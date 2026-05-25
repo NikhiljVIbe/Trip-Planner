@@ -1683,98 +1683,468 @@
   }
   .empty-state p { color: var(--ink-soft); margin-bottom: 24px; }
 
-  /* TRAVEL INFO PAGE */
-  .info-grid {
+  /* ====================================================
+     TRAVEL INFO PAGE — modern redesign
+     ==================================================== */
+
+  /* Hero with quick stats */
+  .ti-hero {
+    background:
+      radial-gradient(ellipse 60% 70% at 0% 100%, rgba(56,189,248,0.35), transparent 60%),
+      radial-gradient(ellipse 60% 70% at 100% 0%, rgba(251,146,60,0.35), transparent 60%),
+      linear-gradient(135deg, #0c4a6e 0%, #0f766e 100%);
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: 36px 40px;
+    margin-bottom: 26px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 20px;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 32px;
+    align-items: center;
   }
-  @media (max-width: 980px) { .info-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px) { .info-grid { grid-template-columns: 1fr; gap: 12px; } }
-  .info-card {
+  .ti-hero-text { min-width: 0; }
+  .ti-eyebrow {
+    display: inline-block;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    padding: 4px 12px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .ti-hero h2 {
+    font-family: var(--serif);
+    font-size: clamp(24px, 3.4vw, 38px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .ti-hero h2 em {
+    font-style: italic;
+    background: linear-gradient(135deg, #fde68a, #fb923c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .ti-hero p {
+    font-size: 14.5px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.5;
+    max-width: 460px;
+  }
+  .ti-stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .ti-stat {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .ti-stat-num {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  .ti-stat-num span {
+    font-size: 13px;
+    opacity: 0.75;
+    margin-left: 2px;
+    font-weight: 500;
+  }
+  .ti-stat-lbl {
+    font-size: 11px;
+    opacity: 0.75;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  @media (max-width: 820px) {
+    .ti-hero { grid-template-columns: 1fr; padding: 28px 24px; gap: 18px; }
+    .ti-stat-grid { grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+    .ti-stat { padding: 10px 12px; }
+    .ti-stat-num { font-size: 18px; }
+    .ti-stat-num span { font-size: 10px; }
+    .ti-stat-lbl { font-size: 9.5px; }
+  }
+  @media (max-width: 480px) {
+    .ti-stat-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Sections */
+  .ti-section {
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
-    padding: 22px;
-    transition: all .25s ease;
+    padding: 28px;
+    margin-bottom: 18px;
   }
-  .info-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-  .info-card.span-2 { grid-column: span 2; }
-  @media (max-width: 980px) { .info-card.span-2 { grid-column: span 2; } }
-  @media (max-width: 640px) { .info-card.span-2 { grid-column: span 1; } }
-  .ic-head {
-    display: flex; align-items: center; gap: 12px;
-    padding-bottom: 14px;
-    margin-bottom: 14px;
-    border-bottom: 1px solid var(--line);
+  @media (max-width: 640px) { .ti-section { padding: 20px; } }
+  .ti-section-head {
+    margin-bottom: 22px;
   }
-  .ic-icon {
-    font-size: 26px;
+  .ti-section-head h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ti-section-head .ti-emoji {
+    font-size: 24px;
     width: 44px; height: 44px;
+    background: var(--brand-light);
+    border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .ti-section-sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-left: 54px;
+  }
+  @media (max-width: 640px) {
+    .ti-section-head h3 { font-size: 18px; }
+    .ti-section-head .ti-emoji { width: 36px; height: 36px; font-size: 20px; }
+    .ti-section-sub { margin-left: 46px; font-size: 13px; }
+  }
+
+  /* Weather section */
+  .ti-weather { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 820px) { .ti-weather { grid-template-columns: 1fr; } }
+  .ti-weather-card {
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    border: 1px solid #fde68a;
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+  .ti-weather-card.lgk {
+    background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+    border-color: #99f6e4;
+  }
+  .ti-weather-head {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 18px;
+  }
+  .ti-city-icon {
+    font-size: 32px;
+    width: 56px; height: 56px;
+    background: #fff;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px -2px rgba(0,0,0,0.1);
+  }
+  .ti-weather-city {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .ti-weather-sub {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  .ti-weather-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 14px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 12px;
+  }
+  .ti-weather-stats > div { text-align: center; }
+  .ws-big {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.05;
+  }
+  .ws-small {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .ti-fact-list { display: flex; flex-direction: column; gap: 10px; }
+  .ti-fact {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .ti-fact strong { color: var(--ink); font-weight: 700; display: inline-block; margin-right: 4px; }
+  .ti-fact em { color: var(--accent); font-style: italic; font-weight: 600; }
+
+  /* Currency section */
+  .ti-rate-strip { margin-bottom: 20px; }
+  .ti-rate-card {
+    background: linear-gradient(135deg, #fef3c7, #fbbf24);
+    border-radius: var(--radius);
+    padding: 22px 28px;
+    text-align: center;
+    color: #78350f;
+  }
+  .ti-rate-big {
+    font-family: var(--serif);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .rate-rm { color: #78350f; }
+  .rate-inr { color: #ea580c; }
+  .ti-rate-note { font-size: 13px; opacity: 0.85; font-weight: 500; }
+
+  .ti-prices {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+  }
+  .ti-price-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+    transition: all .2s ease;
+  }
+  .ti-price-card:hover { border-color: var(--brand); background: #f0fdfa; transform: translateY(-1px); }
+  .ti-price-card .pi { font-size: 22px; flex-shrink: 0; }
+  .ti-price-card .pn { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .ti-price-card .pv { font-size: 12px; color: var(--ink-soft); font-weight: 600; }
+  .ti-price-card .pv em { color: var(--brand); font-style: normal; font-weight: 700; }
+
+  /* Visa section */
+  .ti-visa-banner {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    border: 1px solid #6ee7b7;
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 22px;
+  }
+  .ti-visa-check {
+    width: 48px; height: 48px;
+    background: #16a34a;
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: 0 6px 14px -4px rgba(22,163,74,0.45);
+  }
+  .ti-visa-headline {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    color: #065f46;
+    line-height: 1.15;
+  }
+  .ti-visa-sub {
+    font-size: 13.5px;
+    color: #047857;
+    margin-top: 3px;
+    font-weight: 500;
+  }
+  .ti-checklist { display: flex; flex-direction: column; gap: 12px; }
+  .ti-check {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .ti-check span {
+    width: 28px; height: 28px;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .ti-check div { font-size: 14px; color: var(--ink-soft); line-height: 1.55; }
+  .ti-check strong { color: var(--ink); font-weight: 700; }
+  .ti-check a { color: var(--brand); text-decoration: underline; }
+
+  /* Kids tips */
+  .ti-tips {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .ti-tip {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: flex; gap: 14px;
+    transition: all .2s ease;
+  }
+  .ti-tip:hover { transform: translateY(-2px); border-color: var(--brand); box-shadow: var(--shadow-sm); }
+  .tt-icon {
+    font-size: 28px;
+    width: 50px; height: 50px;
     background: var(--brand-light);
     border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
-  .ic-head h3 {
+  .tt-title {
     font-family: var(--serif);
-    font-size: 19px;
+    font-size: 15px;
     font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.25;
   }
-  .info-card ul {
+  .tt-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* Quick facts grid */
+  .ti-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .ti-fact-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    transition: all .2s ease;
+  }
+  .ti-fact-card:hover { transform: translateY(-2px); border-color: var(--brand); }
+  .fc-emoji { font-size: 28px; margin-bottom: 8px; }
+  .fc-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .fc-value {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+  .fc-sub {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+
+  /* Apps */
+  .ti-apps {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .ti-app {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex; gap: 14px; align-items: center;
+    transition: all .2s ease;
+  }
+  .ti-app:hover { transform: translateY(-2px); border-color: var(--brand); box-shadow: var(--shadow-sm); }
+  .ta-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: 15px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px -3px rgba(0,0,0,0.2);
+  }
+  .ta-name {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .ta-desc {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+
+  /* Packing checklist */
+  .ti-packing {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 820px) { .ti-packing { grid-template-columns: 1fr; } }
+  .ti-pack-col {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .ti-pack-head {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ti-pack-head span { font-size: 22px; }
+  .ti-pack-list {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  .info-card li {
-    font-size: 14px;
+  .ti-pack-list li {
+    padding: 8px 0;
+    padding-left: 24px;
+    font-size: 13.5px;
     color: var(--ink-soft);
-    line-height: 1.55;
-    padding: 6px 0;
     position: relative;
-    padding-left: 16px;
+    line-height: 1.45;
   }
-  .info-card li::before {
-    content: '•';
+  .ti-pack-list li::before {
+    content: '✓';
     position: absolute;
-    left: 4px;
+    left: 0;
+    top: 7px;
+    width: 16px; height: 16px;
+    background: var(--brand-light);
     color: var(--brand);
-    font-weight: 700;
-  }
-  .info-card li strong { color: var(--ink); font-weight: 700; }
-  .info-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-  @media (max-width: 720px) { .info-row { grid-template-columns: 1fr; gap: 18px; } }
-  .info-col-title {
-    font-family: var(--serif);
-    font-weight: 600;
-    font-size: 16px;
-    margin-bottom: 8px;
-    color: var(--ink);
-  }
-  .info-col-title-wide { grid-column: 1 / -1; }
-  .info-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 8px 0;
-    font-size: 13px;
-  }
-  .info-table td {
-    padding: 6px 0;
-    border-bottom: 1px dashed var(--line);
-    color: var(--ink-soft);
-  }
-  .info-table td:last-child {
-    text-align: right;
-    color: var(--ink);
-    font-weight: 700;
-    font-family: var(--serif);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 10px;
   }
 
   /* SCHEDULE NOTE — disclaimer above flight grids */
@@ -3421,169 +3791,222 @@
 
   <!-- TRAVEL INFO -->
   <section class="screen" id="info">
-    <div class="screen-head">
-      <span class="eyebrow">Before you go</span>
-      <h2>Travel info · <span class="em">Malaysia with kids</span></h2>
-      <p>Quick facts, weather, currency, and family tips for KL + Langkawi in June / July.</p>
+
+    <!-- Hero with at-a-glance stats -->
+    <div class="ti-hero">
+      <div class="ti-hero-text">
+        <span class="ti-eyebrow">Before you go</span>
+        <h2>Malaysia with kids — <em>everything to know</em></h2>
+        <p>Weather, currency, visa, packing — everything Indian families should know before flying to Kuala Lumpur and Langkawi in June / July.</p>
+      </div>
+      <div class="ti-stat-grid">
+        <div class="ti-stat">
+          <div class="ti-stat-num">25–33°<span>C</span></div>
+          <div class="ti-stat-lbl">Temperature</div>
+        </div>
+        <div class="ti-stat">
+          <div class="ti-stat-num">₹19 <span>= RM 1</span></div>
+          <div class="ti-stat-lbl">Exchange rate</div>
+        </div>
+        <div class="ti-stat">
+          <div class="ti-stat-num">30 <span>days</span></div>
+          <div class="ti-stat-lbl">Visa-free</div>
+        </div>
+        <div class="ti-stat">
+          <div class="ti-stat-num">+2:30 <span>hr</span></div>
+          <div class="ti-stat-lbl">Ahead of IST</div>
+        </div>
+      </div>
     </div>
 
-    <div class="info-grid">
-
-      <div class="info-card span-2">
-        <div class="ic-head"><span class="ic-icon">🌦️</span><h3>Weather in June – July</h3></div>
-        <div class="info-row">
-          <div class="info-col">
-            <div class="info-col-title">🏙️ Kuala Lumpur</div>
-            <ul>
-              <li><strong>Temp:</strong> 25 – 33 °C, high humidity (~80%)</li>
-              <li><strong>Rain:</strong> Daily afternoon thunderstorms (45 min – 2 hr). Mornings + evenings usually clear.</li>
-              <li><strong>Pack:</strong> Light cotton clothes, small umbrella, light rain jacket, sandals + sneakers</li>
-              <li><strong>Plan around:</strong> Outdoor stuff in the morning, mall/aquarium/hotel pool in afternoon, dinner stroll after rain.</li>
-            </ul>
+    <!-- Section: Weather -->
+    <div class="ti-section">
+      <div class="ti-section-head">
+        <h3><span class="ti-emoji">🌦️</span> Weather in June – July</h3>
+        <p class="ti-section-sub">Tropical and humid year-round. June + July are great months for Langkawi (drier) but bring an umbrella for KL.</p>
+      </div>
+      <div class="ti-weather">
+        <div class="ti-weather-card">
+          <div class="ti-weather-head">
+            <span class="ti-city-icon">🏙️</span>
+            <div>
+              <div class="ti-weather-city">Kuala Lumpur</div>
+              <div class="ti-weather-sub">Capital · 1.5M population</div>
+            </div>
           </div>
-          <div class="info-col">
-            <div class="info-col-title">🏝️ Langkawi</div>
-            <ul>
-              <li><strong>Temp:</strong> 25 – 31 °C, ocean breeze keeps it comfortable</li>
-              <li><strong>Rain:</strong> July is the <strong>driest</strong> month in Langkawi! June has occasional showers but mostly sunny.</li>
-              <li><strong>Sea:</strong> Calm, ideal for kids. Pulau Payar snorkeling at its best.</li>
-              <li><strong>Heads up:</strong> Sumatra haze can occasionally drift in (July). Usually clears in a day or two.</li>
-            </ul>
+          <div class="ti-weather-stats">
+            <div><div class="ws-big">28°C</div><div class="ws-small">Avg</div></div>
+            <div><div class="ws-big">80%</div><div class="ws-small">Humidity</div></div>
+            <div><div class="ws-big">4-5</div><div class="ws-small">Rain days/wk</div></div>
+          </div>
+          <div class="ti-fact-list">
+            <div class="ti-fact"><strong>Rain pattern:</strong> Brief afternoon thunderstorms (45 min – 2 hr). Mornings + evenings usually clear.</div>
+            <div class="ti-fact"><strong>Plan around it:</strong> Outdoor in morning, malls / aquariums / pool 2 – 5 PM, dinner stroll after rain.</div>
+            <div class="ti-fact"><strong>Pack:</strong> Cotton clothes, small umbrella, light rain jacket, sandals.</div>
+          </div>
+        </div>
+        <div class="ti-weather-card lgk">
+          <div class="ti-weather-head">
+            <span class="ti-city-icon">🏝️</span>
+            <div>
+              <div class="ti-weather-city">Langkawi</div>
+              <div class="ti-weather-sub">Andaman Sea · 99 islands</div>
+            </div>
+          </div>
+          <div class="ti-weather-stats">
+            <div><div class="ws-big">29°C</div><div class="ws-small">Avg</div></div>
+            <div><div class="ws-big">75%</div><div class="ws-small">Humidity</div></div>
+            <div><div class="ws-big">2-3</div><div class="ws-small">Rain days/wk</div></div>
+          </div>
+          <div class="ti-fact-list">
+            <div class="ti-fact"><strong>Best window:</strong> July is the <em>driest</em> month — perfect beach + snorkel weather.</div>
+            <div class="ti-fact"><strong>Sea:</strong> Calm, ideal for kids. Pulau Payar snorkeling at its best.</div>
+            <div class="ti-fact"><strong>Heads up:</strong> Occasional Sumatra haze in July. Usually clears in a day.</div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="info-card">
-        <div class="ic-head"><span class="ic-icon">💱</span><h3>Currency &amp; money</h3></div>
-        <ul>
-          <li><strong>1 MYR ≈ ₹19</strong> (changes daily — check XE before exchange)</li>
-          <li><strong>Common prices in INR:</strong>
-            <table class="info-table">
-              <tr><td>Bottled water (500 ml)</td><td>₹25 – 40</td></tr>
-              <tr><td>Kopi / teh tarik</td><td>₹70 – 100</td></tr>
-              <tr><td>Hawker meal</td><td>₹200 – 400</td></tr>
-              <tr><td>Restaurant meal (family)</td><td>₹1,800 – 3,500</td></tr>
-              <tr><td>Hotel breakfast buffet</td><td>₹1,200 – 2,000</td></tr>
-              <tr><td>Grab ride (KLCC ↔ Bukit Bintang)</td><td>₹120 – 250</td></tr>
-              <tr><td>Aquaria KLCC ticket (adult)</td><td>₹1,500</td></tr>
-              <tr><td>SkyCab Langkawi (adult)</td><td>₹1,400</td></tr>
-            </table>
-          </li>
-          <li><strong>Cash vs card:</strong> Visa / Mastercard widely accepted. Use ATM at airport for best rates (skip money-changers). Keep ~RM 200 cash for hawkers + small vendors.</li>
-        </ul>
+    <!-- Section: Currency -->
+    <div class="ti-section">
+      <div class="ti-section-head">
+        <h3><span class="ti-emoji">💱</span> Currency &amp; money</h3>
+        <p class="ti-section-sub">Malaysian Ringgit (RM / MYR). Rate fluctuates daily — check XE before exchanging.</p>
       </div>
-
-      <div class="info-card">
-        <div class="ic-head"><span class="ic-icon">👶</span><h3>Travelling with kids</h3></div>
-        <ul>
-          <li><strong>Stroller:</strong> Bring one that folds one-handed. KLIA + KLIA2 have long walks.</li>
-          <li><strong>Pack:</strong> Diapers + wipes (similar brands available but ₹ more), mosquito patches (Odomos), familiar snacks, electric kettle adapter, SPF 50+ sunscreen, hat, swim diapers.</li>
-          <li><strong>Mosquitos:</strong> Especially in Langkawi rainforest + at dusk. Long sleeves + repellent.</li>
-          <li><strong>Heat strategy:</strong> One outdoor + one indoor activity per day. AC pool time = nap time.</li>
-          <li><strong>Indian food:</strong> Easy to find everywhere — Brickfields (Little India), Bangsar, KLCC food courts. Hotel breakfasts include dosa / paratha.</li>
-          <li><strong>Grab app:</strong> Cheaper than taxis. Child seats on request. Download before you land.</li>
-          <li><strong>Health:</strong> Tap water is safe but most travelers stick to bottled. No malaria in KL/Langkawi.</li>
-        </ul>
-      </div>
-
-      <div class="info-card">
-        <div class="ic-head"><span class="ic-icon">📋</span><h3>Visa &amp; entry</h3></div>
-        <ul>
-          <li><strong>Indian passport:</strong> Visa-free entry to Malaysia for 30 days (as of Dec 2023 – Dec 2026). No visa fee.</li>
-          <li><strong>MDAC form:</strong> Fill the free Malaysia Digital Arrival Card online <strong>within 3 days of arrival</strong> → <a href="https://imigresen-online.imi.gov.my/mdac/main" target="_blank" rel="noopener" style="color:var(--brand);">imigresen-online.imi.gov.my/mdac</a></li>
-          <li><strong>Passport validity:</strong> 6+ months from entry date</li>
-          <li><strong>Proof of return ticket</strong> may be asked at immigration</li>
-          <li><strong>Children:</strong> Same visa-free rules. Carry birth certificate copy for kids under 12.</li>
-        </ul>
-      </div>
-
-      <div class="info-card">
-        <div class="ic-head"><span class="ic-icon">🔌</span><h3>Plugs, SIM &amp; connectivity</h3></div>
-        <ul>
-          <li><strong>Plug type:</strong> Type G (UK 3-pin, square). Bring a universal adapter or buy at airport (~RM 25 / ₹475).</li>
-          <li><strong>Voltage:</strong> 240V — same as India. No converter needed.</li>
-          <li><strong>SIM:</strong> Maxis / Celcom / DiGi prepaid at airport. ~RM 30 (₹570) for 30 GB / 7 days. Activate before clearing customs.</li>
-          <li><strong>WiFi:</strong> Free at hotels, malls, KLIA, KLCC park, Pavilion.</li>
-          <li><strong>eSIM:</strong> Yes — Airalo + Holafly have Malaysia plans (₹500 for 5 GB).</li>
-        </ul>
-      </div>
-
-      <div class="info-card">
-        <div class="ic-head"><span class="ic-icon">🍽️</span><h3>Food &amp; culture</h3></div>
-        <ul>
-          <li><strong>Halal-friendly:</strong> 60%+ Muslim country — most restaurants are halal. Pork is rare outside Chinese areas.</li>
-          <li><strong>Indian veg:</strong> Saravanaa Bhavan, Sangeetha, Annalakshmi all have outlets. Banana leaf rice in Brickfields + Bangsar.</li>
-          <li><strong>Language:</strong> Bahasa Malaysia (national), but <strong>English widely spoken</strong>. Tamil + Hindi understood in Indian areas.</li>
-          <li><strong>Dress code:</strong> Modest at mosques (Putra Mosque provides robes). Beachwear OK at resorts + Pantai Cenang.</li>
-          <li><strong>Tipping:</strong> Not customary. 10% service charge already included in restaurants.</li>
-          <li><strong>Drinking:</strong> Alcohol available in non-Muslim restaurants + hotels. Expensive due to taxes (~RM 30 for a beer).</li>
-        </ul>
-      </div>
-
-      <div class="info-card">
-        <div class="ic-head"><span class="ic-icon">⏰</span><h3>Time &amp; quick facts</h3></div>
-        <ul>
-          <li><strong>Time zone:</strong> GMT+8 — <strong>2 hr 30 min ahead of IST</strong>. Land at 9 AM Malaysia = 6:30 AM India.</li>
-          <li><strong>Currency code:</strong> MYR (Malaysian Ringgit)</li>
-          <li><strong>Country code:</strong> +60</li>
-          <li><strong>Drives on:</strong> Left side (same as India)</li>
-          <li><strong>Tap water:</strong> Treated and safe but most stick to bottled</li>
-          <li><strong>Safety:</strong> Very safe for families. Low petty crime. Tourist police visible in KLCC + Pantai Cenang.</li>
-          <li><strong>Emergency:</strong> 999 (police, ambulance, fire)</li>
-        </ul>
-      </div>
-
-      <div class="info-card">
-        <div class="ic-head"><span class="ic-icon">📱</span><h3>Useful apps</h3></div>
-        <ul>
-          <li><strong>Grab</strong> — Uber-equivalent. Rides, food delivery, parcel.</li>
-          <li><strong>foodpanda</strong> — Food delivery to hotel room (helpful with sleeping kids).</li>
-          <li><strong>Touch 'n Go eWallet</strong> — Pay at hawkers, malls (RM 10 + sign-up bonus).</li>
-          <li><strong>MASkargo / MAS app</strong> — Manage Malaysia Airlines booking, web check-in.</li>
-          <li><strong>AirAsia MOVE</strong> — Manage AK booking, baggage add-ons.</li>
-          <li><strong>Klook</strong> — Discounted attraction tickets (Aquaria, SkyCab, mangrove tour). Skip-the-line.</li>
-          <li><strong>Waze</strong> — Better than Google Maps for KL traffic.</li>
-        </ul>
-      </div>
-
-      <div class="info-card span-2">
-        <div class="ic-head"><span class="ic-icon">🎒</span><h3>What to pack for kids</h3></div>
-        <div class="info-row">
-          <div class="info-col">
-            <div class="info-col-title">Clothes</div>
-            <ul>
-              <li>5–7 cotton t-shirts</li>
-              <li>3–4 shorts</li>
-              <li>2 swimsuits + swim diapers</li>
-              <li>1 light rain jacket</li>
-              <li>Sun hat + sunglasses</li>
-              <li>Sandals (Crocs work great) + sneakers</li>
-            </ul>
-          </div>
-          <div class="info-col">
-            <div class="info-col-title">Health &amp; toiletries</div>
-            <ul>
-              <li>SPF 50+ kids sunscreen</li>
-              <li>Mosquito repellent (Odomos roll-on)</li>
-              <li>Anti-allergy + ORS sachets</li>
-              <li>Thermometer + paracetamol</li>
-              <li>Diapers + wipes (1 pack — buy more there)</li>
-            </ul>
-          </div>
-          <div class="info-col">
-            <div class="info-col-title">Tech &amp; comfort</div>
-            <ul>
-              <li>Universal travel adapter</li>
-              <li>Electric kettle (for warm milk / khichdi)</li>
-              <li>Stroller + carrier (for naps mid-walk)</li>
-              <li>Kids' tablet + headphones (long flights)</li>
-              <li>Familiar snacks + ready-meals</li>
-              <li>Refillable water bottle</li>
-            </ul>
-          </div>
+      <div class="ti-rate-strip">
+        <div class="ti-rate-card">
+          <div class="ti-rate-big"><span class="rate-rm">RM 1</span> = <span class="rate-inr">₹19</span></div>
+          <div class="ti-rate-note">~ exchange rate. Use ATM at airport for best rate (skip money-changers).</div>
         </div>
       </div>
+      <div class="ti-prices">
+        <div class="ti-price-card"><span class="pi">💧</span><div><div class="pn">Bottled water</div><div class="pv">RM 1.50 – 2 · <em>₹30 – 40</em></div></div></div>
+        <div class="ti-price-card"><span class="pi">☕</span><div><div class="pn">Kopi / teh tarik</div><div class="pv">RM 4 – 6 · <em>₹75 – 115</em></div></div></div>
+        <div class="ti-price-card"><span class="pi">🍜</span><div><div class="pn">Hawker meal</div><div class="pv">RM 12 – 20 · <em>₹230 – 380</em></div></div></div>
+        <div class="ti-price-card"><span class="pi">🍽️</span><div><div class="pn">Family restaurant</div><div class="pv">RM 100 – 180 · <em>₹1,900 – 3,400</em></div></div></div>
+        <div class="ti-price-card"><span class="pi">🥐</span><div><div class="pn">Hotel breakfast</div><div class="pv">RM 65 – 105 · <em>₹1,200 – 2,000</em></div></div></div>
+        <div class="ti-price-card"><span class="pi">🚖</span><div><div class="pn">Grab (KLCC ↔ BB)</div><div class="pv">RM 7 – 13 · <em>₹130 – 245</em></div></div></div>
+        <div class="ti-price-card"><span class="pi">🐠</span><div><div class="pn">Aquaria KLCC</div><div class="pv">RM 80 · <em>₹1,520</em></div></div></div>
+        <div class="ti-price-card"><span class="pi">🚠</span><div><div class="pn">SkyCab Langkawi</div><div class="pv">RM 75 · <em>₹1,425</em></div></div></div>
+      </div>
+    </div>
 
+    <!-- Section: Visa + Entry -->
+    <div class="ti-section">
+      <div class="ti-section-head">
+        <h3><span class="ti-emoji">📋</span> Visa &amp; entry</h3>
+      </div>
+      <div class="ti-visa-banner">
+        <span class="ti-visa-check">✓</span>
+        <div>
+          <div class="ti-visa-headline">Visa-free for Indians · up to 30 days</div>
+          <div class="ti-visa-sub">Valid through December 2026. No visa fee, no advance application.</div>
+        </div>
+      </div>
+      <div class="ti-checklist">
+        <div class="ti-check"><span>1</span><div><strong>Fill the MDAC form</strong> (free) within 3 days of arrival → <a href="https://imigresen-online.imi.gov.my/mdac/main" target="_blank" rel="noopener">imigresen-online.imi.gov.my/mdac</a></div></div>
+        <div class="ti-check"><span>2</span><div><strong>Passport validity:</strong> 6+ months from your entry date</div></div>
+        <div class="ti-check"><span>3</span><div><strong>Proof of return ticket</strong> may be asked at immigration — keep PDF handy</div></div>
+        <div class="ti-check"><span>4</span><div><strong>Children:</strong> Same visa-free rules. Carry birth certificate copy for under-12s.</div></div>
+        <div class="ti-check"><span>5</span><div><strong>Print a hotel confirmation</strong> just in case — most travelers never get asked but it speeds things up</div></div>
+      </div>
+    </div>
+
+    <!-- Section: Kids tips -->
+    <div class="ti-section">
+      <div class="ti-section-head">
+        <h3><span class="ti-emoji">👶</span> Travelling with toddlers</h3>
+        <p class="ti-section-sub">Hard-won wisdom from Indian families who've done this trip.</p>
+      </div>
+      <div class="ti-tips">
+        <div class="ti-tip"><div class="tt-icon">🍼</div><div class="tt-body"><div class="tt-title">Stroller you can fold one-handed</div><div class="tt-desc">KLIA + KLIA2 walks are long. A one-handed fold lets you carry a sleepy kid + push gear simultaneously.</div></div></div>
+        <div class="ti-tip"><div class="tt-icon">🦟</div><div class="tt-body"><div class="tt-title">Mosquito repellent (Odomos)</div><div class="tt-desc">Especially in Langkawi rainforest + at dusk. Long sleeves help too.</div></div></div>
+        <div class="ti-tip"><div class="tt-icon">☀️</div><div class="tt-body"><div class="tt-title">Heat strategy: split the day</div><div class="tt-desc">One outdoor activity in the morning, AC pool / aquarium / mall 2 – 5 PM, evening stroll. Don't try to do more.</div></div></div>
+        <div class="ti-tip"><div class="tt-icon">🍛</div><div class="tt-body"><div class="tt-title">Indian food everywhere</div><div class="tt-desc">Saravanaa Bhavan, Sangeetha, Annalakshmi. Brickfields = Little India. Most hotel breakfasts have dosa + paratha.</div></div></div>
+        <div class="ti-tip"><div class="tt-icon">🚗</div><div class="tt-body"><div class="tt-title">Grab app, not taxis</div><div class="tt-desc">Cheaper, English driver, child seats on request. Download + add card before you land.</div></div></div>
+        <div class="ti-tip"><div class="tt-icon">💧</div><div class="tt-body"><div class="tt-title">Bottled water + ORS</div><div class="tt-desc">Tap water is technically safe but stick to bottled to be safe with kids. Carry ORS sachets for any tummy upset.</div></div></div>
+        <div class="ti-tip"><div class="tt-icon">🧴</div><div class="tt-body"><div class="tt-title">SPF 50+ for everyone</div><div class="tt-desc">Apply 20 min before going out, reapply every 2 hr at the beach. Use mineral sunscreen for kids' faces.</div></div></div>
+        <div class="ti-tip"><div class="tt-icon">📱</div><div class="tt-body"><div class="tt-title">eSIM or local SIM</div><div class="tt-desc">Airalo eSIM ~ ₹500 for 5 GB, or Maxis prepaid at airport (~RM 30 for 30 GB / 7 days).</div></div></div>
+      </div>
+    </div>
+
+    <!-- Section: Quick facts grid -->
+    <div class="ti-section">
+      <div class="ti-section-head">
+        <h3><span class="ti-emoji">⚡</span> Quick facts</h3>
+      </div>
+      <div class="ti-facts">
+        <div class="ti-fact-card"><div class="fc-emoji">🔌</div><div class="fc-label">Plug type</div><div class="fc-value">Type G (UK 3-pin)</div><div class="fc-sub">240V — same as India</div></div>
+        <div class="ti-fact-card"><div class="fc-emoji">🕘</div><div class="fc-label">Time zone</div><div class="fc-value">GMT+8</div><div class="fc-sub">2:30 hr ahead of India</div></div>
+        <div class="ti-fact-card"><div class="fc-emoji">🗣️</div><div class="fc-label">Language</div><div class="fc-value">Bahasa + English</div><div class="fc-sub">Tamil + Hindi in Indian areas</div></div>
+        <div class="ti-fact-card"><div class="fc-emoji">🚙</div><div class="fc-label">Drives on</div><div class="fc-value">Left side</div><div class="fc-sub">Same as India</div></div>
+        <div class="ti-fact-card"><div class="fc-emoji">🚨</div><div class="fc-label">Emergency</div><div class="fc-value">999</div><div class="fc-sub">Police / ambulance / fire</div></div>
+        <div class="ti-fact-card"><div class="fc-emoji">📞</div><div class="fc-label">Country code</div><div class="fc-value">+60</div><div class="fc-sub">For calling Malaysia</div></div>
+        <div class="ti-fact-card"><div class="fc-emoji">💵</div><div class="fc-label">Cash to carry</div><div class="fc-value">RM 200</div><div class="fc-sub">For hawkers + small vendors</div></div>
+        <div class="ti-fact-card"><div class="fc-emoji">💳</div><div class="fc-label">Card acceptance</div><div class="fc-value">Visa / Mastercard</div><div class="fc-sub">Widely accepted</div></div>
+      </div>
+    </div>
+
+    <!-- Section: Apps -->
+    <div class="ti-section">
+      <div class="ti-section-head">
+        <h3><span class="ti-emoji">📱</span> Apps to download</h3>
+        <p class="ti-section-sub">Download + sign up before you land so you're ready at the airport.</p>
+      </div>
+      <div class="ti-apps">
+        <div class="ti-app"><div class="ta-icon" style="background:#00b14f;color:#fff;">G</div><div><div class="ta-name">Grab</div><div class="ta-desc">Rides, food delivery, parcels. Add a card before landing.</div></div></div>
+        <div class="ti-app"><div class="ta-icon" style="background:#d70f64;color:#fff;">FP</div><div><div class="ta-name">foodpanda</div><div class="ta-desc">Food delivery to your hotel room — godsend with sleeping kids.</div></div></div>
+        <div class="ti-app"><div class="ta-icon" style="background:#0084ff;color:#fff;">TnG</div><div><div class="ta-name">Touch 'n Go eWallet</div><div class="ta-desc">Pay at hawkers + malls. Sign-up bonus ~RM 10.</div></div></div>
+        <div class="ti-app"><div class="ta-icon" style="background:#ff5722;color:#fff;">K</div><div><div class="ta-name">Klook</div><div class="ta-desc">Discounted Aquaria, SkyCab, mangrove tours. Skip-the-line.</div></div></div>
+        <div class="ti-app"><div class="ta-icon" style="background:#1a73e8;color:#fff;">W</div><div><div class="ta-name">Waze</div><div class="ta-desc">Better than Google Maps for KL traffic.</div></div></div>
+        <div class="ti-app"><div class="ta-icon" style="background:#006dba;color:#fff;">MH</div><div><div class="ta-name">Malaysia Airlines</div><div class="ta-desc">Web check-in, bassinet request, baggage tracking.</div></div></div>
+      </div>
+    </div>
+
+    <!-- Section: Packing checklist -->
+    <div class="ti-section">
+      <div class="ti-section-head">
+        <h3><span class="ti-emoji">🎒</span> Packing checklist for kids</h3>
+        <p class="ti-section-sub">5 nights · light suitcase. Most "forgot" items are easily bought in KL.</p>
+      </div>
+      <div class="ti-packing">
+        <div class="ti-pack-col">
+          <div class="ti-pack-head"><span>👕</span> Clothes</div>
+          <ul class="ti-pack-list">
+            <li>5–7 cotton t-shirts</li>
+            <li>3–4 shorts</li>
+            <li>2 swimsuits + swim diapers</li>
+            <li>1 light rain jacket</li>
+            <li>Sun hat + kid sunglasses</li>
+            <li>Sandals (Crocs) + sneakers</li>
+            <li>2 pajama sets</li>
+          </ul>
+        </div>
+        <div class="ti-pack-col">
+          <div class="ti-pack-head"><span>💊</span> Health &amp; toiletries</div>
+          <ul class="ti-pack-list">
+            <li>SPF 50+ kids sunscreen</li>
+            <li>Odomos mosquito roll-on</li>
+            <li>Anti-allergy + ORS sachets</li>
+            <li>Thermometer + paracetamol</li>
+            <li>Diapers + wipes (1 pack)</li>
+            <li>Hand sanitizer + soap bar</li>
+            <li>Bandaids + antiseptic</li>
+          </ul>
+        </div>
+        <div class="ti-pack-col">
+          <div class="ti-pack-head"><span>🎧</span> Tech &amp; comfort</div>
+          <ul class="ti-pack-list">
+            <li>Universal travel adapter (Type G)</li>
+            <li>Electric kettle (for warm milk)</li>
+            <li>Stroller + carrier</li>
+            <li>Kids' tablet + headphones</li>
+            <li>Favorite snacks + ready-meals</li>
+            <li>Refillable water bottle</li>
+            <li>Comfort toy / blanket</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <div class="step-nav">
