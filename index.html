@@ -2812,6 +2812,85 @@
     .pst-desc { font-size: 12px; }
   }
 
+  /* PDF action button + actions row */
+  .vp-hero-actions {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin: 10px 0 14px;
+  }
+  .pdf-fab {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+  }
+  .pdf-fab:hover { background: rgba(255,255,255,0.25); }
+
+  /* ====================================================
+     PRINT — Save as PDF
+     ==================================================== */
+  @media print {
+    @page { margin: 12mm; size: A4 portrait; }
+    body { background: #fff !important; color: #000 !important; }
+    /* Hide UI chrome */
+    .header, .progress-bar, .progress-mobile, .step-nav, .detail-modal,
+    .vp-hero-actions, .share-fab, .pdf-fab, .btn-back, .btn-primary,
+    .strip-arrow, .saved-actions, .nav-links, .saved-card .stale-warn,
+    .gmap-wrap, .hotel-map { display: none !important; }
+    /* Show only the visible screen for printing */
+    .screen:not(.active) { display: none !important; }
+    .screen.active { display: block !important; }
+    /* Container padding shrinks for paper */
+    .container { padding: 0 !important; max-width: 100% !important; }
+    /* ViewPlan hero — compact for print */
+    .vp-hero {
+      background: #0c4a6e !important;
+      color: #fff !important;
+      padding: 14px 18px !important;
+      margin-bottom: 14px !important;
+      border-radius: 8px !important;
+    }
+    .vp-hero h2 { font-size: 22px !important; margin-bottom: 4px !important; }
+    .vp-hero .vp-meta { font-size: 11px !important; margin-bottom: 0 !important; }
+    .flight-arc-wrap { display: none !important; }
+    .vp-eyebrow { display: none !important; }
+    /* Trip overview row stacks 2 cols on paper */
+    .vp-trip-row { grid-template-columns: 1fr 1fr !important; gap: 8px !important; margin-bottom: 14px !important; }
+    .vp-trip-card { padding: 10px !important; page-break-inside: avoid; border: 1px solid #ccc !important; }
+    .vp-trip-card .vt-click { display: none !important; }
+    /* Convert horizontal strips into vertical print-friendly columns */
+    .strip-wrap { overflow: visible !important; }
+    .strip-scroll { overflow: visible !important; padding: 0 !important; margin: 0 !important; }
+    .strip-row {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 8px !important;
+    }
+    .strip-row::before { display: none !important; }
+    .strip-card {
+      flex: none !important;
+      width: 100% !important;
+      border: 1px solid #ccc !important;
+      page-break-inside: avoid;
+    }
+    .strip-card::after { display: none !important; }
+    .strip-photo { height: 80px !important; }
+    .strip-cta { display: none !important; }
+    /* Day section */
+    .vp-day-section { page-break-inside: avoid; margin-bottom: 16px !important; }
+    .vp-day-badge { width: 32px !important; height: 32px !important; font-size: 14px !important; }
+    /* Booking links — hide chips on print */
+    .booking-links { display: none !important; }
+    /* Detail modal off */
+    body.printing .detail-modal { display: none !important; }
+    /* Trip-recap / hero badges */
+    .shared-banner { display: none !important; }
+    /* Remove transitions / animations on print */
+    * { animation: none !important; transition: none !important; }
+    /* Force black text for readability */
+    .strip-card, .vp-trip-card { color: #000 !important; }
+    /* Show URLs after links so they appear in PDF — but suppress for nav */
+    a[href]:after { content: '' !important; }
+  }
+
   /* SCROLL-INTO-VIEW */
   @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; }
@@ -3639,35 +3718,72 @@ const hotelsLGK = [
    ITINERARY GENERATOR
    ================================================== */
 
-// Real photos via Loremflickr — fetches a real Flickr image matching the tags.
-// First entry is the primary tag, "all" forces match-all so the photo is on-topic.
-const lfk = (tags) => `https://loremflickr.com/800/500/${tags}/all`;
-const PHOTOS = {
-  airport:      lfk('kuala,lumpur,airport,klia'),
-  hotel:        lfk('hotel,lobby,malaysia'),
-  pool:         lfk('hotel,pool,resort'),
-  petronas:     lfk('petronas,towers,kuala,lumpur'),
-  klccPark:     lfk('klcc,park,fountain,kuala,lumpur'),
-  aquaria:      lfk('aquarium,fish,tunnel'),
-  jalanAlor:    lfk('jalan,alor,street,food,kuala,lumpur'),
-  pavilion:     lfk('pavilion,mall,kuala,lumpur'),
-  batuCaves:    lfk('batu,caves,malaysia,steps'),
-  birdPark:     lfk('bird,park,kuala,lumpur'),
-  indianFood:   lfk('south,indian,thali,dosa'),
-  beach:        lfk('langkawi,beach,malaysia'),
-  mangrove:     lfk('mangrove,langkawi,kilim'),
-  underwater:   lfk('underwater,world,langkawi,aquarium'),
-  pantaiCenang: lfk('pantai,cenang,beach,langkawi'),
-  sunset:       lfk('langkawi,sunset,beach'),
-  eagleSquare:  lfk('eagle,square,langkawi,dataran,lang'),
-  islandFood:   lfk('malaysian,food,nasi,kandar'),
-  airplane:     lfk('airplane,malaysia,airlines')
+// Beautiful gradient SVG placeholders — used as the immediate default.
+// Wikipedia / Commons API upgrades these to real photos when available
+// (see swapWikiImages below).  This avoids the random-Loremflickr issue
+// where unrelated photos (e.g. a black cat sculpture) would show up
+// as "1 Utama mall food court".
+const PLACEHOLDERS = {
+  airport:      { c1:'#0c4a6e', c2:'#1e40af', icon:'✈' },
+  hotel:        { c1:'#7c2d12', c2:'#d97706', icon:'🏨' },
+  pool:         { c1:'#0ea5e9', c2:'#1e40af', icon:'🏊' },
+  petronas:     { c1:'#1e3a8a', c2:'#0c4a6e', icon:'🏙' },
+  klccPark:     { c1:'#16a34a', c2:'#15803d', icon:'🌳' },
+  aquaria:      { c1:'#06b6d4', c2:'#0e7490', icon:'🐠' },
+  jalanAlor:    { c1:'#dc2626', c2:'#7f1d1d', icon:'🍜' },
+  pavilion:     { c1:'#7c3aed', c2:'#581c87', icon:'🛍' },
+  batuCaves:    { c1:'#ca8a04', c2:'#92400e', icon:'🛕' },
+  birdPark:     { c1:'#15803d', c2:'#65a30d', icon:'🦜' },
+  indianFood:   { c1:'#f59e0b', c2:'#dc2626', icon:'🍛' },
+  beach:        { c1:'#fbbf24', c2:'#0ea5e9', icon:'🏖' },
+  mangrove:     { c1:'#15803d', c2:'#0f766e', icon:'🦅' },
+  underwater:   { c1:'#0e7490', c2:'#1e40af', icon:'🐧' },
+  pantaiCenang: { c1:'#fbbf24', c2:'#06b6d4', icon:'🌊' },
+  sunset:       { c1:'#fb923c', c2:'#7c3aed', icon:'🌇' },
+  eagleSquare:  { c1:'#dc2626', c2:'#7c2d12', icon:'🦅' },
+  islandFood:   { c1:'#ea580c', c2:'#dc2626', icon:'🍽' },
+  airplane:     { c1:'#0c4a6e', c2:'#1e3a8a', icon:'🛫' }
 };
 
-function loremFallback(name) {
-  const tags = (name||'').toLowerCase().replace(/[^a-z0-9\s-]/g,'').split(/\s+/).filter(Boolean).slice(0,5).join(',');
-  return `https://loremflickr.com/800/500/${tags || 'malaysia,hotel'}`;
+function svgPlaceholder(p) {
+  if (!p) p = PLACEHOLDERS.hotel;
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">' +
+    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0" stop-color="' + p.c1 + '"/>' +
+      '<stop offset="1" stop-color="' + p.c2 + '"/>' +
+    '</linearGradient></defs>' +
+    '<rect width="800" height="500" fill="url(#g)"/>' +
+    '<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="220" fill="rgba(255,255,255,0.92)">' + p.icon + '</text>' +
+    '</svg>';
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
 }
+
+const PHOTOS = Object.fromEntries(
+  Object.entries(PLACEHOLDERS).map(function (kv) { return [kv[0], svgPlaceholder(kv[1])]; })
+);
+
+// Per-hotel placeholder — uses hotel id to pick a consistent gradient variation
+function hotelPlaceholder(hotelId) {
+  const variants = [
+    { c1:'#0f766e', c2:'#134e4a', icon:'🏨' },
+    { c1:'#7c2d12', c2:'#d97706', icon:'🌴' },
+    { c1:'#1e40af', c2:'#0c4a6e', icon:'🏙' },
+    { c1:'#7c3aed', c2:'#581c87', icon:'🛏' },
+    { c1:'#0e7490', c2:'#1e40af', icon:'🏖' },
+    { c1:'#0f766e', c2:'#15803d', icon:'🌴' }
+  ];
+  let h = 0;
+  for (let i = 0; i < (hotelId||'').length; i++) h = (h*31 + hotelId.charCodeAt(i)) | 0;
+  return svgPlaceholder(variants[Math.abs(h) % variants.length]);
+}
+
+function loremFallback(name) {
+  // Backward-compatible name — now returns an SVG placeholder, no longer Loremflickr
+  return svgPlaceholder({ c1:'#0f766e', c2:'#0c4a6e', icon:'🌴' });
+}
+
+const lfk = function () { return svgPlaceholder({ c1:'#0f766e', c2:'#0c4a6e', icon:'🌴' }); };
 
 /* ============================================================
    REAL PHOTOS — Wikipedia REST API
@@ -4084,6 +4200,7 @@ const ICONS = {
   eye:        '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
   trash:      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6l-1.5 14a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>',
   share:      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>',
+  download:   '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>',
   // Google "G" mark (uses currentColor for line, but Google brand colors look better in CSS)
   google:     '<svg viewBox="0 0 24 24" width="14" height="14"><path fill="#4285F4" d="M22.5 12.27c0-.79-.07-1.54-.2-2.27H12v4.3h5.92a5.07 5.07 0 0 1-2.2 3.33v2.77h3.56c2.08-1.92 3.28-4.74 3.28-8.13z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.77c-.99.66-2.25 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1A6.6 6.6 0 0 1 5.49 12c0-.73.13-1.44.35-2.1V7.05H2.18a11 11 0 0 0 0 9.9l3.66-2.85z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.05L5.84 9.9C6.71 7.3 9.14 5.38 12 5.38z"/></svg>'
 };
@@ -4328,7 +4445,7 @@ function renderHotelMap(stateKey) {
             const isSel = state[stateKey] === h.id;
             return `
             <div class="gmap-sb-item ${isSel ? 'selected' : ''}" data-hid="${h.id}" onclick="focusMapHotel(this, '${stateKey}', '${h.id}')">
-              <img src="${h.photo}" alt="${h.name}" data-wiki="${WIKI_HOTELS[h.id] || ''}" onerror="this.onerror=null;this.src='${loremFallback(h.name)}';" />
+              <img src="${h.photo}" alt="${h.name}" data-wiki="${WIKI_HOTELS[h.id] || ''}" onerror="this.onerror=null;this.src='${hotelPlaceholder(h.id)}';" />
               <div class="gmap-sb-body">
                 <div class="gmap-sb-brand ${h.brand === 'accor' ? 'accor' : ''}">${h.group}</div>
                 <div class="gmap-sb-name">${h.name}</div>
@@ -4619,7 +4736,7 @@ function renderHotels(list, mountId, stateKey, nextBtnId, filterBrandKey, filter
   m.innerHTML = filtered.map(h => `
     <div class="hotel-card ${state[stateKey] === h.id ? 'selected' : ''}" data-id="${h.id}" onclick="selectHotel('${stateKey}', '${h.id}', '${nextBtnId}')">
       <div class="hotel-image">
-        <img src="${h.photo}" alt="${h.name}" loading="lazy" data-wiki="${WIKI_HOTELS[h.id] || ''}" onerror="this.onerror=null; this.src='${loremFallback(h.name)}';" />
+        <img src="${h.photo}" alt="${h.name}" loading="lazy" data-wiki="${WIKI_HOTELS[h.id] || ''}" onerror="this.onerror=null; this.src='${hotelPlaceholder(h.id)}';" />
         <span class="brand-badge ${h.brand === 'accor' ? 'accor' : ''}">${h.group}</span>
         <span class="stars-badge">${'★'.repeat(h.stars)}</span>
         ${h.familyPick ? '<span class="family-pick">Family pick</span>' : ''}
@@ -4925,6 +5042,16 @@ function saveItinerary() {
   }
 }
 
+function downloadPDF() {
+  // Mark body so print CSS expands horizontal strips and hides UI chrome
+  document.body.classList.add('printing');
+  // Give the browser a tick to apply the class, then open print dialog.
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => document.body.classList.remove('printing'), 500);
+  }, 80);
+}
+
 function showToast(message) {
   let toast = document.getElementById('appToast');
   if (!toast) {
@@ -5064,7 +5191,10 @@ function renderViewPlan(plan) {
         <span class="vp-eyebrow">${isShared ? 'Shared with you' : 'Your saved trip'}</span>
         <h2>${plan.name}</h2>
         <div class="vp-meta">${planDateRange(plan)} · Family of 4 + 2 toddlers · <span style="opacity:.85;">Click any card below for booking links</span></div>
-        ${!isShared && plan.id ? `<button class="share-fab" onclick="sharePlan('${plan.id}')" style="margin-top:12px;">${ICONS.share} Share this plan</button>` : ''}
+        <div class="vp-hero-actions">
+          ${!isShared && plan.id ? `<button class="share-fab" onclick="sharePlan('${plan.id}')">${ICONS.share} Share</button>` : ''}
+          <button class="share-fab pdf-fab" onclick="downloadPDF()">${ICONS.download} Download PDF</button>
+        </div>
         <div class="flight-arc-wrap">${flightArc(dep)}</div>
       </div>
     </div>
