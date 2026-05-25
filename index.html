@@ -7,8 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <style>
   :root {
     --bg: #faf8f3;
@@ -1884,136 +1882,124 @@
     box-shadow: 0 4px 12px -4px rgba(0,0,0,0.2);
   }
 
-  /* MAP */
+  /* GOOGLE MAP SPLIT VIEW */
   .hotel-map {
     width: 100%;
-    height: 620px;
+    height: 640px;
     border-radius: var(--radius-lg);
     overflow: hidden;
     border: 1px solid var(--line);
-    background: var(--bg-tint);
+    background: var(--card);
   }
-  .leaflet-container {
-    font-family: var(--font);
-    background: #e8e4d6;
+  .gmap-wrap {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    height: 100%;
   }
-  /* Marker pin styles */
-  .map-pin {
-    width: 32px; height: 32px;
-    border-radius: 50% 50% 50% 0;
-    transform: rotate(-45deg);
-    border: 2.5px solid #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
+  @media (max-width: 880px) {
+    .hotel-map { height: 720px; }
+    .gmap-wrap { grid-template-columns: 1fr; grid-template-rows: 280px 1fr; }
   }
-  .map-pin span {
-    transform: rotate(45deg);
-    font-size: 14px;
-    font-weight: 800;
-    color: #fff;
-  }
-  .map-pin.pin-accor { background: #c8102e; }
-  .map-pin.pin-hotel { background: var(--brand); }
-  .map-pin.pin-airport { background: #ea580c; width: 40px; height: 40px; }
-  .map-pin.pin-airport span { font-size: 16px; }
-  .map-pin.pin-city { background: #1e40af; width: 40px; height: 40px; }
-  .map-pin.pin-city span { font-size: 16px; }
-
-  /* Map popup card */
-  .leaflet-popup-content-wrapper {
-    border-radius: 14px;
-    padding: 0;
-  }
-  .leaflet-popup-content {
-    margin: 0;
-    width: 240px !important;
-  }
-  .map-popup {
+  .gmap-sidebar {
+    display: flex; flex-direction: column;
+    border-right: 1px solid var(--line);
+    background: var(--bg);
     overflow: hidden;
-    border-radius: 14px;
   }
-  .map-popup-photo {
-    width: 100%;
-    height: 110px;
-    overflow: hidden;
+  .gmap-sb-header {
+    padding: 12px 18px;
     background: var(--bg-tint);
-  }
-  .map-popup-photo img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .map-popup-body { padding: 12px 14px 14px; }
-  .map-popup-body h4 {
-    font-family: var(--serif);
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 4px;
-    line-height: 1.2;
-  }
-  .map-popup-meta {
+    border-bottom: 1px solid var(--line);
     font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--ink-soft);
-    margin-bottom: 6px;
-  }
-  .map-popup-price {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 10px;
-  }
-  .map-popup-btn {
-    width: 100%;
-    padding: 8px 12px;
-    background: var(--brand);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 12.5px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: var(--font);
-  }
-  .map-popup-btn:hover { background: #0d5752; }
-  .map-popup-distances {
-    display: flex; gap: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    margin: 6px 0 10px;
+    display: flex; justify-content: space-between; align-items: center;
     flex-wrap: wrap;
+    gap: 6px;
   }
-  .map-popup-distances span {
-    padding: 3px 7px;
-    background: var(--bg-tint);
-    border-radius: 6px;
+  .gmap-sb-tip { font-weight: 500; text-transform: none; letter-spacing: 0; font-size: 11px; color: var(--muted); }
+  .gmap-sb-list {
+    overflow-y: auto;
+    flex: 1;
+  }
+  .gmap-sb-item {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 12px;
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background .15s ease;
+    position: relative;
+  }
+  .gmap-sb-item:hover { background: var(--bg-tint); }
+  .gmap-sb-item.focused { background: #fff7ed; border-left: 3px solid var(--accent); padding-left: 9px; }
+  .gmap-sb-item.selected { background: var(--brand-light); border-left: 3px solid var(--brand); padding-left: 9px; }
+  .gmap-sb-item img {
+    width: 90px; height: 90px;
+    border-radius: 10px;
+    object-fit: cover;
+    background: var(--line);
+  }
+  .gmap-sb-body {
+    display: flex; flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .gmap-sb-brand {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     color: var(--ink-soft);
   }
-
-  /* Map legend */
-  .map-legend {
-    position: absolute;
-    top: 16px; right: 16px;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 10px 14px;
-    font-size: 12px;
-    z-index: 999;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  .gmap-sb-brand.accor { color: #c8102e; }
+  .gmap-sb-name {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.2;
+    color: var(--ink);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
-  .map-legend-row {
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 5px;
+  .gmap-sb-meta {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    font-weight: 500;
   }
-  .map-legend-row:last-child { margin-bottom: 0; }
-  .map-legend-dot {
-    width: 14px; height: 14px;
-    border-radius: 50% 50% 50% 0;
-    transform: rotate(-45deg);
-    flex-shrink: 0;
+  .gmap-sb-dist {
+    display: flex; gap: 8px;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
   }
+  .gmap-sb-select {
+    margin-top: 4px;
+    align-self: flex-start;
+    padding: 5px 12px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: background .15s;
+  }
+  .gmap-sb-select:hover { background: var(--brand); }
+  .gmap-sb-select.selected { background: var(--brand); }
+  .gmap-iframe-wrap {
+    position: relative;
+    background: var(--bg-tint);
+    height: 100%;
+  }
+  .gmap-iframe-wrap iframe { width: 100%; height: 100%; display: block; }
 
   /* HORIZONTAL DAY STRIP (viewPlan redesign) */
   .vp-trip-row {
@@ -2073,16 +2059,19 @@
     margin-bottom: 14px;
   }
   .vp-day-badge {
-    width: 36px; height: 36px;
+    width: 46px; height: 46px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--brand-2), var(--brand));
+    background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
     color: #fff;
     display: flex; align-items: center; justify-content: center;
     font-family: var(--serif);
-    font-weight: 600;
-    font-size: 15px;
+    font-weight: 700;
+    font-size: 19px;
     flex-shrink: 0;
-    box-shadow: 0 6px 14px -4px rgba(15,118,110,0.4);
+    box-shadow: 0 8px 20px -4px rgba(234, 88, 12, 0.55);
+    border: 2.5px solid #fff;
+    line-height: 1;
+    letter-spacing: -0.02em;
   }
   .vp-day-title-wrap .vp-day-title {
     font-family: var(--serif);
@@ -2099,6 +2088,37 @@
     margin-top: 1px;
   }
 
+  .strip-wrap { position: relative; }
+  .strip-arrow {
+    position: absolute;
+    top: 70px;
+    width: 40px; height: 40px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--ink);
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 6px 18px -4px rgba(0,0,0,0.18);
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s ease;
+    line-height: 1;
+    padding: 0;
+  }
+  .strip-arrow:hover {
+    background: var(--ink);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -4px rgba(0,0,0,0.28);
+  }
+  .strip-arrow.prev { left: -12px; }
+  .strip-arrow.next { right: -12px; }
+  @media (max-width: 720px) {
+    .strip-arrow { width: 34px; height: 34px; }
+    .strip-arrow svg { width: 16px; height: 16px; }
+    .strip-arrow.prev { left: -6px; }
+    .strip-arrow.next { right: -6px; }
+  }
   .strip-scroll {
     position: relative;
     overflow-x: auto;
@@ -2107,6 +2127,7 @@
     margin: 0 -8px;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
+    scroll-behavior: smooth;
   }
   .strip-scroll::-webkit-scrollbar { height: 6px; }
   .strip-scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
@@ -3526,14 +3547,7 @@ function renderHotelMap(stateKey) {
   const slot = stateKey === 'hotelKL' ? 'KL' : 'LGK';
   const mountId = 'hotels' + slot + 'Map';
   const mount = document.getElementById(mountId);
-  if (!mount || typeof L === 'undefined') return;
-
-  // Reset existing map if any
-  if (_hotelMaps[stateKey]) {
-    _hotelMaps[stateKey].remove();
-    _hotelMaps[stateKey] = null;
-  }
-  mount.innerHTML = '';
+  if (!mount) return;
 
   const list = stateKey === 'hotelKL' ? hotelsKL : hotelsLGK;
   const searchKey = stateKey === 'hotelKL' ? 'searchKL' : 'searchLGK';
@@ -3549,94 +3563,79 @@ function renderHotelMap(stateKey) {
 
   const refs = REFERENCE_POINTS[slot];
 
-  // Create map
-  const map = L.map(mount, { scrollWheelZoom: true, zoomControl: true });
-  _hotelMaps[stateKey] = map;
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    maxZoom: 19
-  }).addTo(map);
-
-  const pin = (cls, label) => L.divIcon({
-    className: '',
-    html: `<div class="map-pin ${cls}"><span>${label}</span></div>`,
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32]
-  });
-  const refPin = (cls, label) => L.divIcon({
-    className: '',
-    html: `<div class="map-pin ${cls}"><span>${label}</span></div>`,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -40]
-  });
-
-  // Reference markers
-  L.marker(refs.airport.coords, { icon: refPin('pin-airport', refs.airport.emoji), zIndexOffset: 1000 })
-    .addTo(map)
-    .bindPopup(`<div style="padding:10px 14px;font-family:var(--font);"><strong>${refs.airport.name}</strong></div>`);
-  L.marker(refs.cityCenter.coords, { icon: refPin('pin-city', refs.cityCenter.emoji), zIndexOffset: 1000 })
-    .addTo(map)
-    .bindPopup(`<div style="padding:10px 14px;font-family:var(--font);"><strong>${refs.cityCenter.name}</strong></div>`);
-
-  // Hotel markers
-  const bounds = [refs.airport.coords, refs.cityCenter.coords];
-  filtered.forEach(h => {
-    const c = getHotelCoords(h, stateKey);
-    bounds.push(c);
-    const apDist = airportDistanceFor(stateKey, h.area);
-    const cityDist = h.distance;
-    const label = h.brand === 'accor' ? 'A' : '★';
-    const marker = L.marker(c, { icon: pin(h.brand === 'accor' ? 'pin-accor' : 'pin-hotel', label) }).addTo(map);
-    const isSelected = state[stateKey] === h.id;
-    marker.bindPopup(`
-      <div class="map-popup">
-        <div class="map-popup-photo"><img src="${h.photo}" alt="${h.name}" onerror="this.onerror=null;this.src='${loremFallback(h.name)}';" /></div>
-        <div class="map-popup-body">
-          <h4>${h.name}</h4>
-          <div class="map-popup-meta">${h.group} · ${h.area}</div>
-          <div class="map-popup-price">${h.price}/night · ${'★'.repeat(h.stars)}</div>
-          <div class="map-popup-distances">
-            <span>✈ ${apDist.km} km</span>
-            <span>${refs.cityCenter.emoji} ${cityDist.km} km</span>
-            <span>🇮🇳 ${h.indian.score}/5</span>
-          </div>
-          <button class="map-popup-btn" onclick="selectHotelFromMap('${stateKey}', '${h.id}', '${nextBtnId}')">${isSelected ? '✓ Selected' : 'Select this hotel'}</button>
-        </div>
-      </div>
-    `, { maxWidth: 260 });
-  });
-
-  // Center to fit all markers + refs
-  if (bounds.length > 0) {
-    map.fitBounds(bounds, { padding: [50, 50] });
+  // Determine initial map query
+  const selected = filtered.find(h => h.id === state[stateKey]);
+  let mapQuery;
+  let zoom = 12;
+  if (selected) {
+    mapQuery = `${selected.name} ${selected.area} Malaysia`;
+    zoom = 15;
+  } else if (state[areaKey] !== 'all') {
+    mapQuery = `hotels ${state[areaKey]} ${slot === 'KL' ? 'Kuala Lumpur' : 'Langkawi'} Malaysia`;
   } else {
-    map.setView(refs.cityCenter.coords, 12);
+    mapQuery = `${state[brandKey] === 'accor' ? 'Accor ' : ''}hotels ${refs.cityCenter.name}`;
   }
 
-  // Legend overlay
-  const legend = L.control({ position: 'topright' });
-  legend.onAdd = () => {
-    const div = L.DomUtil.create('div', 'map-legend');
-    div.innerHTML = `
-      <div class="map-legend-row"><div class="map-legend-dot" style="background:#ea580c;"></div>Airport</div>
-      <div class="map-legend-row"><div class="map-legend-dot" style="background:#1e40af;"></div>City center</div>
-      <div class="map-legend-row"><div class="map-legend-dot" style="background:#0f766e;"></div>Non-Accor</div>
-      <div class="map-legend-row"><div class="map-legend-dot" style="background:#c8102e;"></div>Accor</div>
-      <div style="margin-top:6px;color:var(--muted);font-size:11px;">${filtered.length} hotels shown</div>
-    `;
-    return div;
-  };
-  legend.addTo(map);
+  mount.innerHTML = `
+    <div class="gmap-wrap">
+      <div class="gmap-sidebar">
+        <div class="gmap-sb-header">
+          <span>${filtered.length} ${filtered.length === 1 ? 'hotel' : 'hotels'}</span>
+          <span class="gmap-sb-tip">Click to focus on map →</span>
+        </div>
+        <div class="gmap-sb-list">
+          ${filtered.length === 0 ? '<div style="padding:30px 18px;text-align:center;color:var(--muted);font-size:13px;">No hotels match your filters.</div>' : filtered.map(h => {
+            const apDist = airportDistanceFor(stateKey, h.area);
+            const isSel = state[stateKey] === h.id;
+            return `
+            <div class="gmap-sb-item ${isSel ? 'selected' : ''}" data-hid="${h.id}" onclick="focusMapHotel(this, '${stateKey}', '${h.id}')">
+              <img src="${h.photo}" alt="${h.name}" onerror="this.onerror=null;this.src='${loremFallback(h.name)}';" />
+              <div class="gmap-sb-body">
+                <div class="gmap-sb-brand ${h.brand === 'accor' ? 'accor' : ''}">${h.group}</div>
+                <div class="gmap-sb-name">${h.name}</div>
+                <div class="gmap-sb-meta">${h.area} · ${h.price}/night · ${'★'.repeat(h.stars)}</div>
+                <div class="gmap-sb-dist">
+                  <span title="From airport">✈ ${apDist.km} km</span>
+                  <span title="From city center">🏙 ${h.distance.km} km</span>
+                </div>
+                <button class="gmap-sb-select ${isSel ? 'selected' : ''}" onclick="event.stopPropagation(); selectHotelFromMap('${stateKey}','${h.id}','${nextBtnId}')">${isSel ? '✓ Selected' : 'Select this hotel'}</button>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="gmap-iframe-wrap">
+        <iframe
+          id="gmap-iframe-${slot}"
+          src="https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed&z=${zoom}"
+          width="100%" height="100%"
+          style="border:0;"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  `;
+}
 
-  // Trigger size recalculation since the container was just shown
-  setTimeout(() => map.invalidateSize(), 100);
+function focusMapHotel(el, stateKey, hotelId) {
+  const slot = stateKey === 'hotelKL' ? 'KL' : 'LGK';
+  const list = stateKey === 'hotelKL' ? hotelsKL : hotelsLGK;
+  const h = list.find(x => x.id === hotelId);
+  if (!h) return;
+  const iframe = document.getElementById('gmap-iframe-' + slot);
+  if (iframe) {
+    iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(h.name + ' ' + h.area + ' Malaysia')}&output=embed&z=16`;
+  }
+  // Highlight in sidebar
+  if (el && el.parentElement) {
+    el.parentElement.querySelectorAll('.gmap-sb-item').forEach(x => x.classList.remove('focused'));
+    el.classList.add('focused');
+  }
 }
 
 function selectHotelFromMap(stateKey, id, nextBtnId) {
   selectHotel(stateKey, id, nextBtnId);
-  // Re-render map to update Selected state in popups
   renderHotelMap(stateKey);
   showToast('✓ Hotel selected');
 }
@@ -4256,9 +4255,16 @@ function renderDayStrip(d, dayIdx) {
           <div class="vp-day-date">${d.date}</div>
         </div>
       </div>
-      <div class="strip-scroll">
-        <div class="strip-row">
-          ${d.items.map((i, itemIdx) => {
+      <div class="strip-wrap">
+        <button class="strip-arrow prev" onclick="scrollStrip(this, -1)" aria-label="Previous">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="strip-arrow next" onclick="scrollStrip(this, 1)" aria-label="Next">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div class="strip-scroll">
+          <div class="strip-row">
+            ${d.items.map((i, itemIdx) => {
             const tagType = (i.tags && i.tags[0] && i.tags[0][1]) || 'see';
             return `
               <div class="strip-card tag-${tagType}" onclick="openDetail('activity', '${dayIdx}-${itemIdx}')">
@@ -4280,10 +4286,17 @@ function renderDayStrip(d, dayIdx) {
               </div>
             `;
           }).join('')}
+          </div>
         </div>
       </div>
     </div>
   `;
+}
+
+function scrollStrip(btn, dir) {
+  const wrap = btn.parentElement;
+  const scroll = wrap.querySelector('.strip-scroll');
+  if (scroll) scroll.scrollBy({ left: dir * scroll.clientWidth * 0.75, behavior: 'smooth' });
 }
 
 function bookingChipBig(site, query) {
