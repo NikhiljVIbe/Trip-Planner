@@ -854,6 +854,12 @@
   .hotel-meta-row .dot { color: var(--muted); }
   .hotel-area { font-weight: 600; }
   .hotel-price { font-weight: 700; color: var(--ink); }
+  .inr-sub {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-left: 2px;
+  }
   .hotel-desc { font-size: 14px; color: var(--ink-soft); }
   .hotel-amenities {
     display: flex; flex-wrap: wrap; gap: 6px;
@@ -1760,6 +1766,143 @@
     .vp-section-body { padding: 20px 22px; }
     .vp-section-head { padding: 22px 22px 16px; }
   }
+
+  /* ACTIVITY LIBRARY */
+  .lib-section {
+    margin-top: 36px;
+    padding: 28px;
+    background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 60%);
+    border: 1px solid var(--brand-light);
+    border-radius: var(--radius-lg);
+  }
+  .lib-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 16px; flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+  .lib-title {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+    color: var(--brand);
+  }
+  .lib-sub {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+  .lib-clear {
+    padding: 8px 14px;
+    background: #fef2f2;
+    color: #b91c1c;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .lib-clear:hover { background: #fee2e2; }
+  .lib-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .lib-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px;
+    display: flex;
+    gap: 14px;
+    transition: all .25s ease;
+    align-items: flex-start;
+  }
+  .lib-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--brand);
+  }
+  .lib-card.is-added {
+    background: linear-gradient(135deg, #f0fdfa, #fff);
+    border-color: var(--brand);
+  }
+  .lib-emoji {
+    font-size: 32px;
+    width: 50px; height: 50px;
+    background: var(--bg-tint);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .lib-card.is-added .lib-emoji {
+    background: var(--brand-light);
+  }
+  .lib-body { flex: 1; min-width: 0; }
+  .lib-name {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin-bottom: 6px;
+    display: flex; align-items: flex-start; gap: 6px;
+    justify-content: space-between;
+  }
+  .lib-meta {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .lib-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+    margin-bottom: 8px;
+  }
+  .lib-kids {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .lib-actions {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 8px;
+  }
+  .lib-add {
+    padding: 6px 12px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .lib-add:hover { background: var(--brand); }
+  .lib-added-tag {
+    padding: 5px 12px;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+  }
+  .lib-remove {
+    padding: 5px 12px;
+    background: #fef2f2;
+    color: #b91c1c;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+  }
+  .lib-remove:hover { background: #fee2e2; }
 
   /* PLAN STYLE TABS */
   .plan-style-tabs {
@@ -3283,6 +3426,48 @@ function googleImageURL(q) {
   return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q)}`;
 }
 
+/* ==== INR conversion ==== */
+const MYR_TO_INR = 19; // ~approximate, 2025-2026 range
+function rmToInr(rm) {
+  if (!rm || isNaN(rm)) return 0;
+  return Math.round(rm * MYR_TO_INR);
+}
+function fmtINR(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
+function priceWithINR(rmStr) {
+  if (!rmStr) return '';
+  const m = String(rmStr).match(/RM\s*([\d,]+)/i);
+  if (!m) return rmStr;
+  const rm = parseInt(m[1].replace(/,/g,''));
+  return `${rmStr} <span class="inr-sub">≈ ${fmtINR(rmToInr(rm))}</span>`;
+}
+
+// Convert library activity → day-item shape used by the plan renderer
+function activityToItem(a) {
+  return {
+    time: 'Added',
+    label: 'Extra',
+    title: a.title,
+    desc: a.desc + ' · ' + a.dur + ' · ' + (a.priceRM ? 'RM ' + a.priceRM + ' (₹' + rmToInr(a.priceRM).toLocaleString('en-IN') + ')' : 'Free'),
+    photo: a.photo || PHOTOS.hotel,
+    tags: [['Added','see']],
+    book: a.bookQ ? [['klook', a.bookQ],['getyourguide', a.bookQ]] : null,
+    _extra: a.id
+  };
+}
+
+function mergeExtras(plan, extras, library) {
+  if (!extras || extras.length === 0) return plan;
+  return plan.map(day => {
+    const dayExtras = extras.filter(e => e.day === day.day);
+    if (dayExtras.length === 0) return day;
+    const extraItems = dayExtras.map(e => {
+      const a = library.find(x => x.id === e.id);
+      return a ? activityToItem(a) : null;
+    }).filter(Boolean);
+    return Object.assign({}, day, { items: [...day.items, ...extraItems] });
+  });
+}
+
 function getKLPlan(hotel, flight, style = 'relaxed') {
   const arrTime = parseInt(flight.arr.split(':')[0]);
   const isEvening = arrTime >= 17 || flight.arr.includes('⁺¹');
@@ -3363,10 +3548,11 @@ function getKLPlan(hotel, flight, style = 'relaxed') {
 
   const day2 = style === 'explorer' ? day2Explorer : style === 'indoor' ? day2Indoor : day2Relaxed;
 
-  return [
+  const basePlan = [
     { day:1, date:fmtDay(addDays(state.tripStartDate, 0)), title:'Arrive in KL', pill:day1.pill, items:day1.items },
     { day:2, date:fmtDay(addDays(state.tripStartDate, 1)), title:day2.title, pill:day2.pill, items:day2.items }
   ];
+  return mergeExtras(basePlan, state.extrasKL, KL_ACTIVITIES_LIBRARY);
 }
 
 function getLGKPlan(hotel, style = 'beach') {
@@ -3445,7 +3631,8 @@ function getLGKPlan(hotel, style = 'beach') {
     ]}
   ];
 
-  return style === 'adventure' ? adventurePlan : style === 'culture' ? culturePlan : beachPlan;
+  const basePlan = style === 'adventure' ? adventurePlan : style === 'culture' ? culturePlan : beachPlan;
+  return mergeExtras(basePlan, state.extrasLGK, LGK_ACTIVITIES_LIBRARY);
 }
 
 /* ==================================================
@@ -3462,6 +3649,8 @@ const state = {
   hotelLGK: null,
   planStyleKL: 'relaxed',
   planStyleLGK: 'beach',
+  extrasKL: [], // [{ id, day }]
+  extrasLGK: [], // [{ id, day }]
   todKL: 'all',
   todLGK: 'all',
   searchKL: '',
@@ -3558,6 +3747,46 @@ const LGK_PLAN_STYLES = {
   adventure: { name:'Adventure',       icon:'🛶', desc:'Island hop, SkyCab, snorkel — for older kids' },
   culture:   { name:'Culture & sights',icon:'🎭', desc:'Eagle Square, batik art, museums, Mahsuri Tomb' }
 };
+
+/* ========== ACTIVITY LIBRARY ========== */
+const KL_ACTIVITIES_LIBRARY = [
+  { id:'sunway-lagoon',      title:'Sunway Lagoon Theme Park',     desc:'Five parks in one — water park, wildlife, scream zone, extreme rides. Easily a half-day with kids.', emoji:'🎢', dur:'5-6 hours', priceRM:230, kids:5, area:'Bandar Sunway', bookQ:'sunway lagoon kuala lumpur tickets', wiki:'Sunway Lagoon Kuala Lumpur', photo:PHOTOS.pool },
+  { id:'petrosains',         title:'Petrosains Discovery Centre',  desc:'Interactive science museum inside Suria KLCC. Toddler zone, dinosaur exhibits, oil rig sim.', emoji:'🧪', dur:'2-3 hours', priceRM:36, kids:5, area:'KLCC', bookQ:'petrosains discovery centre tickets', wiki:'Petrosains KLCC science', photo:PHOTOS.aquaria },
+  { id:'kl-tower',           title:'KL Tower SkyDeck + Sky Box',   desc:'421m communications tower — Sky Box glass cube (only the brave!) + observation deck. Better view than Petronas.', emoji:'🗼', dur:'1.5 hours', priceRM:99, kids:4, area:'Bukit Nanas', bookQ:'kl tower observation deck tickets', wiki:'Kuala Lumpur Tower', photo:PHOTOS.petronas },
+  { id:'batu-caves-tour',    title:'Batu Caves Half-Day Tour',     desc:'Iconic 272 rainbow steps, golden Murugan statue, limestone caves. 30 min from city.', emoji:'🛕', dur:'3-4 hours', priceRM:120, kids:4, area:'Batu Caves', bookQ:'batu caves half day tour', wiki:'Batu Caves stairs Murugan', photo:PHOTOS.batuCaves },
+  { id:'kl-bird-park',       title:'KL Bird Park (free-flight)',   desc:'World\'s largest free-flight walk-in aviary. 3,000 birds. Toddler-friendly walking paths.', emoji:'🦜', dur:'2-3 hours', priceRM:75, kids:5, area:'Lake Gardens', bookQ:'kl bird park tickets', wiki:'KL Bird Park Kuala Lumpur', photo:PHOTOS.birdPark },
+  { id:'royal-selangor',     title:'Royal Selangor Pewter Tour',   desc:'World\'s largest pewter factory — kids can hammer their own pewter dish. Lovely souvenir.', emoji:'🔨', dur:'2 hours', priceRM:60, kids:5, area:'Setapak', bookQ:'royal selangor visitor centre tour', wiki:'Royal Selangor pewter visitor centre', photo:PHOTOS.pavilion },
+  { id:'national-museum',    title:'National Museum (Muzium Negara)', desc:'Malaysia\'s history under one roof. Toy + traditional games hall fascinates kids.', emoji:'🏛️', dur:'2 hours', priceRM:5, kids:4, area:'KL Sentral', bookQ:'national museum kuala lumpur', wiki:'National Museum Malaysia', photo:PHOTOS.pavilion },
+  { id:'central-market',     title:'Central Market crafts',        desc:'Art deco market with Malay/Chinese/Indian craft stalls, batik painting demos, henna for kids.', emoji:'🎨', dur:'1.5 hours', priceRM:0, kids:4, area:'Pasar Seni', bookQ:'central market kuala lumpur tour', wiki:'Central Market Kuala Lumpur', photo:PHOTOS.jalanAlor },
+  { id:'putrajaya-trip',     title:'Putrajaya Day Trip + Lake Cruise', desc:'Federal admin capital with iconic pink mosque, futuristic architecture, lake boat ride. 45 min drive.', emoji:'⛴️', dur:'5-6 hours', priceRM:180, kids:4, area:'Putrajaya', bookQ:'putrajaya day tour kl', wiki:'Putra Mosque Putrajaya', photo:PHOTOS.pavilion },
+  { id:'genting-day',        title:'Genting Highlands Day Trip',   desc:'Cool mountain resort with indoor + outdoor theme parks, Sky Worlds. SkyCab cable car. 1 hr drive.', emoji:'⛰️', dur:'8 hours', priceRM:280, kids:5, area:'Genting Highlands', bookQ:'genting highlands theme park day trip', wiki:'Genting Highlands theme park', photo:PHOTOS.pool },
+  { id:'aquaria-extra',      title:'Aquaria KLCC (skip-the-line)', desc:'Indoor aquarium with shark tunnel, otters, electric eels. Stroller-friendly, AC.', emoji:'🐠', dur:'2-3 hours', priceRM:80, kids:5, area:'KLCC', bookQ:'aquaria klcc skip the line', wiki:'Aquaria KLCC aquarium', photo:PHOTOS.aquaria },
+  { id:'berjaya-tsq',        title:'Berjaya Times Square Theme Park', desc:'Indoor theme park — Asia\'s largest indoor coaster, kids\' zone, family rides. Great rain-day option.', emoji:'🎡', dur:'3-4 hours', priceRM:75, kids:5, area:'Bukit Bintang', bookQ:'berjaya times square theme park tickets', wiki:'Berjaya Times Square Theme Park', photo:PHOTOS.pool },
+  { id:'mid-valley',         title:'Mid Valley Megamall',          desc:'Massive mall with food court, indoor playground, IMAX. AC-heavy day escape.', emoji:'🛍️', dur:'3 hours', priceRM:0, kids:3, area:'Mid Valley', bookQ:'mid valley megamall', wiki:'Mid Valley Megamall', photo:PHOTOS.pavilion },
+  { id:'jadi-batek',         title:'Jadi Batek Workshop',          desc:'Batik painting class — kids paint their own scarf/canvas. Wonderful hands-on souvenir.', emoji:'🖌️', dur:'2 hours', priceRM:80, kids:5, area:'Ampang', bookQ:'jadi batek workshop kuala lumpur', wiki:'batik painting workshop', photo:PHOTOS.pavilion },
+  { id:'klcc-park-evening',  title:'KLCC Park Fountain Show',      desc:'Free water + light show every hour after dark. Best from KLCC Park lake bench. Stroller-friendly.', emoji:'⛲', dur:'1 hour', priceRM:0, kids:5, area:'KLCC', bookQ:'klcc park fountain show', wiki:'KLCC Park Kuala Lumpur', photo:PHOTOS.klccPark },
+  { id:'bukit-bintang-walk', title:'Bukit Bintang Walking Street', desc:'Pedestrianized food + shopping zone. Lights, street performers, food trucks. Evenings are magic.', emoji:'🚶', dur:'2 hours', priceRM:0, kids:4, area:'Bukit Bintang', bookQ:'bukit bintang walking street', wiki:'Bukit Bintang Kuala Lumpur', photo:PHOTOS.jalanAlor }
+];
+
+const LGK_ACTIVITIES_LIBRARY = [
+  { id:'skycab',             title:'SkyCab Cable Car + SkyBridge', desc:'World\'s steepest cable car to Mt Mat Cincang. Curved SkyBridge. WARNING: steep + scary — assess kids first.', emoji:'🚠', dur:'3 hours', priceRM:120, kids:3, area:'Pantai Kok', bookQ:'langkawi skycab cable car tickets', wiki:'Langkawi SkyCab cable car', photo:PHOTOS.petronas },
+  { id:'pulau-payar',        title:'Pulau Payar Marine Park Snorkel', desc:'Best snorkeling in the region. Floating platform — even toddlers can splash in shallow coral pools.', emoji:'🐟', dur:'6 hours', priceRM:380, kids:4, area:'Pulau Payar', bookQ:'pulau payar marine park snorkel', wiki:'Pulau Payar Marine Park', photo:PHOTOS.underwater },
+  { id:'mangrove-tour',      title:'Kilim Mangrove + Eagle Tour',  desc:'4hr private covered boat — limestone caves, eagle feeding, mangrove canopy. Toddler-safe.', emoji:'🦅', dur:'4 hours', priceRM:380, kids:5, area:'Kilim Geoforest', bookQ:'langkawi mangrove eagle tour', wiki:'Kilim Karst Geoforest Park', photo:PHOTOS.mangrove },
+  { id:'island-hop',         title:'Island Hopping Tour (3 islands)', desc:'Pulau Dayang Bunting (Pregnant Maiden Lake) + Eagle Feeding + Pulau Beras Basah.', emoji:'⛵', dur:'4 hours', priceRM:180, kids:4, area:'Kuah jetty', bookQ:'langkawi island hopping tour', wiki:'Langkawi island hopping', photo:PHOTOS.beach },
+  { id:'underwater-world',   title:'Underwater World Langkawi',    desc:'Indoor aquarium at Pantai Cenang — penguins, rainforest dome. AC-heavy afternoon escape.', emoji:'🐧', dur:'2-3 hours', priceRM:48, kids:5, area:'Pantai Cenang', bookQ:'underwater world langkawi tickets', wiki:'Underwater World Langkawi', photo:PHOTOS.underwater },
+  { id:'wildlife-park',      title:'Langkawi Wildlife Park',       desc:'Walk-through aviary + petting zoo. Hands-on, toddler-friendly. AC reptile house.', emoji:'🦒', dur:'2-3 hours', priceRM:55, kids:5, area:'Kuah', bookQ:'langkawi wildlife park tickets', wiki:'Langkawi Wildlife Park', photo:PHOTOS.birdPark },
+  { id:'crocodile-park',     title:'Crocodile Adventureland',      desc:'200+ crocodiles, feeding shows, jumping crocs. Safe viewing, big thrill for kids.', emoji:'🐊', dur:'2 hours', priceRM:50, kids:5, area:'Teluk Datai', bookQ:'langkawi crocodile adventureland tickets', wiki:'Crocodile Adventureland Langkawi', photo:PHOTOS.mangrove },
+  { id:'atma-alam',          title:'Atma Alam Batik Art Village',  desc:'Kids paint their own batik fabric — they take a real souvenir they made. Trip highlight.', emoji:'🎨', dur:'2 hours', priceRM:60, kids:5, area:'Padang Matsirat', bookQ:'atma alam batik village langkawi', wiki:'batik painting workshop Langkawi', photo:PHOTOS.eagleSquare },
+  { id:'mahsuri-tomb',       title:'Mahsuri\'s Tomb (Makam Mahsuri)', desc:'The cursed princess of Langkawi — legend says her wrongful execution cursed the island for 7 generations.', emoji:'🪦', dur:'1 hour', priceRM:15, kids:3, area:'Ulu Melaka', bookQ:'makam mahsuri tomb langkawi', wiki:'Mahsuri Langkawi tomb', photo:PHOTOS.eagleSquare },
+  { id:'galeria-perdana',    title:'Galeria Perdana (Dr. Mahathir Museum)', desc:'Surprisingly fun — toy cars, models, gifts from world leaders. Air-conditioned, free admission.', emoji:'🏛️', dur:'1.5 hours', priceRM:10, kids:4, area:'Air Hangat', bookQ:'galeria perdana langkawi', wiki:'Galeria Perdana Langkawi', photo:PHOTOS.pavilion },
+  { id:'eagle-square',       title:'Eagle Square (Dataran Lang)',  desc:'Iconic 12m red eagle statue. 30-min photo stop + waterfront stroll. Easy with strollers.', emoji:'🦅', dur:'45 min', priceRM:0, kids:4, area:'Kuah', bookQ:'dataran lang eagle square langkawi', wiki:'Dataran Lang Langkawi eagle', photo:PHOTOS.eagleSquare },
+  { id:'pantai-cenang',      title:'Pantai Cenang Beach + sunset', desc:'KL\'s favorite family beach. Soft sand, calm waves, sunset food trucks. Stroller-friendly.', emoji:'🏖️', dur:'3 hours', priceRM:0, kids:5, area:'Pantai Cenang', bookQ:'pantai cenang beach langkawi', wiki:'Pantai Cenang Langkawi', photo:PHOTOS.pantaiCenang },
+  { id:'sunset-cruise',      title:'Sunset Cruise (kid-friendly)', desc:'2hr catamaran cruise — calm waters, soft drinks, sunset over Mat Cincang mountain.', emoji:'⛴️', dur:'2.5 hours', priceRM:220, kids:4, area:'Kuah jetty', bookQ:'langkawi sunset dinner cruise', wiki:'Langkawi sunset cruise', photo:PHOTOS.sunset },
+  { id:'air-hangat',         title:'Air Hangat Hot Springs Village', desc:'Natural sulphuric hot springs. Foot soak pools (kid-safe). Cultural performances.', emoji:'♨️', dur:'1.5 hours', priceRM:30, kids:4, area:'Air Hangat', bookQ:'air hangat village langkawi', wiki:'Air Hangat Village Langkawi', photo:PHOTOS.mangrove },
+  { id:'3d-art-museum',      title:'Art in Paradise 3D Museum',    desc:'200+ optical illusion paintings. Kids love posing inside the artworks. Big phone-camera fun.', emoji:'🖼️', dur:'2 hours', priceRM:55, kids:5, area:'Kuah', bookQ:'art in paradise langkawi 3d museum', wiki:'Art in Paradise 3D museum', photo:PHOTOS.pavilion },
+  { id:'rice-museum',        title:'Laman Padi (Rice Museum)',     desc:'Rice paddy fields + interactive farming. Kids can wade in the paddy. Free admission.', emoji:'🌾', dur:'1 hour', priceRM:0, kids:5, area:'Pantai Cenang', bookQ:'laman padi rice museum langkawi', wiki:'Laman Padi Langkawi rice', photo:PHOTOS.mangrove },
+  { id:'tanjung-rhu-beach',  title:'Tanjung Rhu Beach',            desc:'The prettiest beach in Malaysia — white sand, calm shallow water, casuarina trees. Quieter than Cenang.', emoji:'🌴', dur:'3 hours', priceRM:0, kids:5, area:'Tanjung Rhu', bookQ:'tanjung rhu beach langkawi', wiki:'Tanjung Rhu beach Langkawi', photo:PHOTOS.beach }
+];
 
 function findFlightKL(id) {
   for (const c of ['BLR','BOM']) {
@@ -3715,7 +3944,7 @@ function renderHotelMap(stateKey) {
               <div class="gmap-sb-body">
                 <div class="gmap-sb-brand ${h.brand === 'accor' ? 'accor' : ''}">${h.group}</div>
                 <div class="gmap-sb-name">${h.name}</div>
-                <div class="gmap-sb-meta">${h.area} · ${h.price}/night · ${'★'.repeat(h.stars)}</div>
+                <div class="gmap-sb-meta">${h.area} · ${priceWithINR(h.price)}/night · ${'★'.repeat(h.stars)}</div>
                 <div class="gmap-sb-dist">
                   <span title="From airport">✈ ${apDist.km} km</span>
                   <span title="From city center">🏙 ${h.distance.km} km</span>
@@ -3880,6 +4109,8 @@ function startPlanning() {
   state.hotelLGK = null;
   state.planStyleKL = 'relaxed';
   state.planStyleLGK = 'beach';
+  state.extrasKL = [];
+  state.extrasLGK = [];
   goTo('flightKL');
 }
 
@@ -3983,7 +4214,7 @@ function renderHotels(list, mountId, stateKey, nextBtnId, filterBrandKey, filter
         <div class="hotel-meta-row">
           <span class="hotel-area">📍 ${h.area}</span>
           <span class="dot">·</span>
-          <span class="hotel-price">${h.price}/night</span>
+          <span class="hotel-price">${priceWithINR(h.price)}/night</span>
         </div>
         <div class="distance-row">
           <span class="icon-dot">${h.distance.mode === 'walk' ? '🚶' : '🚗'}</span>
@@ -4058,7 +4289,9 @@ function renderPlanKL() {
   const plan = getKLPlan(hotel, flight, state.planStyleKL);
   const sty = KL_PLAN_STYLES[state.planStyleKL];
   document.getElementById('planKL-sub').innerHTML = `<strong style="color:var(--brand)">${sty.icon} ${sty.name}</strong> · ${hotel.name} · arriving ${flight.airline} ${flight.no} at ${flight.arr}.`;
-  document.getElementById('planKLContent').innerHTML = plan.map(d => renderDay(d)).join('');
+  document.getElementById('planKLContent').innerHTML =
+    plan.map(d => renderDay(d)).join('') +
+    renderActivityLibrary('KL', KL_ACTIVITIES_LIBRARY, plan);
 }
 
 function setPlanStyleKL(style) {
@@ -4072,12 +4305,83 @@ function renderPlanLGK() {
   if (!hotel) return;
   renderPlanStyleTabs('planStyleTabsLGK', LGK_PLAN_STYLES, state.planStyleLGK, 'setPlanStyleLGK');
   const plan = getLGKPlan(hotel, state.planStyleLGK);
-  document.getElementById('planLGKContent').innerHTML = plan.map(d => renderDay(d)).join('');
+  document.getElementById('planLGKContent').innerHTML =
+    plan.map(d => renderDay(d)).join('') +
+    renderActivityLibrary('LGK', LGK_ACTIVITIES_LIBRARY, plan);
 }
 
 function setPlanStyleLGK(style) {
   state.planStyleLGK = style;
   renderPlanLGK();
+}
+
+function renderActivityLibrary(slot, library, plan) {
+  const extrasKey = slot === 'KL' ? 'extrasKL' : 'extrasLGK';
+  const extras = state[extrasKey] || [];
+  const addedIds = new Set(extras.map(e => e.id));
+  // Sort library: not-added first (alphabetical), then added ones at the end
+  const sorted = [...library].sort((a, b) => {
+    const aa = addedIds.has(a.id) ? 1 : 0;
+    const bb = addedIds.has(b.id) ? 1 : 0;
+    if (aa !== bb) return aa - bb;
+    return a.title.localeCompare(b.title);
+  });
+  return `
+    <div class="lib-section">
+      <div class="lib-head">
+        <div>
+          <h3 class="lib-title">＋ Activity library</h3>
+          <p class="lib-sub">Tap "Add to Day X" to add any of these to your itinerary above.</p>
+        </div>
+        ${extras.length > 0 ? `<button class="lib-clear" onclick="clearExtras('${slot}')">Clear all (${extras.length})</button>` : ''}
+      </div>
+      <div class="lib-grid">
+        ${sorted.map(a => {
+          const added = extras.find(e => e.id === a.id);
+          return `
+          <div class="lib-card ${added ? 'is-added' : ''}">
+            <div class="lib-emoji">${a.emoji}</div>
+            <div class="lib-body">
+              <div class="lib-name">${a.title}
+                <a class="g-link g-mini" href="${googleSearchURL(a.title + ' Malaysia')}" target="_blank" rel="noopener" title="Search on Google" onclick="event.stopPropagation();">${ICONS.google}</a>
+              </div>
+              <div class="lib-meta">${a.area} · ${a.dur} · ${a.priceRM ? 'RM ' + a.priceRM + ' <span class="inr-sub">≈ ' + fmtINR(rmToInr(a.priceRM)) + '</span>' : '<strong style="color:var(--success);">Free</strong>'}</div>
+              <div class="lib-desc">${a.desc}</div>
+              <div class="lib-kids">Kid friendly ${'⭐'.repeat(a.kids)}</div>
+              <div class="lib-actions">
+                ${added ?
+                  `<span class="lib-added-tag">✓ Added to Day ${added.day}</span>
+                   <button class="lib-remove" onclick="removeExtra('${slot}','${a.id}')">Remove</button>` :
+                  plan.map(d => `<button class="lib-add" onclick="addExtra('${slot}','${a.id}',${d.day})">Add to Day ${d.day}</button>`).join('')
+                }
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function addExtra(slot, activityId, day) {
+  const key = slot === 'KL' ? 'extrasKL' : 'extrasLGK';
+  state[key] = (state[key] || []).filter(e => e.id !== activityId);
+  state[key].push({ id: activityId, day });
+  showToast(`✓ Added to Day ${day}`);
+  if (slot === 'KL') renderPlanKL(); else renderPlanLGK();
+}
+
+function removeExtra(slot, activityId) {
+  const key = slot === 'KL' ? 'extrasKL' : 'extrasLGK';
+  state[key] = (state[key] || []).filter(e => e.id !== activityId);
+  if (slot === 'KL') renderPlanKL(); else renderPlanLGK();
+}
+
+function clearExtras(slot) {
+  const key = slot === 'KL' ? 'extrasKL' : 'extrasLGK';
+  state[key] = [];
+  if (slot === 'KL') renderPlanKL(); else renderPlanLGK();
+  showToast('Cleared added activities');
 }
 
 function renderDay(d) {
@@ -4139,7 +4443,7 @@ function renderSummary() {
     <div class="summary-card">
       <div class="lbl">🏨 Stay in KL</div>
       <div class="val">${hKL ? hKL.name : '—'}</div>
-      <div class="sub">${hKL ? `${hKL.group} · ${hKL.area} · ${hKL.price}/night × 2 nights` : ''}</div>
+      <div class="sub">${hKL ? `${hKL.group} · ${hKL.area} · ${priceWithINR(hKL.price)}/night × 2 nights` : ''}</div>
     </div>
     <div class="summary-card">
       <div class="lbl">✈ Flight to Langkawi</div>
@@ -4149,7 +4453,7 @@ function renderSummary() {
     <div class="summary-card">
       <div class="lbl">🏝 Stay in Langkawi</div>
       <div class="val">${hLGK ? hLGK.name : '—'}</div>
-      <div class="sub">${hLGK ? `${hLGK.group} · ${hLGK.area} · ${hLGK.price}/night × 3 nights` : ''}</div>
+      <div class="sub">${hLGK ? `${hLGK.group} · ${hLGK.area} · ${priceWithINR(hLGK.price)}/night × 3 nights` : ''}</div>
     </div>
   `;
 }
@@ -4170,7 +4474,9 @@ function saveItinerary() {
       flightLGK: state.flightLGK,
       hotelLGK: state.hotelLGK,
       planStyleKL: state.planStyleKL || 'relaxed',
-      planStyleLGK: state.planStyleLGK || 'beach'
+      planStyleLGK: state.planStyleLGK || 'beach',
+      extrasKL: [...(state.extrasKL || [])],
+      extrasLGK: [...(state.extrasLGK || [])]
     };
     list.unshift(newPlan);
     saveSaved(list);
@@ -4346,7 +4652,7 @@ function renderViewPlan(plan) {
       <div class="vp-trip-card" onclick="openDetail('hotel', '${plan.hotelKL || ''}')">
         <div class="vt-eyebrow">${ICONS.building} Stay · Kuala Lumpur (2 nights)</div>
         <h4>${h1 ? h1.name : 'Not selected'}</h4>
-        <div class="vt-meta">${h1 ? `${h1.area} · ${h1.price}/night` : '—'}</div>
+        <div class="vt-meta">${h1 ? `${h1.area} · ${priceWithINR(h1.price)}/night` : '—'}</div>
         <div class="vt-click">Tap for booking links →</div>
       </div>
       <div class="vp-trip-card" onclick="openDetail('flight', '${plan.flightLGK || ''}')">
@@ -4358,7 +4664,7 @@ function renderViewPlan(plan) {
       <div class="vp-trip-card" onclick="openDetail('hotel', '${plan.hotelLGK || ''}')">
         <div class="vt-eyebrow">${ICONS.palm} Stay · Langkawi (3 nights)</div>
         <h4>${h2 ? h2.name : 'Not selected'}</h4>
-        <div class="vt-meta">${h2 ? `${h2.area} · ${h2.price}/night` : '—'}</div>
+        <div class="vt-meta">${h2 ? `${h2.area} · ${priceWithINR(h2.price)}/night` : '—'}</div>
         <div class="vt-click">Tap for booking links →</div>
       </div>
     </div>
@@ -4468,7 +4774,7 @@ function openDetail(type, id) {
           <a class="g-link" href="${googleSearchURL(h.name + ' ' + h.area + ' Malaysia')}" target="_blank" rel="noopener" title="Search on Google">${ICONS.google}</a>
         </div>
         <h2>${h.name}</h2>
-        <div class="detail-meta"><strong>${h.group}</strong> · ${h.price}/night</div>
+        <div class="detail-meta"><strong>${h.group}</strong> · ${priceWithINR(h.price)}/night</div>
         <p>${h.desc}</p>
         <div class="detail-tags">${h.amenities.slice(0,5).map(a => `<span class="amenity-pill">${a}</span>`).join('')}</div>
         <h3>Book this hotel</h3>
@@ -4636,6 +4942,8 @@ function loadPlan(id) {
     state.hotelLGK = p.hotelLGK;
     state.planStyleKL = p.planStyleKL || 'relaxed';
     state.planStyleLGK = p.planStyleLGK || 'beach';
+    state.extrasKL = Array.isArray(p.extrasKL) ? [...p.extrasKL] : [];
+    state.extrasLGK = Array.isArray(p.extrasLGK) ? [...p.extrasLGK] : [];
     renderViewPlan(p);
     goTo('viewPlan');
   } catch (err) {
@@ -4724,6 +5032,8 @@ function checkSharedURL() {
   state.hotelLGK = plan.hotelLGK;
   state.planStyleKL = plan.planStyleKL || 'relaxed';
   state.planStyleLGK = plan.planStyleLGK || 'beach';
+  state.extrasKL = Array.isArray(plan.extrasKL) ? [...plan.extrasKL] : [];
+  state.extrasLGK = Array.isArray(plan.extrasLGK) ? [...plan.extrasLGK] : [];
   state._sharedPlan = plan;
   renderViewPlan(plan);
   goTo('viewPlan');
