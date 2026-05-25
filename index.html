@@ -1811,6 +1811,48 @@
     line-height: 1.4;
   }
 
+  /* GOOGLE SEARCH ICON */
+  .g-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 50%;
+    transition: all .2s ease;
+    flex-shrink: 0;
+    text-decoration: none;
+    line-height: 1;
+  }
+  .g-link:hover {
+    border-color: #4285f4;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.25);
+  }
+  .g-link svg { width: 16px; height: 16px; }
+  .g-link.g-mini { width: 26px; height: 26px; }
+  .g-link.g-mini svg { width: 13px; height: 13px; }
+  .g-link.g-corner {
+    position: absolute;
+    top: 8px; right: 8px;
+    z-index: 4;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-color: transparent;
+  }
+
+  /* Hotel header row with name + google icon */
+  .hotel-card h3,
+  .strip-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  .h3-text { flex: 1; min-width: 0; }
+
   /* HOTEL VIEW TOGGLE (List ↔ Map) */
   .view-toggle {
     display: inline-flex;
@@ -3061,29 +3103,42 @@ const hotelsLGK = [
    ITINERARY GENERATOR
    ================================================== */
 
-// All photo URLs use the picsum service which is guaranteed to load,
-// seeded so each scene gets a consistent (but different) image.
+// Real photos via Loremflickr — fetches a real Flickr image matching the tags.
+// First entry is the primary tag, "all" forces match-all so the photo is on-topic.
+const lfk = (tags) => `https://loremflickr.com/800/500/${tags}/all`;
 const PHOTOS = {
-  airport: 'https://picsum.photos/seed/klairport/600/400',
-  hotel: 'https://picsum.photos/seed/hotelkl/600/400',
-  pool: 'https://picsum.photos/seed/poolresort/600/400',
-  petronas: 'https://picsum.photos/seed/petronas/600/400',
-  klccPark: 'https://picsum.photos/seed/klccpark/600/400',
-  aquaria: 'https://picsum.photos/seed/aquaria/600/400',
-  jalanAlor: 'https://picsum.photos/seed/jalanalor/600/400',
-  pavilion: 'https://picsum.photos/seed/pavilionkl/600/400',
-  batuCaves: 'https://picsum.photos/seed/batucaves/600/400',
-  birdPark: 'https://picsum.photos/seed/birdpark/600/400',
-  indianFood: 'https://picsum.photos/seed/indianfood/600/400',
-  beach: 'https://picsum.photos/seed/lgkbeach/600/400',
-  mangrove: 'https://picsum.photos/seed/mangrove/600/400',
-  underwater: 'https://picsum.photos/seed/underwater/600/400',
-  pantaiCenang: 'https://picsum.photos/seed/pantaicenang/600/400',
-  sunset: 'https://picsum.photos/seed/lgksunset/600/400',
-  eagleSquare: 'https://picsum.photos/seed/eaglesquare/600/400',
-  islandFood: 'https://picsum.photos/seed/islandfood/600/400',
-  airplane: 'https://picsum.photos/seed/airplane/600/400'
+  airport:      lfk('kuala,lumpur,airport,klia'),
+  hotel:        lfk('hotel,lobby,malaysia'),
+  pool:         lfk('hotel,pool,resort'),
+  petronas:     lfk('petronas,towers,kuala,lumpur'),
+  klccPark:     lfk('klcc,park,fountain,kuala,lumpur'),
+  aquaria:      lfk('aquarium,fish,tunnel'),
+  jalanAlor:    lfk('jalan,alor,street,food,kuala,lumpur'),
+  pavilion:     lfk('pavilion,mall,kuala,lumpur'),
+  batuCaves:    lfk('batu,caves,malaysia,steps'),
+  birdPark:     lfk('bird,park,kuala,lumpur'),
+  indianFood:   lfk('south,indian,thali,dosa'),
+  beach:        lfk('langkawi,beach,malaysia'),
+  mangrove:     lfk('mangrove,langkawi,kilim'),
+  underwater:   lfk('underwater,world,langkawi,aquarium'),
+  pantaiCenang: lfk('pantai,cenang,beach,langkawi'),
+  sunset:       lfk('langkawi,sunset,beach'),
+  eagleSquare:  lfk('eagle,square,langkawi,dataran,lang'),
+  islandFood:   lfk('malaysian,food,nasi,kandar'),
+  airplane:     lfk('airplane,malaysia,airlines')
 };
+
+function loremFallback(name) {
+  const tags = (name||'').toLowerCase().replace(/[^a-z0-9\s-]/g,'').split(/\s+/).filter(Boolean).slice(0,5).join(',');
+  return `https://loremflickr.com/800/500/${tags || 'malaysia,hotel'}`;
+}
+
+function googleSearchURL(q) {
+  return `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+}
+function googleImageURL(q) {
+  return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q)}`;
+}
 
 function getKLPlan(hotel, flight, style = 'relaxed') {
   const arrTime = parseInt(flight.arr.split(':')[0]);
@@ -3322,7 +3377,9 @@ const ICONS = {
   clock:      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
   eye:        '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
   trash:      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6l-1.5 14a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>',
-  share:      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>'
+  share:      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>',
+  // Google "G" mark (uses currentColor for line, but Google brand colors look better in CSS)
+  google:     '<svg viewBox="0 0 24 24" width="14" height="14"><path fill="#4285F4" d="M22.5 12.27c0-.79-.07-1.54-.2-2.27H12v4.3h5.92a5.07 5.07 0 0 1-2.2 3.33v2.77h3.56c2.08-1.92 3.28-4.74 3.28-8.13z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.77c-.99.66-2.25 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1A6.6 6.6 0 0 1 5.49 12c0-.73.13-1.44.35-2.1V7.05H2.18a11 11 0 0 0 0 9.9l3.66-2.85z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.05L5.84 9.9C6.71 7.3 9.14 5.38 12 5.38z"/></svg>'
 };
 
 function planDateRange(plan) {
@@ -3535,7 +3592,7 @@ function renderHotelMap(stateKey) {
     const isSelected = state[stateKey] === h.id;
     marker.bindPopup(`
       <div class="map-popup">
-        <div class="map-popup-photo"><img src="${h.photo}" alt="${h.name}" onerror="this.onerror=null;this.src='https://picsum.photos/seed/${h.id}/400/300';" /></div>
+        <div class="map-popup-photo"><img src="${h.photo}" alt="${h.name}" onerror="this.onerror=null;this.src='${loremFallback(h.name)}';" /></div>
         <div class="map-popup-body">
           <h4>${h.name}</h4>
           <div class="map-popup-meta">${h.group} · ${h.area}</div>
@@ -3790,14 +3847,17 @@ function renderHotels(list, mountId, stateKey, nextBtnId, filterBrandKey, filter
   m.innerHTML = filtered.map(h => `
     <div class="hotel-card ${state[stateKey] === h.id ? 'selected' : ''}" data-id="${h.id}" onclick="selectHotel('${stateKey}', '${h.id}', '${nextBtnId}')">
       <div class="hotel-image">
-        <img src="${h.photo}" alt="${h.name}" loading="lazy" onerror="this.onerror=null; this.src='https://picsum.photos/seed/${h.id}/800/500';" />
+        <img src="${h.photo}" alt="${h.name}" loading="lazy" onerror="this.onerror=null; this.src='${loremFallback(h.name)}';" />
         <span class="brand-badge ${h.brand === 'accor' ? 'accor' : ''}">${h.group}</span>
         <span class="stars-badge">${'★'.repeat(h.stars)}</span>
         ${h.familyPick ? '<span class="family-pick">Family pick</span>' : ''}
         <span class="selected-tick">✓</span>
       </div>
       <div class="hotel-body">
-        <h3>${h.name}</h3>
+        <h3>
+          <span class="h3-text">${h.name}</span>
+          <a class="g-link" href="${googleSearchURL(h.name + ' ' + h.area + ' Malaysia')}" target="_blank" rel="noopener" onclick="event.stopPropagation();" title="Search '${h.name}' on Google">${ICONS.google}</a>
+        </h3>
         <div class="hotel-meta-row">
           <span class="hotel-area">📍 ${h.area}</span>
           <span class="dot">·</span>
@@ -4203,7 +4263,8 @@ function renderDayStrip(d, dayIdx) {
             return `
               <div class="strip-card tag-${tagType}" onclick="openDetail('activity', '${dayIdx}-${itemIdx}')">
                 <div class="strip-photo">
-                  ${i.photo ? `<img src="${i.photo}" alt="${i.title}" loading="lazy" onerror="this.onerror=null; this.src='https://picsum.photos/seed/'+encodeURIComponent('${(i.title||'').replace(/'/g, '')}')+'/400/300';" />` : ''}
+                  ${i.photo ? `<img src="${i.photo}" alt="${i.title}" loading="lazy" onerror="this.onerror=null; this.src='${loremFallback(i.title)}';" />` : ''}
+                  <a class="g-link g-corner g-mini" href="${googleSearchURL((i.title||'') + ' ' + ((i.title||'').toLowerCase().includes('langkawi') || (i.title||'').toLowerCase().includes('lgk') || (i.title||'').toLowerCase().includes('mangrove') || (i.title||'').toLowerCase().includes('cenang') ? 'Langkawi' : 'Kuala Lumpur'))}" target="_blank" rel="noopener" onclick="event.stopPropagation();" title="Search '${(i.title||'').replace(/'/g,'')}' on Google">${ICONS.google}</a>
                 </div>
                 <div class="strip-body">
                   <div class="strip-time">
@@ -4259,10 +4320,14 @@ function openDetail(type, id) {
   } else if (type === 'hotel') {
     const h = hotelsKL.find(x => x.id === id) || hotelsLGK.find(x => x.id === id);
     if (!h) { showToast('Hotel not found'); return; }
+    const fallback = loremFallback(h.name);
     html = `
-      <div class="detail-hero" style="background-image:url('${h.photo}'), url('https://picsum.photos/seed/${h.id}/800/500');"></div>
+      <div class="detail-hero" style="background-image:url('${h.photo}'), url('${fallback}');"></div>
       <div class="detail-body">
-        <span class="detail-eyebrow">${'★'.repeat(h.stars)} · ${h.area}</span>
+        <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:6px;">
+          <span class="detail-eyebrow" style="margin-bottom:0;">${'★'.repeat(h.stars)} · ${h.area}</span>
+          <a class="g-link" href="${googleSearchURL(h.name + ' ' + h.area + ' Malaysia')}" target="_blank" rel="noopener" title="Search on Google">${ICONS.google}</a>
+        </div>
         <h2>${h.name}</h2>
         <div class="detail-meta"><strong>${h.group}</strong> · ${h.price}/night</div>
         <p>${h.desc}</p>
@@ -4275,11 +4340,14 @@ function openDetail(type, id) {
     const day = _currentPlanDays[d];
     const item = day && day.items[i];
     if (!item) { showToast('Activity not found'); return; }
-    const fallbackPhoto = `https://picsum.photos/seed/${encodeURIComponent((item.title||'').replace(/'/g,''))}/800/500`;
+    const fallback = loremFallback(item.title);
     html = `
-      <div class="detail-hero" style="background-image:url('${item.photo || fallbackPhoto}'), url('${fallbackPhoto}');"></div>
+      <div class="detail-hero" style="background-image:url('${item.photo || fallback}'), url('${fallback}');"></div>
       <div class="detail-body">
-        <span class="detail-eyebrow">${day.date} · Day ${day.day} · ${item.label}</span>
+        <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:6px;">
+          <span class="detail-eyebrow" style="margin-bottom:0;">${day.date} · Day ${day.day} · ${item.label}</span>
+          <a class="g-link" href="${googleSearchURL(item.title + ' Malaysia')}" target="_blank" rel="noopener" title="Search on Google">${ICONS.google}</a>
+        </div>
         <h2>${item.title}</h2>
         <div class="detail-meta"><strong>${item.time}</strong></div>
         <p>${item.desc}</p>
@@ -4342,8 +4410,8 @@ function renderSaved() {
     const stale = (!fKL && p.flightKL) || (!hKL && p.hotelKL) || (!fLGK && p.flightLGK) || (!hLGK && p.hotelLGK);
     const d = new Date(p.saved);
     const dep = p.departureCity || 'BLR';
-    const klImg = hKL ? hKL.photo : 'https://picsum.photos/seed/kuala-lumpur/400/300';
-    const lgkImg = hLGK ? hLGK.photo : 'https://picsum.photos/seed/langkawi/400/300';
+    const klImg = hKL ? hKL.photo : lfk('kuala,lumpur,skyline,malaysia');
+    const lgkImg = hLGK ? hLGK.photo : lfk('langkawi,beach,malaysia');
     const klStyle = KL_PLAN_STYLES[p.planStyleKL || 'relaxed'] || KL_PLAN_STYLES.relaxed;
     const lgkStyle = LGK_PLAN_STYLES[p.planStyleLGK || 'beach'] || LGK_PLAN_STYLES.beach;
     return `
@@ -4358,14 +4426,14 @@ function renderSaved() {
         </div>
         <div class="sc-thumbs">
           <div class="sc-thumb">
-            <img src="${klImg}" alt="${hKL ? hKL.name : 'KL'}" onerror="this.onerror=null;this.src='https://picsum.photos/seed/${p.hotelKL || 'kl'}/400/300';" />
+            <img src="${klImg}" alt="${hKL ? hKL.name : 'KL'}" onerror="this.onerror=null;this.src='${loremFallback(hKL ? hKL.name : 'kuala lumpur skyline')}';" />
             <div class="sc-thumb-overlay">
               <div class="sc-thumb-tag">${ICONS.building} Kuala Lumpur · 2 nights</div>
               <div class="sc-thumb-name">${hKL ? hKL.name : 'Hotel not found'}</div>
             </div>
           </div>
           <div class="sc-thumb">
-            <img src="${lgkImg}" alt="${hLGK ? hLGK.name : 'Langkawi'}" onerror="this.onerror=null;this.src='https://picsum.photos/seed/${p.hotelLGK || 'lgk'}/400/300';" />
+            <img src="${lgkImg}" alt="${hLGK ? hLGK.name : 'Langkawi'}" onerror="this.onerror=null;this.src='${loremFallback(hLGK ? hLGK.name : 'langkawi beach')}';" />
             <div class="sc-thumb-overlay">
               <div class="sc-thumb-tag">${ICONS.palm} Langkawi · 3 nights</div>
               <div class="sc-thumb-name">${hLGK ? hLGK.name : 'Resort not found'}</div>
