@@ -54,9 +54,15 @@
   }
   .header-inner {
     max-width: 1200px; margin: 0 auto;
-    padding: 18px 28px;
+    padding: 14px 20px;
     display: flex; align-items: center; justify-content: space-between;
-    gap: 24px;
+    gap: 14px;
+  }
+  @media (max-width: 640px) {
+    .header-inner { padding: 10px 14px; gap: 8px; }
+    .logo { font-size: 14px; }
+    .logo .logo-icon { font-size: 18px; }
+    .btn-ghost { padding: 7px 12px; font-size: 12.5px; }
   }
   .logo {
     display: flex; align-items: center; gap: 10px;
@@ -80,39 +86,86 @@
     min-width: 20px; text-align: center;
   }
 
-  /* PROGRESS */
+  /* PROGRESS (desktop) */
   .progress-bar {
     max-width: 1200px; margin: 0 auto;
-    padding: 18px 28px 0;
-    display: flex; gap: 8px; flex-wrap: wrap;
+    padding: 14px 28px 0;
+    display: flex; gap: 6px; flex-wrap: nowrap;
+    overflow-x: auto;
   }
   .progress-step {
     flex: 1; min-width: 90px;
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 14px;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 12px;
-    font-size: 13px;
+    border-radius: 10px;
+    font-size: 12px;
     transition: all .25s ease;
+    white-space: nowrap;
   }
   .progress-step.done { background: var(--brand-light); border-color: var(--brand); color: var(--brand); }
   .progress-step.current { background: var(--ink); color: #fff; border-color: var(--ink); }
   .progress-num {
-    width: 22px; height: 22px; border-radius: 50%;
+    width: 20px; height: 20px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     background: rgba(0,0,0,0.08);
-    font-weight: 700; font-size: 11px;
+    font-weight: 700; font-size: 10.5px;
     flex-shrink: 0;
   }
   .progress-step.done .progress-num { background: var(--brand); color: #fff; }
   .progress-step.current .progress-num { background: rgba(255,255,255,.2); color: #fff; }
   .progress-label { font-weight: 600; line-height: 1.2; }
+  @media (max-width: 720px) {
+    .progress-bar { display: none !important; }
+  }
+
+  /* PROGRESS (mobile compact) */
+  .progress-mobile {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px 0;
+    display: none;
+  }
+  @media (max-width: 720px) {
+    .progress-mobile { display: block; }
+  }
+  .pm-top {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .pm-label {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .pm-label strong {
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .pm-bar {
+    height: 4px;
+    background: var(--line);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .pm-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand), var(--brand-2));
+    border-radius: 999px;
+    transition: width .35s cubic-bezier(.16,1,.3,1);
+  }
 
   /* CONTAINER */
   .container {
     max-width: 1200px; margin: 0 auto;
-    padding: 40px 28px 130px; /* extra bottom for sticky step-nav */
+    padding: 32px 20px 130px; /* extra bottom for sticky step-nav */
+  }
+  @media (max-width: 640px) {
+    .container { padding: 18px 14px 120px; }
+  }
+  @media (max-width: 380px) {
+    .container { padding: 14px 12px 120px; }
   }
 
   /* SCREEN */
@@ -135,18 +188,23 @@
   .screen-head h2 {
     font-family: var(--serif);
     font-weight: 500;
-    font-size: clamp(28px, 4vw, 44px);
+    font-size: clamp(22px, 3.4vw, 36px);
     letter-spacing: -0.02em;
     line-height: 1.1;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
   .screen-head p {
     color: var(--ink-soft);
-    font-size: 16px;
+    font-size: 14.5px;
     max-width: 640px;
-    margin-bottom: 36px;
+    margin-bottom: 22px;
   }
   .screen-head .em { color: var(--brand); font-weight: 600; }
+  @media (max-width: 640px) {
+    .screen-head h2 { font-size: 22px; }
+    .screen-head p { font-size: 13px; margin-bottom: 16px; }
+    .screen-head { margin-bottom: 4px; }
+  }
 
   /* WELCOME */
   .welcome-hero {
@@ -156,27 +214,27 @@
       linear-gradient(135deg, #0c4a6e 0%, #0f766e 60%, #134e4a 100%);
     color: #fff;
     border-radius: var(--radius-lg);
-    padding: 44px 40px;
-    margin-bottom: 28px;
+    padding: 28px 32px;
+    margin-bottom: 18px;
     position: relative; overflow: hidden;
   }
   .welcome-hero::before {
     content: '🌴';
     position: absolute;
-    top: 18px; right: 28px;
-    font-size: 56px;
+    top: 12px; right: 18px;
+    font-size: 38px;
     opacity: 0.22;
     transform: rotate(-15deg);
   }
   .welcome-pill {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 5px 12px;
+    padding: 4px 11px;
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.25);
     border-radius: 999px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 500;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
   .welcome-pill .dot {
     width: 7px; height: 7px; background: #4ade80;
@@ -186,10 +244,10 @@
   .welcome-hero h1 {
     font-family: var(--serif);
     font-weight: 500;
-    font-size: clamp(28px, 4.2vw, 44px);
+    font-size: clamp(22px, 3.5vw, 34px);
     line-height: 1.05;
     letter-spacing: -0.025em;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
   .welcome-hero h1 .accent {
     background: linear-gradient(135deg, #fde68a, #fb923c);
@@ -199,42 +257,168 @@
     font-style: italic;
   }
   .welcome-hero p {
-    font-size: 15px;
+    font-size: 13.5px;
     color: rgba(255,255,255,0.85);
     max-width: 540px;
-    margin-bottom: 22px;
+    margin-bottom: 16px;
+    line-height: 1.4;
   }
   .welcome-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 8px;
     max-width: 600px;
   }
   .welcome-stat {
     background: rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 12px;
-    padding: 10px 12px;
+    border-radius: 10px;
+    padding: 8px 10px;
   }
   .welcome-stat .num {
     font-family: var(--serif);
-    font-size: 22px; font-weight: 600;
+    font-size: 18px; font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.1;
   }
   .welcome-stat .lbl {
-    font-size: 10.5px; opacity: 0.7;
+    font-size: 10px; opacity: 0.7;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     font-weight: 600;
     margin-top: 2px;
   }
   @media (max-width: 640px) {
-    .welcome-hero { padding: 32px 22px; }
-    .welcome-stats { grid-template-columns: repeat(2, 1fr); }
+    .welcome-hero { padding: 22px 18px; border-radius: 18px; }
+    .welcome-hero::before { font-size: 28px; top: 8px; right: 12px; }
+    .welcome-pill { font-size: 10.5px; padding: 3px 9px; margin-bottom: 8px; }
+    .welcome-hero h1 { font-size: 22px; margin-bottom: 6px; }
+    .welcome-hero p { font-size: 12.5px; margin-bottom: 12px; }
+    .welcome-stats { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .welcome-stat { padding: 6px 8px; }
+    .welcome-stat .num { font-size: 15px; }
+    .welcome-stat .lbl { font-size: 8.5px; }
   }
 
-  .start-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .start-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* TRIP SETUP (welcome screen) */
+  .trip-setup {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    margin-bottom: 18px;
+  }
+  .ts-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--brand);
+    margin-bottom: 14px;
+  }
+  .ts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  .ts-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .ts-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .ts-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ts-pill {
+    flex: 1;
+    min-width: 0;
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 1px;
+    padding: 10px 14px;
+    background: var(--bg);
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all .2s ease;
+    font-family: var(--font);
+  }
+  .ts-pill:hover { border-color: var(--ink); }
+  .ts-pill.active {
+    background: linear-gradient(135deg, var(--brand-light), #fff);
+    border-color: var(--brand);
+  }
+  .ts-pill-code {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .ts-pill.active .ts-pill-code { color: var(--brand); }
+  .ts-pill-name {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .ts-date {
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .ts-date:focus, .ts-date:hover { border-color: var(--brand); outline: none; }
+  .ts-return {
+    padding: 12px 14px;
+    background: var(--bg-tint);
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .ts-return strong { color: var(--ink); font-weight: 700; }
+  @media (max-width: 720px) {
+    .ts-grid { grid-template-columns: 1fr; gap: 12px; }
+    .trip-setup { padding: 18px; }
+  }
+
+  /* TRIP RECAP (on flight screen) */
+  .trip-recap {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--brand-light);
+    border: 1px solid var(--brand);
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .tr-item { font-size: 13.5px; color: var(--ink-soft); display: flex; gap: 6px; align-items: baseline; }
+  .tr-lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .tr-item strong { color: var(--brand); font-weight: 700; font-size: 14px; }
+  .tr-edit {
+    margin-left: auto;
+    padding: 5px 12px;
+    background: #fff;
+    border: 1px solid var(--brand);
+    color: var(--brand);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .tr-edit:hover { background: var(--brand); color: #fff; }
+
+  .btn-big { padding: 18px 32px; font-size: 16px; }
 
   .btn-primary {
     background: var(--ink);
@@ -428,10 +612,16 @@
 
   /* FILTERS */
   .filters {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin-bottom: 24px;
-    padding-bottom: 20px;
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 18px;
+    padding-bottom: 16px;
     border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 640px) {
+    .filters { gap: 5px; padding-bottom: 12px; margin-bottom: 14px; }
+    .chip { padding: 7px 12px; font-size: 12px; }
+    .filter-label { font-size: 11px; padding: 7px 0; }
+    .time-filter-row { padding: 10px 12px; margin-bottom: 14px; }
   }
   .filter-label {
     font-size: 12px; font-weight: 700;
@@ -1494,8 +1684,8 @@
     background: linear-gradient(135deg, #0c4a6e 0%, #0f766e 60%, #134e4a 100%);
     color: #fff;
     border-radius: var(--radius-lg);
-    padding: 28px 32px 16px;
-    margin-bottom: 22px;
+    padding: 20px 26px 12px;
+    margin-bottom: 18px;
     position: relative;
     overflow: hidden;
   }
@@ -1511,36 +1701,44 @@
   .vp-hero-inner { position: relative; z-index: 1; }
   .vp-eyebrow {
     display: inline-block;
-    font-size: 10.5px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.14em;
-    padding: 4px 10px;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    padding: 3px 9px;
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.25);
     border-radius: 999px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   .vp-hero h2 {
     font-family: var(--serif);
-    font-size: clamp(22px, 3.2vw, 32px);
+    font-size: clamp(18px, 2.6vw, 26px);
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
   .vp-hero .vp-meta {
-    font-size: 13.5px;
+    font-size: 12.5px;
     color: rgba(255,255,255,0.75);
-    margin-bottom: 18px;
+    margin-bottom: 12px;
+    line-height: 1.4;
   }
   .flight-arc-wrap {
     width: 100%;
-    max-width: 640px;
+    max-width: 540px;
     margin: 0 auto;
   }
   .flight-arc {
     width: 100%;
-    height: 180px;
+    height: 130px;
     overflow: visible;
+  }
+  @media (max-width: 640px) {
+    .vp-hero { padding: 16px 18px 8px; border-radius: 16px; }
+    .vp-hero h2 { font-size: 17px; }
+    .vp-hero .vp-meta { font-size: 11.5px; margin-bottom: 8px; }
+    .flight-arc { height: 100px; }
+    .share-fab { font-size: 12px; padding: 8px 14px; }
   }
   .arc-city { fill: #fff; }
   .arc-city-ring { fill: rgba(255,255,255,0.2); }
@@ -2509,6 +2707,111 @@
     transform: translateX(-50%) translateY(0);
   }
 
+  /* ====================================================
+     MOBILE POLISH — overrides for ≤ 640px
+     ==================================================== */
+  @media (max-width: 640px) {
+    /* Section spacing */
+    .section { padding: 56px 0; }
+
+    /* Hotel cards — slightly more compact, image stays */
+    .hotel-image { height: 160px; }
+    .hotel-body { padding: 16px 16px 18px; gap: 8px; }
+    .hotel-card h3 { font-size: 17px; }
+    .hotel-meta-row { font-size: 12.5px; }
+    .hotel-desc { font-size: 13px; }
+    .distance-row { font-size: 12px; padding: 7px 10px; }
+    .amenity-pill { font-size: 11px; padding: 4px 9px; }
+    .veg-item .vname { font-size: 12px; }
+    .veg-item .vtype { font-size: 9.5px; padding: 2px 6px; }
+
+    /* Strip cards */
+    .strip-card { flex-basis: 200px; }
+    .strip-photo { height: 100px; }
+    .strip-time { font-size: 13px; }
+    .strip-title { font-size: 13.5px; }
+    .strip-body { padding: 14px 12px 12px; }
+    .vp-day-badge { width: 38px; height: 38px; font-size: 16px; border-width: 2px; }
+    .vp-day-title-wrap .vp-day-title { font-size: 16px; }
+    .vp-day-section { margin-bottom: 20px; }
+    .vp-day-header { margin-bottom: 10px; gap: 10px; }
+
+    /* Activity library cards */
+    .lib-section { padding: 18px; margin-top: 24px; }
+    .lib-title { font-size: 18px; }
+    .lib-sub { font-size: 12.5px; }
+    .lib-grid { grid-template-columns: 1fr; gap: 10px; }
+    .lib-card { padding: 14px; gap: 10px; }
+    .lib-emoji { width: 42px; height: 42px; font-size: 24px; border-radius: 10px; }
+    .lib-name { font-size: 14.5px; }
+    .lib-desc { font-size: 12px; }
+
+    /* Trip overview row */
+    .vp-trip-row { gap: 8px; grid-template-columns: 1fr 1fr; }
+    .vp-trip-card { padding: 12px; }
+    .vp-trip-card h4 { font-size: 14px; }
+    .vp-trip-card .vt-meta { font-size: 11.5px; }
+    .vp-trip-card .vt-eyebrow { font-size: 9.5px; }
+    .vp-trip-card .vt-click { font-size: 10.5px; }
+
+    /* Step nav (sticky bottom) */
+    .step-nav { padding: 10px 14px; gap: 6px; }
+    .step-nav .btn-primary, .step-nav .btn-back { padding: 11px 16px; font-size: 13px; }
+    .step-nav .btn-back { padding: 9px 14px; font-size: 12.5px; }
+    .container { padding-bottom: 110px; }
+
+    /* Saved cards stack better */
+    .saved-list { grid-template-columns: 1fr; }
+    .sc-thumbs { height: 140px; }
+    .sc-thumb-name { font-size: 14px; }
+    .sc-body { padding: 16px 18px 18px; }
+    .sc-route { padding: 11px 16px; font-size: 13px; gap: 8px; }
+    .sc-route svg { width: 14px; height: 14px; }
+    .sc-city { padding: 2px 8px; font-size: 11.5px; }
+    .sc-flight-row { padding: 10px; gap: 8px; }
+    .sc-flight-val { font-size: 12px; }
+    .sc-flight-lbl { font-size: 9.5px; }
+    .sc-flight svg { width: 14px; height: 14px; }
+    .sc-styles { gap: 4px; }
+    .sc-style-chip { font-size: 11px; padding: 4px 9px; }
+
+    /* Modal */
+    .detail-card { max-height: 92vh; border-radius: 16px; }
+    .detail-hero { height: 180px; }
+    .detail-body { padding: 18px 22px 22px; }
+    .detail-body h2 { font-size: 20px; }
+    .detail-eyebrow { font-size: 10px; padding: 4px 10px; }
+
+    /* Map view stack */
+    .hotel-map { height: 600px; }
+    .gmap-sb-list { max-height: 240px; }
+
+    /* Trip recap */
+    .trip-recap { padding: 8px 12px; font-size: 12.5px; gap: 12px; }
+    .tr-edit { padding: 4px 10px; font-size: 11.5px; }
+    .tr-item strong { font-size: 13px; }
+
+    /* Booking pills */
+    .blink { padding: 8px 12px; font-size: 12px; }
+    .blink .blink-logo { width: 20px; height: 20px; font-size: 10px; }
+    .fbook { padding: 5px 9px; font-size: 11.5px; }
+
+    /* Day section */
+    .day-section { padding: 18px 16px; border-radius: 18px; }
+    .day-title { font-size: 20px; }
+
+    /* Flight card */
+    .flight-card { padding: 16px; }
+    .price { font-size: 16px; }
+    .route-point .time { font-size: 22px; }
+
+    /* Plan style tabs */
+    .plan-style-tabs { gap: 8px; margin-bottom: 18px; }
+    .pst { padding: 14px 16px; }
+    .pst-name { font-size: 15px; }
+    .pst-desc { font-size: 12px; }
+  }
+
   /* SCROLL-INTO-VIEW */
   @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; }
@@ -2532,7 +2835,7 @@
     </nav>
   </div>
 
-  <!-- PROGRESS -->
+  <!-- PROGRESS (desktop) -->
   <div class="progress-bar" id="progressBar" style="display:none;">
     <div class="progress-step" data-step="flightKL"><span class="progress-num">1</span><span class="progress-label">KL Flight</span></div>
     <div class="progress-step" data-step="hotelKL"><span class="progress-num">2</span><span class="progress-label">KL Hotel</span></div>
@@ -2540,7 +2843,16 @@
     <div class="progress-step" data-step="flightLGK"><span class="progress-num">4</span><span class="progress-label">LGK Flight</span></div>
     <div class="progress-step" data-step="hotelLGK"><span class="progress-num">5</span><span class="progress-label">LGK Hotel</span></div>
     <div class="progress-step" data-step="planLGK"><span class="progress-num">6</span><span class="progress-label">LGK Plan</span></div>
-    <div class="progress-step" data-step="summary"><span class="progress-num">7</span><span class="progress-label">Save</span></div>
+    <div class="progress-step" data-step="flightReturn"><span class="progress-num">7</span><span class="progress-label">Return</span></div>
+    <div class="progress-step" data-step="summary"><span class="progress-num">8</span><span class="progress-label">Save</span></div>
+  </div>
+
+  <!-- PROGRESS (mobile) — compact "Step X of N · Name" -->
+  <div class="progress-mobile" id="progressMobile" style="display:none;">
+    <div class="pm-top">
+      <span class="pm-label">Step <span id="pmCurrent">1</span> of <span id="pmTotal">8</span> · <strong id="pmName">KL Flight</strong></span>
+    </div>
+    <div class="pm-bar"><div class="pm-fill" id="pmFill" style="width:12%;"></div></div>
   </div>
 </header>
 
@@ -2563,8 +2875,35 @@
       </div>
     </div>
 
+    <div class="trip-setup">
+      <div class="ts-eyebrow">Step 0 · Trip details</div>
+      <div class="ts-grid">
+        <div class="ts-field">
+          <label class="ts-label">Flying from</label>
+          <div class="ts-pills">
+            <button class="ts-pill active" data-city="BLR" onclick="setCity('BLR')">
+              <span class="ts-pill-code">BLR</span>
+              <span class="ts-pill-name">Bangalore</span>
+            </button>
+            <button class="ts-pill" data-city="BOM" onclick="setCity('BOM')">
+              <span class="ts-pill-code">BOM</span>
+              <span class="ts-pill-name">Mumbai</span>
+            </button>
+          </div>
+        </div>
+        <div class="ts-field">
+          <label class="ts-label" for="welcomeTripDate">Trip start date</label>
+          <input type="date" id="welcomeTripDate" class="ts-date" onchange="setTripDate(this.value)" />
+        </div>
+        <div class="ts-field">
+          <label class="ts-label">Returns</label>
+          <div class="ts-return" id="welcomeTripEnd">— (5 nights)</div>
+        </div>
+      </div>
+    </div>
+
     <div class="start-actions">
-      <button class="btn-primary" onclick="startPlanning()">
+      <button class="btn-primary btn-big" onclick="startPlanning()">
         Start planning
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </button>
@@ -2597,25 +2936,13 @@
     <div class="screen-head">
       <span class="eyebrow">Step 1 · Outbound</span>
       <h2>Pick your flight to <span class="em">Kuala Lumpur</span></h2>
-      <p>Choose your departure city, then pick the flight that works best with your kids' schedule.</p>
+      <p id="flightKL-intro">Flights below match your departure city + date. Pick the one that works best with kids' schedules.</p>
     </div>
 
-    <div class="city-toggle">
-      <div class="city-toggle-label">Flying from:</div>
-      <button class="city-btn active" data-city="BLR" onclick="setCity('BLR')">
-        <span class="city-code">BLR</span>
-        <span class="city-name">Bangalore</span>
-      </button>
-      <button class="city-btn" data-city="BOM" onclick="setCity('BOM')">
-        <span class="city-code">BOM</span>
-        <span class="city-name">Mumbai</span>
-      </button>
-
-      <div class="date-picker-wrap">
-        <label class="city-toggle-label" for="tripStartDate">Trip starts:</label>
-        <input type="date" id="tripStartDate" class="date-input" onchange="setTripDate(this.value)" />
-        <span class="date-end" id="tripEndLabel"></span>
-      </div>
+    <div class="trip-recap">
+      <div class="tr-item"><span class="tr-lbl">From</span> <strong id="recapCity">BLR</strong></div>
+      <div class="tr-item"><span class="tr-lbl">Date</span> <strong id="recapDate">Jun 30, 2026</strong></div>
+      <button class="tr-edit" onclick="goTo('welcome')">Edit</button>
     </div>
 
     <div class="callout">
@@ -2788,17 +3115,44 @@
     <div id="planLGKContent"></div>
     <div class="step-nav">
       <button class="btn-back" onclick="goTo('hotelLGK')">← Back</button>
-      <button class="btn-primary" onclick="goTo('summary')">
+      <button class="btn-primary" onclick="goTo('flightReturn')">
+        Continue to return flight
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- STEP 7: RETURN FLIGHT -->
+  <section class="screen" id="flightReturn">
+    <div class="screen-head">
+      <span class="eyebrow">Step 7 · Return home</span>
+      <h2>Fly back <span class="em" id="returnHeadlineCity">Langkawi → Bangalore</span></h2>
+      <p>No direct flights exist from Langkawi to India — every option connects through Kuala Lumpur. Single-ticket options (Malaysia Airlines, Batik Air) are safer with kids than self-transfer combos.</p>
+    </div>
+    <div class="callout">
+      <p><strong>Recommended:</strong> Malaysia Airlines single ticket — both legs on one booking, free re-routing if Day 5 LGK→KUL is delayed, bassinet + meals included.</p>
+    </div>
+    <div class="time-filter-row">
+      <span class="filter-label">Departure time:</span>
+      <button class="chip active" data-tod="all" data-tslot="Return">All times</button>
+      <button class="chip" data-tod="morning" data-tslot="Return">🌅 Morning</button>
+      <button class="chip" data-tod="afternoon" data-tslot="Return">☀️ Afternoon</button>
+      <button class="chip" data-tod="evening" data-tslot="Return">🌇 Evening</button>
+    </div>
+    <div class="grid" id="flightsReturn"></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo('planLGK')">← Back</button>
+      <button class="btn-primary" onclick="goTo('summary')" id="next-flightReturn" disabled style="opacity:.4;cursor:not-allowed;">
         Review &amp; save
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </button>
     </div>
   </section>
 
-  <!-- STEP 7: SUMMARY -->
+  <!-- STEP 8: SUMMARY -->
   <section class="screen" id="summary">
     <div class="screen-head">
-      <span class="eyebrow">Step 7 · Done</span>
+      <span class="eyebrow">Step 8 · Done</span>
       <h2>Your <span class="em">Malaysia plan</span> at a glance</h2>
       <p>Review everything below and save this plan to come back to it any time.</p>
     </div>
@@ -2879,6 +3233,24 @@ const flightsByCity = {
   ]
 };
 let flightsKL = flightsByCity.BLR;
+
+// LGK → home (via KUL connection — no direct flights from Langkawi to India)
+const flightsReturnByCity = {
+  BLR: [
+    { id:'ret-blr-mh', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 1432 + MH 192', dep:'10:00', arr:'21:30', from:'LGK', to:'BLR', via:'KUL · 3h layover', dur:'8h 30m', type:'1 stop · KUL', price:'₹26,500', kids:5, notes:'Best return — full service, single ticket, bassinet, free meals.', tags:[['Recommended','green'],['Free meals','green'],['Bassinet','green']] },
+    { id:'ret-blr-ak', airline:'AirAsia', logo:'lg-ai', no:'AK 6260 + AK 15', dep:'13:15', arr:'23:55', from:'LGK', to:'BLR', via:'KUL · 2h layover', dur:'7h 40m', type:'1 stop · KUL', price:'₹19,800', kids:3, notes:'Cheapest option. Self-transfer at KLIA2 — book combo for protection.', tags:[['Self-transfer','amber'],['Cheapest','green']] },
+    { id:'ret-blr-od', airline:'Batik Air', logo:'lg-od', no:'OD 1583 + OD 217', dep:'15:50', arr:'02:30⁺¹', from:'LGK', to:'BLR', via:'KUL · 2h 30m layover', dur:'9h 40m', type:'1 stop · KUL', price:'₹22,400', kids:3, notes:'Newer fleet. Late arrival in BLR — straight to bed.', tags:[['1 stop','amber']] },
+    { id:'ret-blr-fy', airline:'Firefly + IndiGo', logo:'lg-fy', no:'FY 3105 + 6E 1044', dep:'09:30', arr:'19:30', from:'LGK', to:'BLR', via:'SZB → KUL ground transfer', dur:'10h', type:'Connection · ground transfer', price:'₹21,500', kids:2, notes:'Firefly to Subang, then road transfer to KLIA. Complex with kids — skip unless on tight budget.', tags:[['Complex','red']] }
+  ],
+  BOM: [
+    { id:'ret-bom-mh', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 1432 + MH 194', dep:'10:00', arr:'19:30', from:'LGK', to:'BOM', via:'KUL · 3h layover', dur:'9h 30m', type:'1 stop · KUL', price:'₹28,500', kids:5, notes:'Best return — full service, single ticket, bassinet, free meals.', tags:[['Recommended','green'],['Free meals','green'],['Bassinet','green']] },
+    { id:'ret-bom-ai', airline:'Air India + AirAsia', logo:'lg-ai2', no:'AK 6260 + AI 1397', dep:'13:15', arr:'00:45⁺¹', from:'LGK', to:'BOM', via:'KUL · 4h layover', dur:'9h 30m', type:'2 tickets · KUL', price:'₹23,800', kids:3, notes:'Long layover allows airline change. Eat at KLIA satellite terminal.', tags:[['2 tickets','amber']] },
+    { id:'ret-bom-ak', airline:'AirAsia', logo:'lg-ai', no:'AK 6260 + AK 11', dep:'13:15', arr:'21:30', from:'LGK', to:'BOM', via:'KUL · 2h layover', dur:'7h 15m', type:'1 stop · KUL', price:'₹19,500', kids:3, notes:'Cheapest option. Self-transfer at KLIA2.', tags:[['Self-transfer','amber'],['Cheapest','green']] },
+    { id:'ret-bom-mh2', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 1438 + MH 196', dep:'17:30', arr:'02:00⁺¹', from:'LGK', to:'BOM', via:'KUL · 2h 30m layover', dur:'8h 30m', type:'1 stop · KUL · Red-eye home', price:'₹27,500', kids:4, notes:'Afternoon Langkawi flight + overnight to BOM. Kids sleep on the long leg.', tags:[['Red-eye home','red'],['Free meals','green']] }
+  ]
+};
+
+let flightsReturn = flightsReturnByCity.BLR;
 
 const flightsLGK = [
   { id:'mh1432', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 1432', dep:'10:00', arr:'11:00', from:'KUL', to:'LGK', dur:'1h 00m', type:'Direct', price:'₹3,800', kids:5, notes:'Best with kids — full service, free snacks, assigned seats.', tags:[['Recommended','green'],['Free meal','green']] },
@@ -3647,6 +4019,8 @@ const state = {
   hotelKL: null,
   flightLGK: null,
   hotelLGK: null,
+  flightReturn: null,
+  todReturn: 'all',
   planStyleKL: 'relaxed',
   planStyleLGK: 'beach',
   extrasKL: [], // [{ id, day }]
@@ -3729,11 +4103,17 @@ function updateWelcomePillDate() {
 }
 
 function updateTripEndLabel() {
-  const lbl = document.getElementById('tripEndLabel');
-  if (!lbl) return;
   const end = addDays(state.tripStartDate, TRIP_NIGHTS);
-  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][end.getMonth()];
-  lbl.innerHTML = `→ <strong>${m} ${end.getDate()}</strong> (${TRIP_NIGHTS} nights)`;
+  const start = addDays(state.tripStartDate, 0);
+  const m = (d) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+  // Welcome page "Returns" field
+  const wEnd = document.getElementById('welcomeTripEnd');
+  if (wEnd) wEnd.innerHTML = `<strong>${m(end)} ${end.getDate()}, ${end.getFullYear()}</strong> · ${TRIP_NIGHTS} nights`;
+  // Recap on flight screens
+  const recapDate = document.getElementById('recapDate');
+  if (recapDate) recapDate.textContent = `${m(start)} ${start.getDate()}, ${start.getFullYear()}`;
+  const recapCity = document.getElementById('recapCity');
+  if (recapCity) recapCity.textContent = state.departureCity;
 }
 
 const KL_PLAN_STYLES = {
@@ -3791,6 +4171,14 @@ const LGK_ACTIVITIES_LIBRARY = [
 function findFlightKL(id) {
   for (const c of ['BLR','BOM']) {
     const f = flightsByCity[c].find(x => x.id === id);
+    if (f) return f;
+  }
+  return null;
+}
+
+function findFlightReturn(id) {
+  for (const c of ['BLR','BOM']) {
+    const f = flightsReturnByCity[c].find(x => x.id === id);
     if (f) return f;
   }
   return null;
@@ -4037,20 +4425,29 @@ function setTOD(slot, tod) {
   if (slot === 'KL') {
     state.todKL = tod;
     renderFlights(flightsKL, 'flightsKL', 'flightKL', 'next-flightKL');
-  } else {
+  } else if (slot === 'LGK') {
     state.todLGK = tod;
     renderFlights(flightsLGK, 'flightsLGK', 'flightLGK', 'next-flightLGK');
+  } else if (slot === 'Return') {
+    state.todReturn = tod;
+    renderFlights(flightsReturn, 'flightsReturn', 'flightReturn', 'next-flightReturn');
   }
 }
 
 function setCity(city) {
   state.departureCity = city;
   flightsKL = flightsByCity[city];
+  flightsReturn = flightsReturnByCity[city];
   state.flightKL = null;
-  document.querySelectorAll('.city-btn').forEach(b => b.classList.toggle('active', b.dataset.city === city));
+  state.flightReturn = null;
+  document.querySelectorAll('.ts-pill, .city-btn').forEach(b => b.classList.toggle('active', b.dataset.city === city));
   renderFlights(flightsKL, 'flightsKL', 'flightKL', 'next-flightKL');
+  renderFlights(flightsReturn, 'flightsReturn', 'flightReturn', 'next-flightReturn');
   const btn = document.getElementById('next-flightKL');
-  btn.disabled = true; btn.style.opacity = .4; btn.style.cursor = 'not-allowed';
+  if (btn) { btn.disabled = true; btn.style.opacity = .4; btn.style.cursor = 'not-allowed'; }
+  const btn2 = document.getElementById('next-flightReturn');
+  if (btn2) { btn2.disabled = true; btn2.style.opacity = .4; btn2.style.cursor = 'not-allowed'; }
+  updateTripEndLabel();
 }
 
 const STORAGE_KEY = 'malaysia-itineraries-v1';
@@ -4072,16 +4469,19 @@ function updateSavedBadge() {
    NAVIGATION
    ================================================== */
 
+const PROGRESS_ORDER = ['flightKL','hotelKL','planKL','flightLGK','hotelLGK','planLGK','flightReturn','summary'];
+const PROGRESS_NAMES = ['KL Flight','KL Hotel','KL Plan','LGK Flight','LGK Hotel','LGK Plan','Return','Save'];
+
 function goTo(screenId) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(screenId).classList.add('active');
   state.currentScreen = screenId;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Toggle progress bar
-  const progress = document.getElementById('progressBar');
-  const showProgress = ['flightKL','hotelKL','planKL','flightLGK','hotelLGK','planLGK','summary'].includes(screenId);
-  progress.style.display = showProgress ? 'flex' : 'none';
+  // Toggle progress bars
+  const showProgress = PROGRESS_ORDER.includes(screenId);
+  document.getElementById('progressBar').style.display = showProgress ? '' : 'none';
+  document.getElementById('progressMobile').style.display = showProgress ? '' : 'none';
   updateProgress();
 
   // Special renders per screen
@@ -4090,16 +4490,33 @@ function goTo(screenId) {
   if (screenId === 'planLGK') renderPlanLGK();
   if (screenId === 'summary') renderSummary();
   if (screenId === 'hotelKL') updateFlightContext();
+  if (screenId === 'flightKL') updateTripEndLabel();
+  if (screenId === 'flightReturn') updateReturnHeadline();
 }
 
 function updateProgress() {
-  const order = ['flightKL','hotelKL','planKL','flightLGK','hotelLGK','planLGK','summary'];
-  const currentIdx = order.indexOf(state.currentScreen);
+  const currentIdx = PROGRESS_ORDER.indexOf(state.currentScreen);
   document.querySelectorAll('.progress-step').forEach((el, idx) => {
     el.classList.remove('done','current');
     if (idx < currentIdx) el.classList.add('done');
     else if (idx === currentIdx) el.classList.add('current');
   });
+  // Mobile bar
+  if (currentIdx >= 0) {
+    const pmCurrent = document.getElementById('pmCurrent');
+    const pmTotal = document.getElementById('pmTotal');
+    const pmName = document.getElementById('pmName');
+    const pmFill = document.getElementById('pmFill');
+    if (pmCurrent) pmCurrent.textContent = currentIdx + 1;
+    if (pmTotal) pmTotal.textContent = PROGRESS_ORDER.length;
+    if (pmName) pmName.textContent = PROGRESS_NAMES[currentIdx];
+    if (pmFill) pmFill.style.width = (((currentIdx + 1) / PROGRESS_ORDER.length) * 100) + '%';
+  }
+}
+
+function updateReturnHeadline() {
+  const el = document.getElementById('returnHeadlineCity');
+  if (el) el.textContent = `Langkawi → ${state.departureCity === 'BOM' ? 'Mumbai' : 'Bangalore'}`;
 }
 
 function startPlanning() {
@@ -4107,6 +4524,7 @@ function startPlanning() {
   state.hotelKL = null;
   state.flightLGK = null;
   state.hotelLGK = null;
+  state.flightReturn = null;
   state.planStyleKL = 'relaxed';
   state.planStyleLGK = 'beach';
   state.extrasKL = [];
@@ -4130,7 +4548,8 @@ function updateFlightContext() {
 
 function renderFlights(list, mountId, stateKey, nextBtnId) {
   const m = document.getElementById(mountId);
-  const tod = stateKey === 'flightKL' ? state.todKL : state.todLGK;
+  if (!m) return;
+  const tod = stateKey === 'flightKL' ? state.todKL : stateKey === 'flightLGK' ? state.todLGK : state.todReturn;
   const filtered = filterFlightsByTOD(list, tod);
   if (filtered.length === 0) {
     m.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="emoji">🕒</div><h3>No flights in this time window</h3><p>Try a different time of day.</p></div>`;
@@ -4433,6 +4852,7 @@ function renderSummary() {
   const hKL = hotelsKL.find(h => h.id === state.hotelKL);
   const fLGK = flightsLGK.find(f => f.id === state.flightLGK);
   const hLGK = hotelsLGK.find(h => h.id === state.hotelLGK);
+  const fRet = findFlightReturn(state.flightReturn);
 
   document.getElementById('summaryGrid').innerHTML = `
     <div class="summary-card">
@@ -4455,6 +4875,11 @@ function renderSummary() {
       <div class="val">${hLGK ? hLGK.name : '—'}</div>
       <div class="sub">${hLGK ? `${hLGK.group} · ${hLGK.area} · ${priceWithINR(hLGK.price)}/night × 3 nights` : ''}</div>
     </div>
+    <div class="summary-card">
+      <div class="lbl">✈ Return flight</div>
+      <div class="val">${fRet ? `${fRet.airline} ${fRet.no}` : '—'}</div>
+      <div class="sub">${fRet ? `${fRet.dep} → ${fRet.arr} · ${fRet.dur} · ${fRet.price}` : ''}</div>
+    </div>
   `;
 }
 
@@ -4473,6 +4898,7 @@ function saveItinerary() {
       hotelKL: state.hotelKL,
       flightLGK: state.flightLGK,
       hotelLGK: state.hotelLGK,
+      flightReturn: state.flightReturn,
       planStyleKL: state.planStyleKL || 'relaxed',
       planStyleLGK: state.planStyleLGK || 'beach',
       extrasKL: [...(state.extrasKL || [])],
@@ -4616,6 +5042,7 @@ function renderViewPlan(plan) {
   const h1 = hotelsKL.find(h => h.id === plan.hotelKL);
   const f2 = flightsLGK.find(f => f.id === plan.flightLGK);
   const h2 = hotelsLGK.find(h => h.id === plan.hotelLGK);
+  const fRet = findFlightReturn(plan.flightReturn);
   const dep = plan.departureCity || 'BLR';
 
   const klStyle = plan.planStyleKL || 'relaxed';
@@ -4665,6 +5092,12 @@ function renderViewPlan(plan) {
         <div class="vt-eyebrow">${ICONS.palm} Stay · Langkawi (3 nights)</div>
         <h4>${h2 ? h2.name : 'Not selected'}</h4>
         <div class="vt-meta">${h2 ? `${h2.area} · ${priceWithINR(h2.price)}/night` : '—'}</div>
+        <div class="vt-click">Tap for booking links →</div>
+      </div>
+      <div class="vp-trip-card" onclick="openDetail('flight', '${plan.flightReturn || ''}')">
+        <div class="vt-eyebrow">${ICONS.plane} Return · LGK → ${dep}</div>
+        <h4>${fRet ? `${fRet.airline} ${fRet.no}` : 'Not selected'}</h4>
+        <div class="vt-meta">${fRet ? `${fRet.dep} → ${fRet.arr} · ${fRet.price}` : '—'}</div>
         <div class="vt-click">Tap for booking links →</div>
       </div>
     </div>
@@ -4748,7 +5181,7 @@ function bookingChipBig(site, query) {
 function openDetail(type, id) {
   let html = '';
   if (type === 'flight') {
-    const f = findFlightKL(id) || flightsLGK.find(x => x.id === id);
+    const f = findFlightKL(id) || flightsLGK.find(x => x.id === id) || findFlightReturn(id);
     if (!f) { showToast('Flight not found'); return; }
     html = `
       <div class="detail-hero" style="background-image:url('${PHOTOS.airplane}');"></div>
@@ -4940,6 +5373,7 @@ function loadPlan(id) {
     state.hotelKL = p.hotelKL;
     state.flightLGK = p.flightLGK;
     state.hotelLGK = p.hotelLGK;
+    state.flightReturn = p.flightReturn || null;
     state.planStyleKL = p.planStyleKL || 'relaxed';
     state.planStyleLGK = p.planStyleLGK || 'beach';
     state.extrasKL = Array.isArray(p.extrasKL) ? [...p.extrasKL] : [];
@@ -5030,6 +5464,7 @@ function checkSharedURL() {
   state.hotelKL = plan.hotelKL;
   state.flightLGK = plan.flightLGK;
   state.hotelLGK = plan.hotelLGK;
+  state.flightReturn = plan.flightReturn || null;
   state.planStyleKL = plan.planStyleKL || 'relaxed';
   state.planStyleLGK = plan.planStyleLGK || 'beach';
   state.extrasKL = Array.isArray(plan.extrasKL) ? [...plan.extrasKL] : [];
@@ -5095,17 +5530,18 @@ document.addEventListener('click', (e) => {
    BOOT
    ================================================== */
 
-// Initialize date input with state default
-const _dateInput = document.getElementById('tripStartDate');
-if (_dateInput) {
-  _dateInput.value = state.tripStartDate;
-  _dateInput.min = new Date().toISOString().slice(0,10);
+// Initialize date input on welcome screen
+const _wDate = document.getElementById('welcomeTripDate');
+if (_wDate) {
+  _wDate.value = state.tripStartDate;
+  _wDate.min = new Date().toISOString().slice(0,10);
 }
 updateTripEndLabel();
 updateWelcomePillDate();
 
 renderFlights(flightsKL, 'flightsKL', 'flightKL', 'next-flightKL');
 renderFlights(flightsLGK, 'flightsLGK', 'flightLGK', 'next-flightLGK');
+renderFlights(flightsReturn, 'flightsReturn', 'flightReturn', 'next-flightReturn');
 renderHotels(hotelsKL, 'hotelsKL', 'hotelKL', 'next-hotelKL', 'filterBrand', 'filterArea');
 renderHotels(hotelsLGK, 'hotelsLGK', 'hotelLGK', 'next-hotelLGK', 'filterBrandL', 'filterAreaL');
 updateSavedBadge();
