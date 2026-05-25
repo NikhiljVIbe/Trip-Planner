@@ -346,6 +346,36 @@
     font-weight: 600;
     color: var(--ink-soft);
   }
+  .date-picker-wrap {
+    display: flex; align-items: center; gap: 10px;
+    margin-left: auto;
+    padding-left: 16px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 720px) {
+    .date-picker-wrap { margin-left: 0; padding-left: 0; width: 100%; }
+  }
+  .date-input {
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    font-family: var(--font);
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color .2s ease;
+    min-width: 170px;
+  }
+  .date-input:hover, .date-input:focus { border-color: var(--brand); outline: none; }
+  .date-end {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .date-end strong { color: var(--ink); font-weight: 700; }
 
   /* FILTERS */
   .filters {
@@ -1063,11 +1093,44 @@
   }
   .saved-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--brand); }
   .saved-card:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
+  /* SAVED CARD — route header */
+  .sc-route {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    background: linear-gradient(135deg, #0c4a6e 0%, #0f766e 60%, #134e4a 100%);
+    color: #fff;
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .sc-route svg { stroke: rgba(255,255,255,0.6); }
+  .sc-city {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-family: var(--font);
+  }
+  .sc-city-end { background: linear-gradient(135deg, #fde68a, #fb923c); color: #78350f; border-color: transparent; }
+  .sc-nights {
+    margin-left: auto;
+    font-family: var(--font);
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.85;
+  }
+
   .sc-thumbs {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2px;
-    height: 150px;
+    height: 180px;
     background: var(--line);
   }
   .sc-thumb {
@@ -1082,21 +1145,98 @@
     transition: transform .5s ease;
   }
   .saved-card:hover .sc-thumb img { transform: scale(1.06); }
-  .sc-thumb-lbl {
+  .sc-thumb-overlay {
     position: absolute;
-    bottom: 8px; left: 8px;
-    padding: 4px 10px;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(8px);
+    left: 0; right: 0; bottom: 0;
+    padding: 14px 14px 14px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.78) 100%);
     color: #fff;
-    font-size: 11.5px;
-    font-weight: 700;
-    border-radius: 999px;
-    letter-spacing: 0.04em;
   }
+  .sc-thumb-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 9px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .sc-thumb-tag svg { stroke: #fff; }
+  .sc-thumb-name {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
   .sc-body {
     padding: 22px 24px 24px;
   }
+  .sc-meta {
+    display: flex; align-items: center; gap: 6px;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin: 10px 0 14px;
+    font-weight: 500;
+  }
+  .sc-meta svg { stroke: var(--muted); flex-shrink: 0; }
+  .sc-meta-sep { color: var(--muted); padding: 0 2px; }
+
+  .sc-styles {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .sc-style-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 11px;
+    background: var(--brand-light);
+    color: var(--brand);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .sc-style-icon { font-size: 14px; }
+
+  .sc-flight-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: var(--bg);
+    border-radius: 12px;
+    border: 1px solid var(--line);
+  }
+  @media (max-width: 560px) { .sc-flight-row { grid-template-columns: 1fr; } }
+  .sc-flight {
+    display: flex; align-items: center; gap: 10px;
+    min-width: 0;
+  }
+  .sc-flight svg { stroke: var(--brand); flex-shrink: 0; }
+  .sc-flight-lbl {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .sc-flight-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 1px;
+    line-height: 1.2;
+  }
+
+  .btn-mini svg { vertical-align: middle; margin-right: 4px; }
   .stale-warn {
     background: #fef3c7;
     border: 1px solid #fde68a;
@@ -1586,7 +1726,7 @@
     <div class="welcome-hero">
       <div class="welcome-pill">
         <span class="dot"></span>
-        <span>Family · 2 toddlers · Jun 30 — Jul 5, 2026</span>
+        <span id="welcomePillDate">Family · 2 toddlers · Jun 30 — Jul 5, 2026</span>
       </div>
       <h1>Plan your <span class="accent">Malaysia</span><br/>family escape.</h1>
       <p>A guided 7-step planner that picks the right flights, the most kid-friendly hotels, and builds a relaxed day-by-day itinerary for Kuala Lumpur and Langkawi.</p>
@@ -1645,6 +1785,12 @@
         <span class="city-code">BOM</span>
         <span class="city-name">Mumbai</span>
       </button>
+
+      <div class="date-picker-wrap">
+        <label class="city-toggle-label" for="tripStartDate">Trip starts:</label>
+        <input type="date" id="tripStartDate" class="date-input" onchange="setTripDate(this.value)" />
+        <span class="date-end" id="tripEndLabel"></span>
+      </div>
     </div>
 
     <div class="callout">
@@ -2265,8 +2411,8 @@ function getKLPlan(hotel, flight, style = 'relaxed') {
   const day2 = style === 'explorer' ? day2Explorer : style === 'indoor' ? day2Indoor : day2Relaxed;
 
   return [
-    { day:1, date:'Tue · Jun 30', title:'Arrive in KL', pill:day1.pill, items:day1.items },
-    { day:2, date:'Wed · Jul 1', title:day2.title, pill:day2.pill, items:day2.items }
+    { day:1, date:fmtDay(addDays(state.tripStartDate, 0)), title:'Arrive in KL', pill:day1.pill, items:day1.items },
+    { day:2, date:fmtDay(addDays(state.tripStartDate, 1)), title:day2.title, pill:day2.pill, items:day2.items }
   ];
 }
 
@@ -2276,7 +2422,7 @@ function getLGKPlan(hotel, style = 'beach') {
   const beachy = area === 'Pantai Cenang';
 
   // Day 1 is the same for all styles — arrival is arrival.
-  const day1 = { day:1, date:'Thu · Jul 2', title:'Land + slow start', pill:'Arrival', items: [
+  const day1 = { day:1, date:fmtDay(addDays(state.tripStartDate, 2)), title:'Land + slow start', pill:'Arrival', items: [
     { time:'Morning', label:'Travel', title:'KL → Langkawi (LGK)', desc:'Short 1-hour flight. Resort pickup at LGK airport.', photo:PHOTOS.airplane, tags:[['Move','move']] },
     { time:'1:00 PM', label:'Check-in', title:`Arrive at ${hotel.name}`, desc:`Welcome drink, settle in. ${remote ? 'You\'re tucked into a quiet bay — perfect.' : 'You\'re right by the action — bonus.'}`, photo:PHOTOS.hotel, tags:[['Rest','rest']] },
     { time:'3:00 PM', label:'Pool / Beach', title:'Toddler-pace beach time', desc:`Shallow water at ${area === 'Datai Bay' ? 'Datai Bay (calm, private)' : area === 'Tanjung Rhu' ? 'Tanjung Rhu (prettiest beach in Malaysia)' : 'Pantai Cenang'}. Sandcastles, no agenda.`, photo:PHOTOS.beach, tags:[['Rest','rest']] },
@@ -2286,7 +2432,7 @@ function getLGKPlan(hotel, style = 'beach') {
 
   // STYLE: BEACH (default — relaxed)
   const beachPlan = [day1,
-    { day:2, date:'Fri · Jul 3', title:'Mangroves + eagles', pill:'Beach + chill', items: [
+    { day:2, date:fmtDay(addDays(state.tripStartDate, 3)), title:'Mangroves + eagles', pill:'Beach + chill', items: [
       { time:'7:30 AM', label:'Breakfast', title:'Resort breakfast', desc:'Eat well — you\'ll be on a boat for half the day.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'9:00 AM', label:'Adventure', title:'Kilim Geoforest mangrove + eagle tour', desc:'Private covered boat (book ahead, ~RM 600 per family). 4 hours through limestone caves, eagle feeding, mangrove canopy. Toddler-safe.', photo:PHOTOS.mangrove, tags:[['See','see'],['Move','move']], book:[['klook','langkawi-mangrove-tour'],['getyourguide','kilim-geoforest-langkawi']] },
       { time:'12:30 PM', label:'Lunch', title:'Floating fish farm restaurant', desc:'Inside the geopark. Fresh seafood + veg options. Fish swim under your table.', photo:PHOTOS.islandFood, tags:[['Eat','eat'],['See','see']] },
@@ -2294,7 +2440,7 @@ function getLGKPlan(hotel, style = 'beach') {
       { time:'5:00 PM', label:'Activity 2', title:beachy ? 'Underwater World Langkawi' : 'Sunset beach walk', desc:beachy ? 'Indoor aquarium at Pantai Cenang — penguins, rainforest dome.' : 'Long walk on your private beach, golden-hour magic.', photo:beachy ? PHOTOS.underwater : PHOTOS.sunset, tags:[['See','see']], book:beachy ? [['klook','underwater-world-langkawi']] : null },
       { time:'7:30 PM', label:'Dinner', title:beachy ? 'Pantai Cenang beachfront' : 'In-resort fine dining', desc:beachy ? 'Casual beachfront with sand under your feet.' : 'Romantic enough for parents, kid-friendly menu.', photo:PHOTOS.pantaiCenang, tags:[['Eat','eat']] }
     ]},
-    { day:3, date:'Sat · Jul 4', title:'Slow island day', pill:'Beach + culture', items: [
+    { day:3, date:fmtDay(addDays(state.tripStartDate, 4)), title:'Slow island day', pill:'Beach + culture', items: [
       { time:'8:30 AM', label:'Breakfast', title:'Long, slow breakfast', desc:'No rush.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'10:30 AM', label:'See', title:'Eagle Square + Kuah town', desc:'Iconic 12m eagle statue, 30-min photo stop + waterfront walk.', photo:PHOTOS.eagleSquare, tags:[['See','see']] },
       { time:'12:30 PM', label:'Lunch', title:beachy ? 'Restoran Tomato Nasi Kandar' : 'Wonderland Food Store, Kuah', desc:'Cheap, kid-friendly, local.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
@@ -2306,7 +2452,7 @@ function getLGKPlan(hotel, style = 'beach') {
 
   // STYLE: ADVENTURE
   const adventurePlan = [day1,
-    { day:2, date:'Fri · Jul 3', title:'Island hopping + cable car', pill:'Adventure', items: [
+    { day:2, date:fmtDay(addDays(state.tripStartDate, 3)), title:'Island hopping + cable car', pill:'Adventure', items: [
       { time:'7:30 AM', label:'Breakfast', title:'Resort breakfast', desc:'Fuel up — long day on water and at altitude.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'8:30 AM', label:'Adventure', title:'Island Hopping Tour (3 islands)', desc:'Pulau Dayang Bunting (Pregnant Maiden Lake) + Eagle Feeding + Pulau Beras Basah. Private speedboat option safer with toddlers.', photo:PHOTOS.beach, tags:[['See','see'],['Move','move']], book:[['klook','langkawi-island-hopping'],['getyourguide','langkawi-island-hopping']] },
       { time:'1:00 PM', label:'Lunch', title:'Pantai Cenang seafood lunch', desc:'Back on land — quick refuel before afternoon.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
@@ -2314,7 +2460,7 @@ function getLGKPlan(hotel, style = 'beach') {
       { time:'4:00 PM', label:'See', title:'Panorama Langkawi SkyCab + SkyBridge', desc:'World\'s steepest cable car. WARNING: very steep, scary for toddlers — assess your kids first. Older kids (3+) usually love it.', photo:PHOTOS.petronas, tags:[['See','see'],['Move','move']], book:[['klook','langkawi-skycab'],['getyourguide','langkawi-skybridge-cable-car']] },
       { time:'7:00 PM', label:'Walk', title:'Oriental Village shops + dinner', desc:'Toy stores, ice cream, local crafts at the cable car base.', photo:PHOTOS.pantaiCenang, tags:[['Eat','eat']] }
     ]},
-    { day:3, date:'Sat · Jul 4', title:'Snorkel + sunset cruise', pill:'Adventure', items: [
+    { day:3, date:fmtDay(addDays(state.tripStartDate, 4)), title:'Snorkel + sunset cruise', pill:'Adventure', items: [
       { time:'8:00 AM', label:'Breakfast', title:'Quick breakfast', desc:'Hit the water early.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'9:30 AM', label:'Snorkel', title:'Pulau Payar Marine Park (half-day)', desc:'Best snorkeling in Langkawi. Floating platform — even toddlers can splash in shallow corral pools.', photo:PHOTOS.underwater, tags:[['See','see'],['Move','move']], book:[['klook','pulau-payar-marine-park'],['getyourguide','pulau-payar-snorkel']] },
       { time:'1:30 PM', label:'Lunch', title:'Lunch on Pulau Payar platform', desc:'Buffet on the floating platform. Fish swarm beneath you.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
@@ -2326,7 +2472,7 @@ function getLGKPlan(hotel, style = 'beach') {
 
   // STYLE: CULTURE
   const culturePlan = [day1,
-    { day:2, date:'Fri · Jul 3', title:'Legends + art', pill:'Culture', items: [
+    { day:2, date:fmtDay(addDays(state.tripStartDate, 3)), title:'Legends + art', pill:'Culture', items: [
       { time:'8:30 AM', label:'Breakfast', title:'Resort breakfast', desc:'Slow start — cultural sites open mid-morning.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'10:00 AM', label:'See', title:'Makam Mahsuri (Mahsuri\'s Tomb)', desc:'The cursed princess of Langkawi — legend says her wrongful execution cursed the island for 7 generations. Beautiful complex, stories your kids will remember.', photo:PHOTOS.eagleSquare, tags:[['See','see']] },
       { time:'11:30 AM', label:'Art', title:'Atma Alam Batik Art Village', desc:'Kids paint their own batik fabric — they take home a real souvenir they made. Highlight of the trip.', photo:PHOTOS.batuCaves, tags:[['See','see']], book:[['klook','atma-alam-batik-langkawi']] },
@@ -2335,7 +2481,7 @@ function getLGKPlan(hotel, style = 'beach') {
       { time:'5:00 PM', label:'See', title:'Eagle Square + Kuah waterfront', desc:'12m red eagle statue — symbol of Langkawi. Photo stop + waterfront stroll.', photo:PHOTOS.eagleSquare, tags:[['See','see']] },
       { time:'7:00 PM', label:'Dinner', title:'Wonderland Food Store, Kuah', desc:'Hawker stalls — Malay, Chinese, Indian veg side by side.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] }
     ]},
-    { day:3, date:'Sat · Jul 4', title:'Museums + nature', pill:'Culture', items: [
+    { day:3, date:fmtDay(addDays(state.tripStartDate, 4)), title:'Museums + nature', pill:'Culture', items: [
       { time:'8:30 AM', label:'Breakfast', title:'Slow breakfast', desc:'No rush.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'10:00 AM', label:'See', title:'Galeria Perdana (Dr. Mahathir Museum)', desc:'Surprisingly fun for kids — toy cars, models, gifts from world leaders. Air-conditioned.', photo:PHOTOS.pavilion, tags:[['See','see']] },
       { time:'12:00 PM', label:'Lunch', title:'Local kopitiam in Kuah', desc:'Coffee shop noodles — easy on kids\' stomachs.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
@@ -2356,6 +2502,7 @@ function getLGKPlan(hotel, style = 'beach') {
 const state = {
   currentScreen: 'welcome',
   departureCity: 'BLR',
+  tripStartDate: '2026-06-30',
   flightKL: null,
   hotelKL: null,
   flightLGK: null,
@@ -2367,6 +2514,76 @@ const state = {
   filterBrandL: 'all',
   filterAreaL: 'all'
 };
+
+const TRIP_NIGHTS = 5; // 2 KL + 3 LGK
+
+function addDays(yyyymmdd, n) {
+  const d = new Date(yyyymmdd + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  return d;
+}
+function fmtDay(d) {
+  const dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+  const mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+  return `${dow} · ${mon} ${d.getDate()}`;
+}
+function fmtRange() {
+  const start = addDays(state.tripStartDate, 0);
+  const end = addDays(state.tripStartDate, TRIP_NIGHTS);
+  const sMon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][start.getMonth()];
+  const eMon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][end.getMonth()];
+  return `${sMon} ${start.getDate()} — ${sMon === eMon ? '' : eMon + ' '}${end.getDate()}, ${end.getFullYear()}`;
+}
+function fmtBookingDate(offset) {
+  // For booking URLs: DD/MM/YYYY
+  const d = addDays(state.tripStartDate, offset || 0);
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth() + 1).padStart(2,'0');
+  return `${dd}/${mm}/${d.getFullYear()}`;
+}
+
+function setTripDate(yyyymmdd) {
+  if (!yyyymmdd) return;
+  state.tripStartDate = yyyymmdd;
+  updateTripEndLabel();
+  updateWelcomePillDate();
+  // re-render flight options so booking URLs reflect new date
+  if (flightsKL) renderFlights(flightsKL, 'flightsKL', 'flightKL', 'next-flightKL');
+  renderFlights(flightsLGK, 'flightsLGK', 'flightLGK', 'next-flightLGK');
+}
+
+const ICONS = {
+  plane:      '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>',
+  planeArrow: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>',
+  building:   '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M8 10h.01M8 14h.01M16 6h.01M16 10h.01M16 14h.01M12 6h.01M12 10h.01M12 14h.01"/></svg>',
+  palm:       '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2l1-1 1 1h4M13 7.14A5.82 5.82 0 0 1 16.5 6c3.04 0 5.5 2.24 5.5 5h-3l-1-1-1 1h-3M5.89 9.71c-2.15 2.15-2.3 5.47-.35 7.43l4.24-4.25M11 15.5c.5 2.5 2 4.5 4.5 5.5l1.5-2-1-1.5 2-1.5L18 14c-2.5-1-4.5-3-5.5-5"/></svg>',
+  calendar:   '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+  clock:      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+  eye:        '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  trash:      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6l-1.5 14a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>'
+};
+
+function planDateRange(plan) {
+  // Range based on a saved plan's tripStartDate (fallback to state if missing)
+  const start = plan && plan.tripStartDate ? plan.tripStartDate : state.tripStartDate;
+  const s = addDays(start, 0);
+  const e = addDays(start, TRIP_NIGHTS);
+  const mon = (d) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+  return `${mon(s)} ${s.getDate()} — ${mon(s) === mon(e) ? '' : mon(e) + ' '}${e.getDate()}, ${e.getFullYear()}`;
+}
+
+function updateWelcomePillDate() {
+  const el = document.getElementById('welcomePillDate');
+  if (el) el.textContent = `Family · 2 toddlers · ${fmtRange()}`;
+}
+
+function updateTripEndLabel() {
+  const lbl = document.getElementById('tripEndLabel');
+  if (!lbl) return;
+  const end = addDays(state.tripStartDate, TRIP_NIGHTS);
+  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][end.getMonth()];
+  lbl.innerHTML = `→ <strong>${m} ${end.getDate()}</strong> (${TRIP_NIGHTS} nights)`;
+}
 
 const KL_PLAN_STYLES = {
   relaxed:  { name:'Relaxed family',  icon:'😌', desc:'Slow pace, big naps, light evenings — best with toddlers' },
@@ -2502,11 +2719,11 @@ function renderFlights(list, mountId, stateKey, nextBtnId) {
       <div style="margin-top:10px;font-size:13px;color:var(--ink-soft);">${f.notes}</div>
       <div class="flight-book-row" onclick="event.stopPropagation();">
         <div class="fbook-label">Book on:</div>
-        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' site:makemytrip.com')}" style="--c:#eb2026;">MakeMyTrip</a>
-        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' site:goibibo.com')}" style="--c:#fc4961;">Goibibo</a>
-        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' site:yatra.com')}" style="--c:#fb6a3a;">Yatra</a>
-        <a class="fbook" target="_blank" rel="noopener" href="https://www.skyscanner.co.in/transport/flights/${f.from.toLowerCase()}/${f.to.toLowerCase()}/" style="--c:#0770e3;">Skyscanner</a>
-        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' site:cleartrip.com')}" style="--c:#f47521;">Cleartrip</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' ' + fmtBookingDate(0) + ' site:makemytrip.com')}" style="--c:#eb2026;">MakeMyTrip</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' ' + fmtBookingDate(0) + ' site:goibibo.com')}" style="--c:#fc4961;">Goibibo</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' ' + fmtBookingDate(0) + ' site:yatra.com')}" style="--c:#fb6a3a;">Yatra</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.skyscanner.co.in/transport/flights/${f.from.toLowerCase()}/${f.to.toLowerCase()}/${state.tripStartDate.replace(/-/g,'')}" style="--c:#0770e3;">Skyscanner</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' ' + fmtBookingDate(0) + ' site:cleartrip.com')}" style="--c:#f47521;">Cleartrip</a>
       </div>
     </div>
   `).join('');
@@ -2719,6 +2936,7 @@ function saveItinerary() {
       name,
       saved: new Date().toISOString(),
       departureCity: state.departureCity,
+      tripStartDate: state.tripStartDate,
       flightKL: state.flightKL,
       hotelKL: state.hotelKL,
       flightLGK: state.flightLGK,
@@ -2874,7 +3092,7 @@ function renderViewPlan(plan) {
       <div class="vp-hero-inner">
         <span class="vp-eyebrow">Your saved trip</span>
         <h2>${plan.name}</h2>
-        <div class="vp-meta">Jun 30 — Jul 5, 2026 · Family of 4 + 2 toddlers</div>
+        <div class="vp-meta">${planDateRange(plan)} · Family of 4 + 2 toddlers</div>
         <div class="flight-arc-wrap">${flightArc(dep)}</div>
       </div>
     </div>
@@ -3044,32 +3262,68 @@ function renderSaved() {
     const hLGK = hotelsLGK.find(h => h.id === p.hotelLGK);
     const stale = (!fKL && p.flightKL) || (!hKL && p.hotelKL) || (!fLGK && p.flightLGK) || (!hLGK && p.hotelLGK);
     const d = new Date(p.saved);
+    const dep = p.departureCity || 'BLR';
     const klImg = hKL ? hKL.photo : 'https://picsum.photos/seed/kuala-lumpur/400/300';
     const lgkImg = hLGK ? hLGK.photo : 'https://picsum.photos/seed/langkawi/400/300';
+    const klStyle = KL_PLAN_STYLES[p.planStyleKL || 'relaxed'] || KL_PLAN_STYLES.relaxed;
+    const lgkStyle = LGK_PLAN_STYLES[p.planStyleLGK || 'beach'] || LGK_PLAN_STYLES.beach;
     return `
       <div class="saved-card" onclick="loadPlan('${p.id}')" role="button" tabindex="0">
+        <div class="sc-route">
+          <span class="sc-city">${dep}</span>
+          ${ICONS.planeArrow}
+          <span class="sc-city">KUL</span>
+          ${ICONS.planeArrow}
+          <span class="sc-city sc-city-end">LGK</span>
+          <span class="sc-nights">${TRIP_NIGHTS} nights</span>
+        </div>
         <div class="sc-thumbs">
           <div class="sc-thumb">
             <img src="${klImg}" alt="${hKL ? hKL.name : 'KL'}" onerror="this.onerror=null;this.src='https://picsum.photos/seed/${p.hotelKL || 'kl'}/400/300';" />
-            <div class="sc-thumb-lbl">🏙️ KL</div>
+            <div class="sc-thumb-overlay">
+              <div class="sc-thumb-tag">${ICONS.building} Kuala Lumpur · 2 nights</div>
+              <div class="sc-thumb-name">${hKL ? hKL.name : 'Hotel not found'}</div>
+            </div>
           </div>
           <div class="sc-thumb">
             <img src="${lgkImg}" alt="${hLGK ? hLGK.name : 'Langkawi'}" onerror="this.onerror=null;this.src='https://picsum.photos/seed/${p.hotelLGK || 'lgk'}/400/300';" />
-            <div class="sc-thumb-lbl">🏝️ Langkawi</div>
+            <div class="sc-thumb-overlay">
+              <div class="sc-thumb-tag">${ICONS.palm} Langkawi · 3 nights</div>
+              <div class="sc-thumb-name">${hLGK ? hLGK.name : 'Resort not found'}</div>
+            </div>
           </div>
         </div>
         <div class="sc-body">
           ${stale ? '<div class="stale-warn">⚠️ Saved with older data — some items may not display.</div>' : ''}
           <h4>${p.name}</h4>
-          <div class="saved-date">Saved ${d.toLocaleDateString()} · ${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
-          <div class="saved-detail"><strong>From</strong><span>${p.departureCity || 'BLR'}</span></div>
-          <div class="saved-detail"><strong>KL Flight</strong><span>${fKL ? `${fKL.airline} ${fKL.no} · ${fKL.dep}` : '— (not found)'}</span></div>
-          <div class="saved-detail"><strong>KL Hotel</strong><span>${hKL ? hKL.name : '— (not found)'}</span></div>
-          <div class="saved-detail"><strong>LGK Flight</strong><span>${fLGK ? `${fLGK.airline} ${fLGK.no}` : '— (not found)'}</span></div>
-          <div class="saved-detail"><strong>LGK Hotel</strong><span>${hLGK ? hLGK.name : '— (not found)'}</span></div>
+          <div class="sc-meta">
+            ${ICONS.calendar} ${planDateRange(p)}
+            <span class="sc-meta-sep">·</span>
+            ${ICONS.clock} Saved ${d.toLocaleDateString()}
+          </div>
+          <div class="sc-styles">
+            <span class="sc-style-chip"><span class="sc-style-icon">${klStyle.icon}</span> KL: ${klStyle.name}</span>
+            <span class="sc-style-chip"><span class="sc-style-icon">${lgkStyle.icon}</span> LGK: ${lgkStyle.name}</span>
+          </div>
+          <div class="sc-flight-row">
+            <div class="sc-flight">
+              ${ICONS.plane}
+              <div>
+                <div class="sc-flight-lbl">${dep} → KUL</div>
+                <div class="sc-flight-val">${fKL ? `${fKL.airline} ${fKL.no} · ${fKL.dep}` : 'not found'}</div>
+              </div>
+            </div>
+            <div class="sc-flight">
+              ${ICONS.plane}
+              <div>
+                <div class="sc-flight-lbl">KUL → LGK</div>
+                <div class="sc-flight-val">${fLGK ? `${fLGK.airline} ${fLGK.no} · ${fLGK.dep}` : 'not found'}</div>
+              </div>
+            </div>
+          </div>
           <div class="saved-actions" onclick="event.stopPropagation();">
-            <button class="btn-mini view" onclick="loadPlan('${p.id}')">📋 View visual plan</button>
-            <button class="btn-mini delete" onclick="deletePlan('${p.id}')">Delete</button>
+            <button class="btn-mini view" onclick="loadPlan('${p.id}')">${ICONS.eye} View visual plan</button>
+            <button class="btn-mini delete" onclick="deletePlan('${p.id}')">${ICONS.trash} Delete</button>
           </div>
         </div>
       </div>`;
@@ -3085,6 +3339,7 @@ function loadPlan(id) {
       return;
     }
     state.departureCity = p.departureCity || 'BLR';
+    state.tripStartDate = p.tripStartDate || '2026-06-30';
     state.flightKL = p.flightKL;
     state.hotelKL = p.hotelKL;
     state.flightLGK = p.flightLGK;
@@ -3127,6 +3382,15 @@ document.addEventListener('click', (e) => {
 /* ==================================================
    BOOT
    ================================================== */
+
+// Initialize date input with state default
+const _dateInput = document.getElementById('tripStartDate');
+if (_dateInput) {
+  _dateInput.value = state.tripStartDate;
+  _dateInput.min = new Date().toISOString().slice(0,10);
+}
+updateTripEndLabel();
+updateWelcomePillDate();
 
 renderFlights(flightsKL, 'flightsKL', 'flightKL', 'next-flightKL');
 renderFlights(flightsLGK, 'flightsLGK', 'flightLGK', 'next-flightLGK');
