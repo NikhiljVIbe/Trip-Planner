@@ -214,17 +214,23 @@
       linear-gradient(135deg, #0c4a6e 0%, #0f766e 60%, #134e4a 100%);
     color: #fff;
     border-radius: var(--radius-lg);
-    padding: 28px 32px;
+    padding: 24px 32px;
     margin-bottom: 18px;
     position: relative; overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
   }
+  .welcome-hero-text { min-width: 0; position: relative; z-index: 1; }
   .welcome-hero::before {
     content: '🌴';
     position: absolute;
-    top: 12px; right: 18px;
-    font-size: 38px;
-    opacity: 0.22;
+    top: 8px; right: 12px;
+    font-size: 28px;
+    opacity: 0.2;
     transform: rotate(-15deg);
+    z-index: 0;
   }
   .welcome-pill {
     display: inline-flex; align-items: center; gap: 8px;
@@ -265,39 +271,52 @@
   }
   .welcome-stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
-    max-width: 600px;
+    width: 240px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
   }
   .welcome-stat {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
     border-radius: 10px;
-    padding: 8px 10px;
+    padding: 10px 12px;
+    text-align: center;
   }
   .welcome-stat .num {
     font-family: var(--serif);
-    font-size: 18px; font-weight: 600;
+    font-size: 22px; font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.1;
   }
   .welcome-stat .lbl {
-    font-size: 10px; opacity: 0.7;
+    font-size: 10px; opacity: 0.75;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     font-weight: 600;
     margin-top: 2px;
   }
+  .welcome-hero p { margin-bottom: 0; }
+  @media (max-width: 820px) {
+    .welcome-hero {
+      grid-template-columns: 1fr;
+      padding: 22px 22px;
+      gap: 16px;
+    }
+    .welcome-stats { width: 100%; grid-template-columns: repeat(4, 1fr); }
+  }
   @media (max-width: 640px) {
-    .welcome-hero { padding: 22px 18px; border-radius: 18px; }
-    .welcome-hero::before { font-size: 28px; top: 8px; right: 12px; }
+    .welcome-hero { padding: 20px 18px; border-radius: 18px; }
+    .welcome-hero::before { font-size: 24px; top: 6px; right: 10px; }
     .welcome-pill { font-size: 10.5px; padding: 3px 9px; margin-bottom: 8px; }
     .welcome-hero h1 { font-size: 22px; margin-bottom: 6px; }
-    .welcome-hero p { font-size: 12.5px; margin-bottom: 12px; }
-    .welcome-stats { grid-template-columns: repeat(4, 1fr); gap: 6px; }
-    .welcome-stat { padding: 6px 8px; }
-    .welcome-stat .num { font-size: 15px; }
-    .welcome-stat .lbl { font-size: 8.5px; }
+    .welcome-hero p { font-size: 12.5px; }
+    .welcome-stats { gap: 5px; }
+    .welcome-stat { padding: 7px 8px; }
+    .welcome-stat .num { font-size: 17px; }
+    .welcome-stat .lbl { font-size: 9px; }
   }
 
   .start-actions { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -1684,10 +1703,14 @@
     background: linear-gradient(135deg, #0c4a6e 0%, #0f766e 60%, #134e4a 100%);
     color: #fff;
     border-radius: var(--radius-lg);
-    padding: 20px 26px 12px;
+    padding: 22px 28px;
     margin-bottom: 18px;
     position: relative;
     overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr minmax(280px, 420px);
+    gap: 24px;
+    align-items: center;
   }
   .vp-hero::before {
     content: '';
@@ -1698,7 +1721,8 @@
       radial-gradient(ellipse 50% 50% at 80% 80%, rgba(251,146,60,0.45), transparent 60%);
     pointer-events: none;
   }
-  .vp-hero-inner { position: relative; z-index: 1; }
+  .vp-hero-text { position: relative; z-index: 1; min-width: 0; }
+  .vp-hero-arc { position: relative; z-index: 1; min-width: 0; }
   .vp-eyebrow {
     display: inline-block;
     font-size: 10px; font-weight: 700;
@@ -1711,7 +1735,7 @@
   }
   .vp-hero h2 {
     font-family: var(--serif);
-    font-size: clamp(18px, 2.6vw, 26px);
+    font-size: clamp(20px, 2.8vw, 30px);
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 1.1;
@@ -1723,22 +1747,30 @@
     margin-bottom: 12px;
     line-height: 1.4;
   }
+  .vp-hero-actions { margin-bottom: 0 !important; margin-top: 0 !important; }
   .flight-arc-wrap {
     width: 100%;
-    max-width: 540px;
     margin: 0 auto;
   }
   .flight-arc {
     width: 100%;
-    height: 130px;
+    height: 150px;
     overflow: visible;
   }
+  @media (max-width: 820px) {
+    .vp-hero {
+      grid-template-columns: 1fr;
+      gap: 14px;
+      padding: 20px 22px;
+    }
+    .flight-arc { height: 110px; }
+  }
   @media (max-width: 640px) {
-    .vp-hero { padding: 16px 18px 8px; border-radius: 16px; }
-    .vp-hero h2 { font-size: 17px; }
+    .vp-hero { padding: 16px 18px; border-radius: 16px; }
+    .vp-hero h2 { font-size: 18px; }
     .vp-hero .vp-meta { font-size: 11.5px; margin-bottom: 8px; }
     .flight-arc { height: 100px; }
-    .share-fab { font-size: 12px; padding: 8px 14px; }
+    .share-fab { font-size: 11.5px; padding: 7px 12px; }
   }
   .arc-city { fill: #fff; }
   .arc-city-ring { fill: rgba(255,255,255,0.2); }
@@ -2940,12 +2972,14 @@
   <!-- WELCOME SCREEN -->
   <section class="screen active" id="welcome">
     <div class="welcome-hero">
-      <div class="welcome-pill">
-        <span class="dot"></span>
-        <span id="welcomePillDate">Family · 2 toddlers · Jun 30 — Jul 5, 2026</span>
+      <div class="welcome-hero-text">
+        <div class="welcome-pill">
+          <span class="dot"></span>
+          <span id="welcomePillDate">Family · 2 toddlers · Jun 30 — Jul 5, 2026</span>
+        </div>
+        <h1>Plan your <span class="accent">Malaysia</span> family escape.</h1>
+        <p>A guided 8-step planner that picks the right flights, the most kid-friendly hotels, and builds a relaxed day-by-day itinerary for Kuala Lumpur and Langkawi.</p>
       </div>
-      <h1>Plan your <span class="accent">Malaysia</span><br/>family escape.</h1>
-      <p>A guided 7-step planner that picks the right flights, the most kid-friendly hotels, and builds a relaxed day-by-day itinerary for Kuala Lumpur and Langkawi.</p>
       <div class="welcome-stats">
         <div class="welcome-stat"><div class="num">6</div><div class="lbl">Days</div></div>
         <div class="welcome-stat"><div class="num">2</div><div class="lbl">Cities</div></div>
@@ -5187,14 +5221,16 @@ function renderViewPlan(plan) {
       </div>
     ` : ''}
     <div class="vp-hero">
-      <div class="vp-hero-inner">
+      <div class="vp-hero-text">
         <span class="vp-eyebrow">${isShared ? 'Shared with you' : 'Your saved trip'}</span>
         <h2>${plan.name}</h2>
         <div class="vp-meta">${planDateRange(plan)} · Family of 4 + 2 toddlers · <span style="opacity:.85;">Click any card below for booking links</span></div>
         <div class="vp-hero-actions">
-          ${!isShared && plan.id ? `<button class="share-fab" onclick="sharePlan('${plan.id}')">${ICONS.share} Share</button>` : ''}
+          ${!isShared && plan.id ? `<button class="share-fab" onclick="sharePlan('${plan.id}')">${ICONS.share} Share this plan</button>` : ''}
           <button class="share-fab pdf-fab" onclick="downloadPDF()">${ICONS.download} Download PDF</button>
         </div>
+      </div>
+      <div class="vp-hero-arc">
         <div class="flight-arc-wrap">${flightArc(dep)}</div>
       </div>
     </div>
