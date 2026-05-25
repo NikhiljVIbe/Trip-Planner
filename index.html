@@ -3154,6 +3154,128 @@ function loremFallback(name) {
   return `https://loremflickr.com/800/500/${tags || 'malaysia,hotel'}`;
 }
 
+/* ============================================================
+   REAL PHOTOS — Wikipedia REST API
+   Fetches the canonical Wikimedia image for each landmark/hotel
+   article. Cached for the session.
+   ============================================================ */
+const _wikiImgCache = JSON.parse(localStorage.getItem('wikiImgCache_v2') || '{}');
+const _wikiImgPending = {};
+
+// Place key (PHOTOS.*) → Commons file-search query for real photos
+const WIKI_FOR_PHOTO = {
+  petronas:     'Petronas Twin Towers Kuala Lumpur',
+  klccPark:     'KLCC Park Kuala Lumpur',
+  aquaria:      'Aquaria KLCC aquarium',
+  batuCaves:    'Batu Caves stairs Murugan',
+  birdPark:     'KL Bird Park Kuala Lumpur',
+  jalanAlor:    'Jalan Alor food street',
+  pavilion:     'Pavilion Kuala Lumpur mall',
+  beach:        'Pantai Cenang Langkawi beach',
+  mangrove:     'Kilim Geoforest Langkawi mangrove',
+  underwater:   'Underwater World Langkawi',
+  pantaiCenang: 'Pantai Cenang Langkawi',
+  eagleSquare:  'Dataran Lang Langkawi eagle',
+  airport:      'Kuala Lumpur International Airport KLIA',
+  airplane:     'Malaysia Airlines aircraft'
+};
+
+// Reverse-lookup: URL → wiki title (built at boot from PHOTOS)
+const WIKI_BY_URL = {};
+Object.keys(WIKI_FOR_PHOTO).forEach(k => {
+  if (PHOTOS[k]) WIKI_BY_URL[PHOTOS[k]] = WIKI_FOR_PHOTO[k];
+});
+
+// Hotel id → Commons search query. Search Commons file-namespace for real photos.
+// Note: For lesser-known hotels with no Commons photos, the original Unsplash photo is kept.
+const WIKI_HOTELS = {
+  'shangri-la':      'Shangri-La Kuala Lumpur hotel',
+  'mandarin':        'Mandarin Oriental Kuala Lumpur',
+  'ritz':            'Ritz-Carlton Kuala Lumpur',
+  'traders':         'Traders Hotel Kuala Lumpur',
+  'grand-hyatt':     'Grand Hyatt Kuala Lumpur',
+  'four-seasons-kl': 'Four Seasons Place Kuala Lumpur',
+  'jw-marriott':     'JW Marriott Kuala Lumpur',
+  'westin-kl':       'Westin Kuala Lumpur',
+  'hilton-kl':       'Hilton Kuala Lumpur Sentral',
+  'le-meridien':     'Le Meridien Kuala Lumpur',
+  'banyan-tree-kl':  'Banyan Tree Kuala Lumpur',
+  'w-kl':            'W Hotel Kuala Lumpur',
+  'doubletree':      'DoubleTree Hilton Kuala Lumpur',
+  'pullman-bb':      'Pullman Kuala Lumpur',
+  'sofitel-d':       'Sofitel Kuala Lumpur Damansara',
+  'andaman':         'The Andaman Langkawi resort',
+  'datai':           'The Datai Langkawi',
+  'westin':          'Westin Langkawi resort',
+  'st-regis':        'St Regis Langkawi',
+  'four-seasons':    'Four Seasons Langkawi',
+  'ritz-lgk':        'Ritz-Carlton Langkawi',
+  'berjaya':         'Berjaya Langkawi Resort',
+  'meritus':         'Pelangi Beach Langkawi',
+  'doubletree-lgk':  'DoubleTree Hilton Langkawi'
+};
+
+async function fetchWikiImage(query) {
+  if (!query) return null;
+  if (_wikiImgCache[query] !== undefined) return _wikiImgCache[query];
+  if (_wikiImgPending[query]) return _wikiImgPending[query];
+  _wikiImgPending[query] = (async () => {
+    // Use Wikimedia Commons file-search — returns real photos (not page logos)
+    try {
+      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(query)}&gsrlimit=8&gsrnamespace=6&prop=imageinfo&iiprop=url&iiurlwidth=800&format=json&origin=*`;
+      const res = await fetch(url);
+      if (!res.ok) { _wikiImgCache[query] = null; return null; }
+      const data = await res.json();
+      const pages = (data.query && data.query.pages) || {};
+      // Require filename to contain at least 2 keywords from the query (≥3 chars).
+      // Filters out off-topic results like portraits taken at the hotel.
+      const keywords = query.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w => w.length >= 3);
+      const minMatches = Math.min(2, keywords.length);
+      let best = null;
+      // Order pages by search index
+      const ordered = Object.values(pages).sort((a, b) => (a.index||999) - (b.index||999));
+      for (const p of ordered) {
+        const ii = (p.imageinfo || [])[0];
+        const thumb = ii && ii.thumburl;
+        if (!thumb) continue;
+        const blob = (p.title || '') + ' ' + thumb;
+        if (/logo|\.svg|wordmark|\.gif|map|diagram|coat[_ ]of[_ ]arms|location[_ ]map|flag/i.test(blob)) continue;
+        const filename = (p.title || '').toLowerCase();
+        const matched = keywords.filter(w => filename.includes(w)).length;
+        if (matched < minMatches) continue;
+        best = thumb;
+        break;
+      }
+      _wikiImgCache[query] = best;
+      try { localStorage.setItem('wikiImgCache_v2', JSON.stringify(_wikiImgCache)); } catch {}
+      return best;
+    } catch { _wikiImgCache[query] = null; return null; }
+  })();
+  return _wikiImgPending[query];
+}
+
+// Scan the DOM (or a container) for any <img data-wiki="..."> and swap in real photos
+async function swapWikiImages(container) {
+  const root = container || document;
+  const imgs = root.querySelectorAll('img[data-wiki]:not([data-wiki=""]):not([data-wiki-done])');
+  imgs.forEach(async (img) => {
+    img.setAttribute('data-wiki-done', '1');
+    const title = img.dataset.wiki;
+    const url = await fetchWikiImage(title);
+    if (url && img.isConnected) img.src = url;
+  });
+  // Also swap [data-wiki-bg] background-image elements
+  const bgs = root.querySelectorAll('[data-wiki-bg]:not([data-wiki-bg=""]):not([data-wiki-done])');
+  bgs.forEach(async (el) => {
+    el.setAttribute('data-wiki-done', '1');
+    const title = el.dataset.wikiBg;
+    const url = await fetchWikiImage(title);
+    if (url && el.isConnected) {
+      el.style.backgroundImage = `url('${url}')`;
+    }
+  });
+}
+
 function googleSearchURL(q) {
   return `https://www.google.com/search?q=${encodeURIComponent(q)}`;
 }
@@ -3589,7 +3711,7 @@ function renderHotelMap(stateKey) {
             const isSel = state[stateKey] === h.id;
             return `
             <div class="gmap-sb-item ${isSel ? 'selected' : ''}" data-hid="${h.id}" onclick="focusMapHotel(this, '${stateKey}', '${h.id}')">
-              <img src="${h.photo}" alt="${h.name}" onerror="this.onerror=null;this.src='${loremFallback(h.name)}';" />
+              <img src="${h.photo}" alt="${h.name}" data-wiki="${WIKI_HOTELS[h.id] || ''}" onerror="this.onerror=null;this.src='${loremFallback(h.name)}';" />
               <div class="gmap-sb-body">
                 <div class="gmap-sb-brand ${h.brand === 'accor' ? 'accor' : ''}">${h.group}</div>
                 <div class="gmap-sb-name">${h.name}</div>
@@ -3616,6 +3738,7 @@ function renderHotelMap(stateKey) {
       </div>
     </div>
   `;
+  swapWikiImages(mount);
 }
 
 function focusMapHotel(el, stateKey, hotelId) {
@@ -3846,7 +3969,7 @@ function renderHotels(list, mountId, stateKey, nextBtnId, filterBrandKey, filter
   m.innerHTML = filtered.map(h => `
     <div class="hotel-card ${state[stateKey] === h.id ? 'selected' : ''}" data-id="${h.id}" onclick="selectHotel('${stateKey}', '${h.id}', '${nextBtnId}')">
       <div class="hotel-image">
-        <img src="${h.photo}" alt="${h.name}" loading="lazy" onerror="this.onerror=null; this.src='${loremFallback(h.name)}';" />
+        <img src="${h.photo}" alt="${h.name}" loading="lazy" data-wiki="${WIKI_HOTELS[h.id] || ''}" onerror="this.onerror=null; this.src='${loremFallback(h.name)}';" />
         <span class="brand-badge ${h.brand === 'accor' ? 'accor' : ''}">${h.group}</span>
         <span class="stars-badge">${'★'.repeat(h.stars)}</span>
         ${h.familyPick ? '<span class="family-pick">Family pick</span>' : ''}
@@ -3901,6 +4024,7 @@ function renderHotels(list, mountId, stateKey, nextBtnId, filterBrandKey, filter
       </div>
     </div>
   `).join('');
+  swapWikiImages(m);
 }
 
 function selectHotel(stateKey, id, btnId) {
@@ -4243,6 +4367,7 @@ function renderViewPlan(plan) {
     ${lgkPlan.map((d, idx) => renderDayStrip(d, idx + klPlan.length)).join('')}
   `;
   document.getElementById('viewPlanContent').innerHTML = html;
+  swapWikiImages(document.getElementById('viewPlanContent'));
 }
 
 function renderDayStrip(d, dayIdx) {
@@ -4269,7 +4394,7 @@ function renderDayStrip(d, dayIdx) {
             return `
               <div class="strip-card tag-${tagType}" onclick="openDetail('activity', '${dayIdx}-${itemIdx}')">
                 <div class="strip-photo">
-                  ${i.photo ? `<img src="${i.photo}" alt="${i.title}" loading="lazy" onerror="this.onerror=null; this.src='${loremFallback(i.title)}';" />` : ''}
+                  ${i.photo ? `<img src="${i.photo}" alt="${i.title}" loading="lazy" data-wiki="${WIKI_BY_URL[i.photo] || ''}" onerror="this.onerror=null; this.src='${loremFallback(i.title)}';" />` : ''}
                   <a class="g-link g-corner g-mini" href="${googleSearchURL((i.title||'') + ' ' + ((i.title||'').toLowerCase().includes('langkawi') || (i.title||'').toLowerCase().includes('lgk') || (i.title||'').toLowerCase().includes('mangrove') || (i.title||'').toLowerCase().includes('cenang') ? 'Langkawi' : 'Kuala Lumpur'))}" target="_blank" rel="noopener" onclick="event.stopPropagation();" title="Search '${(i.title||'').replace(/'/g,'')}' on Google">${ICONS.google}</a>
                 </div>
                 <div class="strip-body">
@@ -4334,8 +4459,9 @@ function openDetail(type, id) {
     const h = hotelsKL.find(x => x.id === id) || hotelsLGK.find(x => x.id === id);
     if (!h) { showToast('Hotel not found'); return; }
     const fallback = loremFallback(h.name);
+    const wikiTitle = WIKI_HOTELS[h.id] || '';
     html = `
-      <div class="detail-hero" style="background-image:url('${h.photo}'), url('${fallback}');"></div>
+      <div class="detail-hero" data-wiki-bg="${wikiTitle}" style="background-image:url('${h.photo}'), url('${fallback}');"></div>
       <div class="detail-body">
         <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:6px;">
           <span class="detail-eyebrow" style="margin-bottom:0;">${'★'.repeat(h.stars)} · ${h.area}</span>
@@ -4354,8 +4480,9 @@ function openDetail(type, id) {
     const item = day && day.items[i];
     if (!item) { showToast('Activity not found'); return; }
     const fallback = loremFallback(item.title);
+    const wikiTitle = WIKI_BY_URL[item.photo] || '';
     html = `
-      <div class="detail-hero" style="background-image:url('${item.photo || fallback}'), url('${fallback}');"></div>
+      <div class="detail-hero" data-wiki-bg="${wikiTitle}" style="background-image:url('${item.photo || fallback}'), url('${fallback}');"></div>
       <div class="detail-body">
         <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:6px;">
           <span class="detail-eyebrow" style="margin-bottom:0;">${day.date} · Day ${day.day} · ${item.label}</span>
@@ -4377,6 +4504,7 @@ function openDetail(type, id) {
   document.getElementById('detailContent').innerHTML = html;
   document.getElementById('detailModal').classList.add('show');
   document.body.style.overflow = 'hidden';
+  swapWikiImages(document.getElementById('detailContent'));
 }
 
 function closeDetail() {
@@ -4439,14 +4567,14 @@ function renderSaved() {
         </div>
         <div class="sc-thumbs">
           <div class="sc-thumb">
-            <img src="${klImg}" alt="${hKL ? hKL.name : 'KL'}" onerror="this.onerror=null;this.src='${loremFallback(hKL ? hKL.name : 'kuala lumpur skyline')}';" />
+            <img src="${klImg}" alt="${hKL ? hKL.name : 'KL'}" data-wiki="${(hKL && WIKI_HOTELS[hKL.id]) || 'Petronas Towers'}" onerror="this.onerror=null;this.src='${loremFallback(hKL ? hKL.name : 'kuala lumpur skyline')}';" />
             <div class="sc-thumb-overlay">
               <div class="sc-thumb-tag">${ICONS.building} Kuala Lumpur · 2 nights</div>
               <div class="sc-thumb-name">${hKL ? hKL.name : 'Hotel not found'}</div>
             </div>
           </div>
           <div class="sc-thumb">
-            <img src="${lgkImg}" alt="${hLGK ? hLGK.name : 'Langkawi'}" onerror="this.onerror=null;this.src='${loremFallback(hLGK ? hLGK.name : 'langkawi beach')}';" />
+            <img src="${lgkImg}" alt="${hLGK ? hLGK.name : 'Langkawi'}" data-wiki="${(hLGK && WIKI_HOTELS[hLGK.id]) || 'Pantai Cenang'}" onerror="this.onerror=null;this.src='${loremFallback(hLGK ? hLGK.name : 'langkawi beach')}';" />
             <div class="sc-thumb-overlay">
               <div class="sc-thumb-tag">${ICONS.palm} Langkawi · 3 nights</div>
               <div class="sc-thumb-name">${hLGK ? hLGK.name : 'Resort not found'}</div>
@@ -4489,6 +4617,7 @@ function renderSaved() {
         </div>
       </div>`;
   }).join('')}</div>`;
+  swapWikiImages(m);
 }
 
 function loadPlan(id) {
