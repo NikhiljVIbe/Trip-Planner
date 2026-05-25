@@ -319,7 +319,13 @@
     .welcome-stat .lbl { font-size: 9px; }
   }
 
-  .start-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .start-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
 
   /* TRIP SETUP (welcome screen) */
   .trip-setup {
@@ -1677,6 +1683,100 @@
   }
   .empty-state p { color: var(--ink-soft); margin-bottom: 24px; }
 
+  /* TRAVEL INFO PAGE */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 980px) { .info-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .info-grid { grid-template-columns: 1fr; gap: 12px; } }
+  .info-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    transition: all .25s ease;
+  }
+  .info-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .info-card.span-2 { grid-column: span 2; }
+  @media (max-width: 980px) { .info-card.span-2 { grid-column: span 2; } }
+  @media (max-width: 640px) { .info-card.span-2 { grid-column: span 1; } }
+  .ic-head {
+    display: flex; align-items: center; gap: 12px;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .ic-icon {
+    font-size: 26px;
+    width: 44px; height: 44px;
+    background: var(--brand-light);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .ic-head h3 {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .info-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .info-card li {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    padding: 6px 0;
+    position: relative;
+    padding-left: 16px;
+  }
+  .info-card li::before {
+    content: '•';
+    position: absolute;
+    left: 4px;
+    color: var(--brand);
+    font-weight: 700;
+  }
+  .info-card li strong { color: var(--ink); font-weight: 700; }
+  .info-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 720px) { .info-row { grid-template-columns: 1fr; gap: 18px; } }
+  .info-col-title {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .info-col-title-wide { grid-column: 1 / -1; }
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 13px;
+  }
+  .info-table td {
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--line);
+    color: var(--ink-soft);
+  }
+  .info-table td:last-child {
+    text-align: right;
+    color: var(--ink);
+    font-weight: 700;
+    font-family: var(--serif);
+  }
+
   /* SCHEDULE NOTE — disclaimer above flight grids */
   .schedule-note {
     background: #fffbeb;
@@ -2965,7 +3065,8 @@
       <span class="logo-text">Malaysia Planner <small>· 2026</small></span>
     </div>
     <nav class="header-nav">
-      <button class="btn-ghost" onclick="goTo('welcome')">Plan New</button>
+      <button class="btn-ghost" onclick="goTo('welcome')">Plan</button>
+      <button class="btn-ghost" onclick="goTo('info')">Travel info</button>
       <button class="btn-ghost" onclick="goTo('saved')" id="savedNav">
         Saved <span class="saved-badge" id="savedCount">0</span>
       </button>
@@ -3315,6 +3416,179 @@
     <div class="step-nav">
       <button class="btn-back" onclick="goTo('planLGK')">← Back</button>
       <button class="btn-primary" onclick="goTo('welcome')">Plan another →</button>
+    </div>
+  </section>
+
+  <!-- TRAVEL INFO -->
+  <section class="screen" id="info">
+    <div class="screen-head">
+      <span class="eyebrow">Before you go</span>
+      <h2>Travel info · <span class="em">Malaysia with kids</span></h2>
+      <p>Quick facts, weather, currency, and family tips for KL + Langkawi in June / July.</p>
+    </div>
+
+    <div class="info-grid">
+
+      <div class="info-card span-2">
+        <div class="ic-head"><span class="ic-icon">🌦️</span><h3>Weather in June – July</h3></div>
+        <div class="info-row">
+          <div class="info-col">
+            <div class="info-col-title">🏙️ Kuala Lumpur</div>
+            <ul>
+              <li><strong>Temp:</strong> 25 – 33 °C, high humidity (~80%)</li>
+              <li><strong>Rain:</strong> Daily afternoon thunderstorms (45 min – 2 hr). Mornings + evenings usually clear.</li>
+              <li><strong>Pack:</strong> Light cotton clothes, small umbrella, light rain jacket, sandals + sneakers</li>
+              <li><strong>Plan around:</strong> Outdoor stuff in the morning, mall/aquarium/hotel pool in afternoon, dinner stroll after rain.</li>
+            </ul>
+          </div>
+          <div class="info-col">
+            <div class="info-col-title">🏝️ Langkawi</div>
+            <ul>
+              <li><strong>Temp:</strong> 25 – 31 °C, ocean breeze keeps it comfortable</li>
+              <li><strong>Rain:</strong> July is the <strong>driest</strong> month in Langkawi! June has occasional showers but mostly sunny.</li>
+              <li><strong>Sea:</strong> Calm, ideal for kids. Pulau Payar snorkeling at its best.</li>
+              <li><strong>Heads up:</strong> Sumatra haze can occasionally drift in (July). Usually clears in a day or two.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-head"><span class="ic-icon">💱</span><h3>Currency &amp; money</h3></div>
+        <ul>
+          <li><strong>1 MYR ≈ ₹19</strong> (changes daily — check XE before exchange)</li>
+          <li><strong>Common prices in INR:</strong>
+            <table class="info-table">
+              <tr><td>Bottled water (500 ml)</td><td>₹25 – 40</td></tr>
+              <tr><td>Kopi / teh tarik</td><td>₹70 – 100</td></tr>
+              <tr><td>Hawker meal</td><td>₹200 – 400</td></tr>
+              <tr><td>Restaurant meal (family)</td><td>₹1,800 – 3,500</td></tr>
+              <tr><td>Hotel breakfast buffet</td><td>₹1,200 – 2,000</td></tr>
+              <tr><td>Grab ride (KLCC ↔ Bukit Bintang)</td><td>₹120 – 250</td></tr>
+              <tr><td>Aquaria KLCC ticket (adult)</td><td>₹1,500</td></tr>
+              <tr><td>SkyCab Langkawi (adult)</td><td>₹1,400</td></tr>
+            </table>
+          </li>
+          <li><strong>Cash vs card:</strong> Visa / Mastercard widely accepted. Use ATM at airport for best rates (skip money-changers). Keep ~RM 200 cash for hawkers + small vendors.</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-head"><span class="ic-icon">👶</span><h3>Travelling with kids</h3></div>
+        <ul>
+          <li><strong>Stroller:</strong> Bring one that folds one-handed. KLIA + KLIA2 have long walks.</li>
+          <li><strong>Pack:</strong> Diapers + wipes (similar brands available but ₹ more), mosquito patches (Odomos), familiar snacks, electric kettle adapter, SPF 50+ sunscreen, hat, swim diapers.</li>
+          <li><strong>Mosquitos:</strong> Especially in Langkawi rainforest + at dusk. Long sleeves + repellent.</li>
+          <li><strong>Heat strategy:</strong> One outdoor + one indoor activity per day. AC pool time = nap time.</li>
+          <li><strong>Indian food:</strong> Easy to find everywhere — Brickfields (Little India), Bangsar, KLCC food courts. Hotel breakfasts include dosa / paratha.</li>
+          <li><strong>Grab app:</strong> Cheaper than taxis. Child seats on request. Download before you land.</li>
+          <li><strong>Health:</strong> Tap water is safe but most travelers stick to bottled. No malaria in KL/Langkawi.</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-head"><span class="ic-icon">📋</span><h3>Visa &amp; entry</h3></div>
+        <ul>
+          <li><strong>Indian passport:</strong> Visa-free entry to Malaysia for 30 days (as of Dec 2023 – Dec 2026). No visa fee.</li>
+          <li><strong>MDAC form:</strong> Fill the free Malaysia Digital Arrival Card online <strong>within 3 days of arrival</strong> → <a href="https://imigresen-online.imi.gov.my/mdac/main" target="_blank" rel="noopener" style="color:var(--brand);">imigresen-online.imi.gov.my/mdac</a></li>
+          <li><strong>Passport validity:</strong> 6+ months from entry date</li>
+          <li><strong>Proof of return ticket</strong> may be asked at immigration</li>
+          <li><strong>Children:</strong> Same visa-free rules. Carry birth certificate copy for kids under 12.</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-head"><span class="ic-icon">🔌</span><h3>Plugs, SIM &amp; connectivity</h3></div>
+        <ul>
+          <li><strong>Plug type:</strong> Type G (UK 3-pin, square). Bring a universal adapter or buy at airport (~RM 25 / ₹475).</li>
+          <li><strong>Voltage:</strong> 240V — same as India. No converter needed.</li>
+          <li><strong>SIM:</strong> Maxis / Celcom / DiGi prepaid at airport. ~RM 30 (₹570) for 30 GB / 7 days. Activate before clearing customs.</li>
+          <li><strong>WiFi:</strong> Free at hotels, malls, KLIA, KLCC park, Pavilion.</li>
+          <li><strong>eSIM:</strong> Yes — Airalo + Holafly have Malaysia plans (₹500 for 5 GB).</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-head"><span class="ic-icon">🍽️</span><h3>Food &amp; culture</h3></div>
+        <ul>
+          <li><strong>Halal-friendly:</strong> 60%+ Muslim country — most restaurants are halal. Pork is rare outside Chinese areas.</li>
+          <li><strong>Indian veg:</strong> Saravanaa Bhavan, Sangeetha, Annalakshmi all have outlets. Banana leaf rice in Brickfields + Bangsar.</li>
+          <li><strong>Language:</strong> Bahasa Malaysia (national), but <strong>English widely spoken</strong>. Tamil + Hindi understood in Indian areas.</li>
+          <li><strong>Dress code:</strong> Modest at mosques (Putra Mosque provides robes). Beachwear OK at resorts + Pantai Cenang.</li>
+          <li><strong>Tipping:</strong> Not customary. 10% service charge already included in restaurants.</li>
+          <li><strong>Drinking:</strong> Alcohol available in non-Muslim restaurants + hotels. Expensive due to taxes (~RM 30 for a beer).</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-head"><span class="ic-icon">⏰</span><h3>Time &amp; quick facts</h3></div>
+        <ul>
+          <li><strong>Time zone:</strong> GMT+8 — <strong>2 hr 30 min ahead of IST</strong>. Land at 9 AM Malaysia = 6:30 AM India.</li>
+          <li><strong>Currency code:</strong> MYR (Malaysian Ringgit)</li>
+          <li><strong>Country code:</strong> +60</li>
+          <li><strong>Drives on:</strong> Left side (same as India)</li>
+          <li><strong>Tap water:</strong> Treated and safe but most stick to bottled</li>
+          <li><strong>Safety:</strong> Very safe for families. Low petty crime. Tourist police visible in KLCC + Pantai Cenang.</li>
+          <li><strong>Emergency:</strong> 999 (police, ambulance, fire)</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-head"><span class="ic-icon">📱</span><h3>Useful apps</h3></div>
+        <ul>
+          <li><strong>Grab</strong> — Uber-equivalent. Rides, food delivery, parcel.</li>
+          <li><strong>foodpanda</strong> — Food delivery to hotel room (helpful with sleeping kids).</li>
+          <li><strong>Touch 'n Go eWallet</strong> — Pay at hawkers, malls (RM 10 + sign-up bonus).</li>
+          <li><strong>MASkargo / MAS app</strong> — Manage Malaysia Airlines booking, web check-in.</li>
+          <li><strong>AirAsia MOVE</strong> — Manage AK booking, baggage add-ons.</li>
+          <li><strong>Klook</strong> — Discounted attraction tickets (Aquaria, SkyCab, mangrove tour). Skip-the-line.</li>
+          <li><strong>Waze</strong> — Better than Google Maps for KL traffic.</li>
+        </ul>
+      </div>
+
+      <div class="info-card span-2">
+        <div class="ic-head"><span class="ic-icon">🎒</span><h3>What to pack for kids</h3></div>
+        <div class="info-row">
+          <div class="info-col">
+            <div class="info-col-title">Clothes</div>
+            <ul>
+              <li>5–7 cotton t-shirts</li>
+              <li>3–4 shorts</li>
+              <li>2 swimsuits + swim diapers</li>
+              <li>1 light rain jacket</li>
+              <li>Sun hat + sunglasses</li>
+              <li>Sandals (Crocs work great) + sneakers</li>
+            </ul>
+          </div>
+          <div class="info-col">
+            <div class="info-col-title">Health &amp; toiletries</div>
+            <ul>
+              <li>SPF 50+ kids sunscreen</li>
+              <li>Mosquito repellent (Odomos roll-on)</li>
+              <li>Anti-allergy + ORS sachets</li>
+              <li>Thermometer + paracetamol</li>
+              <li>Diapers + wipes (1 pack — buy more there)</li>
+            </ul>
+          </div>
+          <div class="info-col">
+            <div class="info-col-title">Tech &amp; comfort</div>
+            <ul>
+              <li>Universal travel adapter</li>
+              <li>Electric kettle (for warm milk / khichdi)</li>
+              <li>Stroller + carrier (for naps mid-walk)</li>
+              <li>Kids' tablet + headphones (long flights)</li>
+              <li>Familiar snacks + ready-meals</li>
+              <li>Refillable water bottle</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo('welcome')">← Back to planning</button>
+      <button class="btn-primary" onclick="startPlanning()">Start planning →</button>
     </div>
   </section>
 
@@ -4773,11 +5047,12 @@ function renderFlights(list, mountId, stateKey, nextBtnId) {
       <div style="margin-top:10px;font-size:13px;color:var(--ink-soft);">${f.notes}</div>
       <div class="flight-book-row" onclick="event.stopPropagation();">
         <div class="fbook-label">Book on:</div>
-        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' ' + fmtBookingDate(0) + ' site:makemytrip.com')}" style="--c:#eb2026;">MakeMyTrip</a>
-        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' ' + fmtBookingDate(0) + ' site:goibibo.com')}" style="--c:#fc4961;">Goibibo</a>
-        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' ' + fmtBookingDate(0) + ' site:yatra.com')}" style="--c:#fb6a3a;">Yatra</a>
-        <a class="fbook" target="_blank" rel="noopener" href="https://www.skyscanner.co.in/transport/flights/${f.from.toLowerCase()}/${f.to.toLowerCase()}/${state.tripStartDate.replace(/-/g,'')}" style="--c:#0770e3;">Skyscanner</a>
-        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' ' + fmtBookingDate(0) + ' site:cleartrip.com')}" style="--c:#f47521;">Cleartrip</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.makemytrip.com/flight/search?itinerary=${f.from}-${f.to}-${fmtBookingDate(0)}&tripType=O&paxType=A-2_C-2_I-0&intl=true&cabinClass=E" style="--c:#eb2026;">MakeMyTrip</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.goibibo.com/flights/air-${f.from}-${f.to}-${fmtBookingDate(0).replace(/\//g,'')}--2-2-0-E.html" style="--c:#fc4961;">Goibibo</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://flight.yatra.com/air-search-ui/dom2?type=O&class=Economy&adult=2&child=2&infant=0&flight_depart_date=${fmtBookingDate(0)}&from=${f.from}&to=${f.to}" style="--c:#fb6a3a;">Yatra</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.skyscanner.co.in/transport/flights/${f.from.toLowerCase()}/${f.to.toLowerCase()}/${state.tripStartDate.slice(2).replace(/-/g,'')}/?adultsv2=2&childrenv2=2" style="--c:#0770e3;">Skyscanner</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.cleartrip.com/flights/results?adults=2&childs=2&infants=0&from=${f.from}&to=${f.to}&depart_date=${fmtBookingDate(0)}&intl=y" style="--c:#f47521;">Cleartrip</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/travel/flights?q=Flights+from+${f.from}+to+${f.to}+on+${state.tripStartDate}" style="--c:#1a73e8;">Google</a>
       </div>
     </div>
   `).join('');
@@ -5140,53 +5415,72 @@ function showToast(message) {
 
 /* ========== VISUAL VIEW PLAN ========== */
 
-// Build a Google site-search URL — the most reliable way to land on the right hotel/flight page
-// since direct search URLs on these aggregators change frequently and often 404.
-function gSearch(query, site) {
-  return `https://www.google.com/search?q=${encodeURIComponent(query + ' site:' + site)}`;
+// Date helpers — each booking site uses a different format
+function _depDate() { return state.tripStartDate || '2026-06-30'; }
+function _retDate() {
+  const d = new Date(_depDate() + 'T00:00:00');
+  d.setDate(d.getDate() + TRIP_NIGHTS);
+  return d.toISOString().slice(0,10);
+}
+function _ddmmyyyy(yyyymmdd, sep) {
+  const [y, m, d] = yyyymmdd.split('-');
+  return d + (sep||'/') + m + (sep||'/') + y;
+}
+function _yymmdd(yyyymmdd) {
+  const [y, m, d] = yyyymmdd.split('-');
+  return y.slice(2) + m + d;
 }
 
 function hotelBookingLinks(h) {
   if (!h) return '';
-  const q = `${h.name} ${h.area || ''} Malaysia`;
+  const name = encodeURIComponent(h.name);
+  const checkin = _depDate();   // YYYY-MM-DD
+  const checkout = _retDate();
+  const mmtCheckin  = checkin.split('-')[1] + checkin.split('-')[2] + checkin.split('-')[0];   // MMDDYYYY
+  const mmtCheckout = checkout.split('-')[1] + checkout.split('-')[2] + checkout.split('-')[0];
   const links = [
-    { site:'MakeMyTrip',  url:gSearch(q, 'makemytrip.com'),  color:'#eb2026', logo:'M' },
-    { site:'Goibibo',     url:gSearch(q, 'goibibo.com'),     color:'#fc4961', logo:'G' },
-    { site:'Booking.com', url:`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(h.name)}`, color:'#003580', logo:'B' },
-    { site:'Agoda',       url:`https://www.agoda.com/search?query=${encodeURIComponent(h.name)}`,             color:'#5392f9', logo:'A' },
-    { site:'Yatra',       url:gSearch(q, 'yatra.com'),       color:'#fb6a3a', logo:'Y' },
-    { site:'Trivago',     url:`https://www.trivago.in/en-IN/srl/hotels?query=${encodeURIComponent(h.name)}`,  color:'#FFC107', logo:'T' }
+    { site:'MakeMyTrip',  url:`https://www.makemytrip.com/hotels/hotel-listing/?checkin=${mmtCheckin}&checkout=${mmtCheckout}&country=MY&searchText=${name}&roomStayQualifier=2e2e0e&locusType=hotel`, color:'#eb2026', logo:'M' },
+    { site:'Goibibo',     url:`https://www.goibibo.com/hotels/hotels-in-${encodeURIComponent((h.area||'kuala-lumpur').toLowerCase().replace(/\s+/g,'-'))}-malaysia/?searchText=${name}`, color:'#fc4961', logo:'G' },
+    { site:'Booking.com', url:`https://www.booking.com/searchresults.html?ss=${name}&checkin=${checkin}&checkout=${checkout}&group_adults=4&group_children=2`, color:'#003580', logo:'B' },
+    { site:'Agoda',       url:`https://www.agoda.com/search?textToSearch=${name}&checkIn=${checkin}&checkOut=${checkout}&adults=4&children=2`, color:'#5392f9', logo:'A' },
+    { site:'Yatra',       url:`https://hotels.yatra.com/hotels/search?searchText=${name}&country=MY&checkIn=${_ddmmyyyy(checkin)}&checkOut=${_ddmmyyyy(checkout)}&rooms=1&adultCount=4&childCount=2`, color:'#fb6a3a', logo:'Y' },
+    { site:'Trivago',     url:`https://www.trivago.in/en-IN/srl/hotels?query=${name}`, color:'#FFC107', logo:'T' }
   ];
-  if (h.brand === 'accor')                                    links.unshift({ site:'Accor (best rate)',    url:gSearch(h.name, 'all.accor.com'),       color:'#c8102e', logo:'A' });
-  if (h.group && h.group.includes('Marriott'))                links.unshift({ site:'Marriott (best rate)', url:gSearch(h.name, 'marriott.com'),        color:'#1c1c1c', logo:'M' });
-  if (h.group && h.group.includes('Hilton'))                  links.unshift({ site:'Hilton',               url:gSearch(h.name, 'hilton.com'),          color:'#003366', logo:'H' });
-  if (h.group && h.group.includes('Hyatt'))                   links.unshift({ site:'Hyatt',                url:gSearch(h.name, 'hyatt.com'),           color:'#2c2a29', logo:'H' });
-  if (h.group && h.group.includes('Shangri-La'))              links.unshift({ site:'Shangri-La',           url:gSearch(h.name, 'shangri-la.com'),      color:'#9b2235', logo:'S' });
-  if (h.group && h.group.includes('IHG'))                     links.unshift({ site:'IHG',                  url:gSearch(h.name, 'ihg.com'),             color:'#002a6c', logo:'I' });
+  if (h.brand === 'accor')                          links.unshift({ site:'Accor.com',        url:`https://all.accor.com/ssr/app/accor/search?searchTerm=${name}`,    color:'#c8102e', logo:'A' });
+  if (h.group && h.group.includes('Marriott'))      links.unshift({ site:'Marriott.com',     url:`https://www.marriott.com/search/findHotels.mi?destinationAddress.destination=${name}`, color:'#1c1c1c', logo:'M' });
+  if (h.group && h.group.includes('Hilton'))        links.unshift({ site:'Hilton.com',       url:`https://www.hilton.com/en/search/find-hotels/?query=${name}`, color:'#003366', logo:'H' });
+  if (h.group && h.group.includes('Hyatt'))         links.unshift({ site:'Hyatt.com',        url:`https://www.hyatt.com/search/${name}`, color:'#2c2a29', logo:'H' });
+  if (h.group && h.group.includes('Shangri-La'))    links.unshift({ site:'Shangri-La.com',   url:`https://www.shangri-la.com/search/?q=${name}`, color:'#9b2235', logo:'S' });
+  if (h.group && h.group.includes('IHG'))           links.unshift({ site:'IHG.com',          url:`https://www.ihg.com/destinations/us/en/search?qDest=${name}`, color:'#002a6c', logo:'I' });
   return links.map(l => `<a class="blink" href="${l.url}" target="_blank" rel="noopener" style="--bcolor:${l.color};"><span class="blink-logo">${l.logo}</span>${l.site}</a>`).join('');
 }
 
 function flightBookingLinks(f) {
   if (!f) return '';
-  const q = `${f.airline} ${f.no} ${f.from} to ${f.to} flight`;
+  const dep = _depDate();             // YYYY-MM-DD
+  const from = (f.from||'').toUpperCase();
+  const to = (f.to||'').toUpperCase();
+  const depDDMMYYYY = _ddmmyyyy(dep);          // 30/06/2026
+  const depYYMMDD = _yymmdd(dep);              // 260630
+  const depDDMMYYYYnosep = _ddmmyyyy(dep,'');  // 30062026
   const links = [
-    { site:'MakeMyTrip', url:gSearch(q, 'makemytrip.com'), color:'#eb2026', logo:'M' },
-    { site:'Goibibo',    url:gSearch(q, 'goibibo.com'),    color:'#fc4961', logo:'G' },
-    { site:'Yatra',      url:gSearch(q, 'yatra.com'),      color:'#fb6a3a', logo:'Y' },
-    { site:'Cleartrip',  url:gSearch(q, 'cleartrip.com'),  color:'#f47521', logo:'C' },
-    { site:'Skyscanner', url:`https://www.skyscanner.co.in/transport/flights/${(f.from||'').toLowerCase()}/${(f.to||'').toLowerCase()}/`, color:'#0770e3', logo:'S' },
-    { site:f.airline,    url:gSearch(`${f.airline} ${f.from} ${f.to} flight booking`, ''), color:'#0f766e', logo:'✈' }
+    { site:'MakeMyTrip', url:`https://www.makemytrip.com/flight/search?itinerary=${from}-${to}-${depDDMMYYYY}&tripType=O&paxType=A-2_C-2_I-0&intl=true&cabinClass=E`, color:'#eb2026', logo:'M' },
+    { site:'Goibibo',    url:`https://www.goibibo.com/flights/air-${from}-${to}-${depDDMMYYYYnosep}--2-2-0-E.html`, color:'#fc4961', logo:'G' },
+    { site:'Yatra',      url:`https://flight.yatra.com/air-search-ui/dom2?type=O&class=Economy&adult=2&child=2&infant=0&flight_depart_date=${depDDMMYYYY}&from=${from}&to=${to}`, color:'#fb6a3a', logo:'Y' },
+    { site:'Cleartrip',  url:`https://www.cleartrip.com/flights/results?adults=2&childs=2&infants=0&from=${from}&to=${to}&depart_date=${depDDMMYYYY}&intl=y`, color:'#f47521', logo:'C' },
+    { site:'Skyscanner', url:`https://www.skyscanner.co.in/transport/flights/${from.toLowerCase()}/${to.toLowerCase()}/${depYYMMDD}/?adultsv2=2&childrenv2=2`, color:'#0770e3', logo:'S' },
+    { site:'Google Flights', url:`https://www.google.com/travel/flights?q=Flights+from+${from}+to+${to}+on+${dep}`, color:'#1a73e8', logo:'G' }
   ];
   return links.map(l => `<a class="blink" href="${l.url}" target="_blank" rel="noopener" style="--bcolor:${l.color};"><span class="blink-logo">${l.logo}</span>${l.site}</a>`).join('');
 }
 
 function activityBookingLinks(query) {
-  const q = encodeURIComponent(query);
+  const q = encodeURIComponent(query + ' Malaysia');
   const links = [
-    { site:'Klook',         url:`https://www.klook.com/search/result/?query=${q}`,    color:'#ff5722', logo:'K' },
-    { site:'GetYourGuide',  url:`https://www.getyourguide.com/s/?q=${q}`,             color:'#ff7300', logo:'G' },
-    { site:'Viator',        url:`https://www.viator.com/search?text=${q}`,            color:'#ed1c24', logo:'V' },
-    { site:'MakeMyTrip',    url:gSearch(query + ' tour Malaysia', 'makemytrip.com'),  color:'#eb2026', logo:'M' }
+    { site:'Klook',         url:`https://www.klook.com/search/result/?query=${q}`,        color:'#ff5722', logo:'K' },
+    { site:'GetYourGuide',  url:`https://www.getyourguide.com/s/?q=${q}`,                 color:'#ff7300', logo:'G' },
+    { site:'Viator',        url:`https://www.viator.com/search?text=${q}`,                color:'#ed1c24', logo:'V' },
+    { site:'MakeMyTrip',    url:`https://www.makemytrip.com/holidays-international/search?destination=Malaysia&q=${q}`, color:'#eb2026', logo:'M' }
   ];
   return links.map(l => `<a class="blink" href="${l.url}" target="_blank" rel="noopener" style="--bcolor:${l.color};"><span class="blink-logo">${l.logo}</span>${l.site}</a>`).join('');
 }
