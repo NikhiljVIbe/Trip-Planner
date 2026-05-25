@@ -1771,6 +1771,313 @@
     line-height: 1.4;
   }
 
+  /* HORIZONTAL DAY STRIP (viewPlan redesign) */
+  .vp-trip-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+  .vp-trip-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all .2s ease;
+    display: flex; flex-direction: column; gap: 6px;
+    position: relative;
+  }
+  .vp-trip-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--brand);
+    box-shadow: var(--shadow-md);
+  }
+  .vp-trip-card .vt-eyebrow {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .vp-trip-card .vt-eyebrow svg { stroke: var(--brand); }
+  .vp-trip-card h4 {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .vp-trip-card .vt-meta {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .vp-trip-card .vt-click {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 11.5px;
+    color: var(--brand);
+    font-weight: 700;
+  }
+
+  .vp-day-section {
+    margin-bottom: 26px;
+  }
+  .vp-day-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 14px;
+  }
+  .vp-day-badge {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-2), var(--brand));
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 15px;
+    flex-shrink: 0;
+    box-shadow: 0 6px 14px -4px rgba(15,118,110,0.4);
+  }
+  .vp-day-title-wrap .vp-day-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .vp-day-title-wrap .vp-day-date {
+    font-size: 12px; color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    margin-top: 1px;
+  }
+
+  .strip-scroll {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 0 16px;
+    margin: 0 -8px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+  .strip-scroll::-webkit-scrollbar { height: 6px; }
+  .strip-scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
+  .strip-scroll::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  .strip-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    padding: 0 8px;
+    position: relative;
+  }
+  /* Dotted connector line */
+  .strip-row::before {
+    content: '';
+    position: absolute;
+    left: 24px; right: 24px;
+    top: 56px;
+    border-top: 2px dashed var(--line);
+    z-index: 0;
+  }
+  .strip-card {
+    flex: 0 0 230px;
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .25s ease;
+    scroll-snap-align: start;
+    position: relative;
+    z-index: 1;
+    display: flex; flex-direction: column;
+  }
+  .strip-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--brand);
+    box-shadow: var(--shadow-md);
+  }
+  .strip-card::after {
+    content: '';
+    position: absolute;
+    top: 96px; left: 50%;
+    width: 14px; height: 14px;
+    background: var(--bg);
+    border: 3px solid var(--brand);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+  .strip-card.tag-eat::after { border-color: #ca8a04; }
+  .strip-card.tag-see::after { border-color: #0f766e; }
+  .strip-card.tag-move::after { border-color: #1e40af; }
+  .strip-card.tag-rest::after { border-color: #6b21a8; }
+  .strip-photo {
+    width: 100%;
+    height: 110px;
+    overflow: hidden;
+    background: var(--bg-tint);
+  }
+  .strip-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .5s ease;
+  }
+  .strip-card:hover .strip-photo img { transform: scale(1.08); }
+  .strip-body {
+    padding: 18px 14px 14px;
+    display: flex; flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+  .strip-time {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--brand);
+    line-height: 1.1;
+  }
+  .strip-time-label {
+    display: block;
+    font-family: var(--font);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 3px;
+  }
+  .strip-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-top: 2px;
+  }
+  .strip-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+  .strip-tags .time-tag { font-size: 10.5px; padding: 2px 6px; }
+  .strip-cta {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--brand);
+    display: flex; align-items: center; gap: 3px;
+  }
+  @media (max-width: 720px) {
+    .strip-card { flex-basis: 210px; }
+  }
+
+  /* DETAIL MODAL */
+  .detail-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: fadeIn .2s ease;
+  }
+  .detail-modal.show { display: flex; }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .detail-card {
+    background: var(--card);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 580px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.4);
+    animation: slideUp .3s cubic-bezier(.16,1,.3,1);
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px) scale(.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .detail-close {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    color: var(--ink);
+    transition: background .15s;
+  }
+  .detail-close:hover { background: #fff; }
+  .detail-hero {
+    height: 220px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--bg-tint);
+    position: relative;
+  }
+  .detail-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.5));
+  }
+  .detail-body {
+    padding: 24px 28px 28px;
+  }
+  .detail-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--brand);
+    background: var(--brand-light);
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .detail-body h2 {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .detail-meta {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .detail-body p {
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    margin-bottom: 16px;
+    line-height: 1.55;
+  }
+  .detail-body h3 {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 600;
+    margin: 18px 0 10px;
+    color: var(--ink);
+  }
+  .detail-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .detail-body .booking-links { margin-bottom: 10px; }
+
   /* TOAST */
   .app-toast {
     position: fixed;
@@ -2120,6 +2427,16 @@
     </div>
   </section>
 </main>
+
+<!-- Detail Modal (used for activity/hotel/flight click on viewPlan) -->
+<div class="detail-modal" id="detailModal" onclick="if(event.target===this) closeDetail()">
+  <div class="detail-card" role="dialog" aria-modal="true">
+    <button class="detail-close" onclick="closeDetail()" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div id="detailContent"></div>
+  </div>
+</div>
 
 <script>
 /* ==================================================
@@ -3396,6 +3713,8 @@ function flightArc(depCity) {
   `;
 }
 
+let _currentPlanDays = []; // cache for modal lookups
+
 function renderViewPlan(plan) {
   const f1 = findFlightKL(plan.flightKL);
   const h1 = hotelsKL.find(h => h.id === plan.hotelKL);
@@ -3407,6 +3726,7 @@ function renderViewPlan(plan) {
   const lgkStyle = plan.planStyleLGK || 'beach';
   const klPlan = (h1 && f1) ? getKLPlan(h1, f1, klStyle) : [];
   const lgkPlan = h2 ? getLGKPlan(h2, lgkStyle) : [];
+  _currentPlanDays = [...klPlan, ...lgkPlan];
 
   const isShared = !!state._sharedPlan;
   const html = `
@@ -3420,143 +3740,171 @@ function renderViewPlan(plan) {
       <div class="vp-hero-inner">
         <span class="vp-eyebrow">${isShared ? 'Shared with you' : 'Your saved trip'}</span>
         <h2>${plan.name}</h2>
-        <div class="vp-meta">${planDateRange(plan)} · Family of 4 + 2 toddlers</div>
-        ${!isShared ? `<button class="share-fab" onclick="sharePlan('${plan.id}')" style="margin-top:12px;">${ICONS.share} Share this plan</button>` : ''}
+        <div class="vp-meta">${planDateRange(plan)} · Family of 4 + 2 toddlers · <span style="opacity:.85;">Click any card below for booking links</span></div>
+        ${!isShared && plan.id ? `<button class="share-fab" onclick="sharePlan('${plan.id}')" style="margin-top:12px;">${ICONS.share} Share this plan</button>` : ''}
         <div class="flight-arc-wrap">${flightArc(dep)}</div>
       </div>
     </div>
 
-    <div class="vp-section">
-      <div class="vp-section-head">
-        <div class="vp-section-title">
-          <div class="vp-icon">✈️</div>
-          <div>
-            <h3>Outbound flight · ${dep} → KUL</h3>
-            <div class="vp-sub">${f1 ? `${f1.airline} ${f1.no} · ${f1.dep} → ${f1.arr} · ${f1.price}` : '—'}</div>
-          </div>
-        </div>
+    <div class="vp-trip-row">
+      <div class="vp-trip-card" onclick="openDetail('flight', '${plan.flightKL || ''}')">
+        <div class="vt-eyebrow">${ICONS.plane} Flight · ${dep} → KUL</div>
+        <h4>${f1 ? `${f1.airline} ${f1.no}` : 'Not selected'}</h4>
+        <div class="vt-meta">${f1 ? `${f1.dep} → ${f1.arr} · ${f1.price}` : '—'}</div>
+        <div class="vt-click">Tap for booking links →</div>
       </div>
-      <div class="vp-section-body">
-        ${f1 ? `<p style="color:var(--ink-soft);font-size:14.5px;">${f1.notes}</p>` : ''}
-        <div class="booking-links">${f1 ? flightBookingLinks(f1) : ''}</div>
+      <div class="vp-trip-card" onclick="openDetail('hotel', '${plan.hotelKL || ''}')">
+        <div class="vt-eyebrow">${ICONS.building} Stay · Kuala Lumpur (2 nights)</div>
+        <h4>${h1 ? h1.name : 'Not selected'}</h4>
+        <div class="vt-meta">${h1 ? `${h1.area} · ${h1.price}/night` : '—'}</div>
+        <div class="vt-click">Tap for booking links →</div>
       </div>
-    </div>
-
-    <div class="vp-section">
-      <div class="vp-section-head">
-        <div class="vp-section-title">
-          <div class="vp-icon">🏨</div>
-          <div>
-            <h3>KL Stay · ${h1 ? h1.name : '—'}</h3>
-            <div class="vp-sub">${h1 ? `${h1.group} · ${h1.area} · ${h1.price}/night × 2 nights` : ''}</div>
-          </div>
-        </div>
+      <div class="vp-trip-card" onclick="openDetail('flight', '${plan.flightLGK || ''}')">
+        <div class="vt-eyebrow">${ICONS.plane} Flight · KUL → LGK</div>
+        <h4>${f2 ? `${f2.airline} ${f2.no}` : 'Not selected'}</h4>
+        <div class="vt-meta">${f2 ? `${f2.dep} → ${f2.arr} · ${f2.price}` : '—'}</div>
+        <div class="vt-click">Tap for booking links →</div>
       </div>
-      <div class="vp-section-body">
-        ${h1 ? `<p style="color:var(--ink-soft);font-size:14.5px;">${h1.desc}</p>` : ''}
-        <div class="booking-links">${h1 ? hotelBookingLinks(h1) : ''}</div>
+      <div class="vp-trip-card" onclick="openDetail('hotel', '${plan.hotelLGK || ''}')">
+        <div class="vt-eyebrow">${ICONS.palm} Stay · Langkawi (3 nights)</div>
+        <h4>${h2 ? h2.name : 'Not selected'}</h4>
+        <div class="vt-meta">${h2 ? `${h2.area} · ${h2.price}/night` : '—'}</div>
+        <div class="vt-click">Tap for booking links →</div>
       </div>
     </div>
 
-    <div class="vp-section">
-      <div class="vp-section-head">
-        <div class="vp-section-title">
-          <div class="vp-icon">🗓️</div>
-          <div>
-            <h3>2 days in Kuala Lumpur</h3>
-            <div class="vp-sub">Day-by-day with photos and booking links</div>
-          </div>
-        </div>
-      </div>
-      <div class="vp-section-body">
-        <div class="dot-timeline">
-          ${klPlan.map(d => renderDayTimeline(d)).join('')}
-        </div>
-      </div>
-    </div>
-
-    <div class="vp-section">
-      <div class="vp-section-head">
-        <div class="vp-section-title">
-          <div class="vp-icon">✈️</div>
-          <div>
-            <h3>Island hop · KUL → LGK</h3>
-            <div class="vp-sub">${f2 ? `${f2.airline} ${f2.no} · ${f2.dep} → ${f2.arr} · ${f2.price}` : '—'}</div>
-          </div>
-        </div>
-      </div>
-      <div class="vp-section-body">
-        ${f2 ? `<p style="color:var(--ink-soft);font-size:14.5px;">${f2.notes}</p>` : ''}
-        <div class="booking-links">${f2 ? flightBookingLinks(f2) : ''}</div>
-      </div>
-    </div>
-
-    <div class="vp-section">
-      <div class="vp-section-head">
-        <div class="vp-section-title">
-          <div class="vp-icon">🏝️</div>
-          <div>
-            <h3>Langkawi Stay · ${h2 ? h2.name : '—'}</h3>
-            <div class="vp-sub">${h2 ? `${h2.group} · ${h2.area} · ${h2.price}/night × 3 nights` : ''}</div>
-          </div>
-        </div>
-      </div>
-      <div class="vp-section-body">
-        ${h2 ? `<p style="color:var(--ink-soft);font-size:14.5px;">${h2.desc}</p>` : ''}
-        <div class="booking-links">${h2 ? hotelBookingLinks(h2) : ''}</div>
-      </div>
-    </div>
-
-    <div class="vp-section">
-      <div class="vp-section-head">
-        <div class="vp-section-title">
-          <div class="vp-icon">🗓️</div>
-          <div>
-            <h3>3 days in Langkawi</h3>
-            <div class="vp-sub">Beach + adventure + culture</div>
-          </div>
-        </div>
-      </div>
-      <div class="vp-section-body">
-        <div class="dot-timeline">
-          ${lgkPlan.map(d => renderDayTimeline(d)).join('')}
-        </div>
-      </div>
-    </div>
+    ${klPlan.map((d, idx) => renderDayStrip(d, idx)).join('')}
+    ${lgkPlan.map((d, idx) => renderDayStrip(d, idx + klPlan.length)).join('')}
   `;
   document.getElementById('viewPlanContent').innerHTML = html;
 }
 
-function renderDayTimeline(d) {
+function renderDayStrip(d, dayIdx) {
   return `
-    <div class="dt-day-head">
-      <div class="dt-day-num">${d.day}</div>
-      <div class="dt-day-meta">
-        <div class="dh-title">${d.title}</div>
-        <div class="dh-date">${d.date}</div>
-      </div>
-    </div>
-    <div class="dt-list">
-      ${d.items.map(i => `
-        <div class="dt-item">
-          <div class="dt-time">
-            <span class="dt-label">${i.label}</span>
-            ${i.time}
-          </div>
-          <div class="dt-content">
-            ${i.photo ? `<div class="dt-photo-wrap"><img src="${i.photo}" alt="${i.title}" loading="lazy" onerror="this.onerror=null; this.src='https://picsum.photos/seed/'+encodeURIComponent('${(i.title||'').replace(/'/g, '')}')+'/600/400';" /></div>` : ''}
-            <h4>${i.title}</h4>
-            <p>${i.desc}</p>
-            <div class="dt-tags">
-              ${i.tags.map(t => `<span class="time-tag ${t[1]}">${t[0]}</span>`).join('')}
-            </div>
-            ${i.book ? `<div class="booking-links">${i.book.map(b => bookingChipBig(b[0], b[1])).join('')}</div>` : ''}
-          </div>
+    <div class="vp-day-section">
+      <div class="vp-day-header">
+        <div class="vp-day-badge">${d.day}</div>
+        <div class="vp-day-title-wrap">
+          <div class="vp-day-title">${d.title}</div>
+          <div class="vp-day-date">${d.date}</div>
         </div>
-      `).join('')}
+      </div>
+      <div class="strip-scroll">
+        <div class="strip-row">
+          ${d.items.map((i, itemIdx) => {
+            const tagType = (i.tags && i.tags[0] && i.tags[0][1]) || 'see';
+            return `
+              <div class="strip-card tag-${tagType}" onclick="openDetail('activity', '${dayIdx}-${itemIdx}')">
+                <div class="strip-photo">
+                  ${i.photo ? `<img src="${i.photo}" alt="${i.title}" loading="lazy" onerror="this.onerror=null; this.src='https://picsum.photos/seed/'+encodeURIComponent('${(i.title||'').replace(/'/g, '')}')+'/400/300';" />` : ''}
+                </div>
+                <div class="strip-body">
+                  <div class="strip-time">
+                    <span class="strip-time-label">${i.label}</span>
+                    ${i.time}
+                  </div>
+                  <div class="strip-title">${i.title}</div>
+                  <div class="strip-tags">
+                    ${i.tags.slice(0,2).map(t => `<span class="time-tag ${t[1]}">${t[0]}</span>`).join('')}
+                  </div>
+                  <div class="strip-cta">${i.book ? '🔗 Booking links →' : 'View details →'}</div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
     </div>
   `;
 }
+
+function bookingChipBig(site, query) {
+  const sites = {
+    klook: { name:'Klook', color:'#ff5722', logo:'K' },
+    getyourguide: { name:'GetYourGuide', color:'#ff7300', logo:'G' },
+    viator: { name:'Viator', color:'#ed1c24', logo:'V' }
+  };
+  const s = sites[site] || sites.klook;
+  const url = site === 'klook' ? `https://www.klook.com/search/result/?query=${encodeURIComponent(query)}` :
+              site === 'getyourguide' ? `https://www.getyourguide.com/s/?q=${encodeURIComponent(query)}` :
+              `https://www.viator.com/search?text=${encodeURIComponent(query)}`;
+  return `<a class="blink" href="${url}" target="_blank" rel="noopener" style="--bcolor:${s.color};"><span class="blink-logo">${s.logo}</span>Book on ${s.name}</a>`;
+}
+
+/* ========== DETAIL MODAL ========== */
+
+function openDetail(type, id) {
+  let html = '';
+  if (type === 'flight') {
+    const f = findFlightKL(id) || flightsLGK.find(x => x.id === id);
+    if (!f) { showToast('Flight not found'); return; }
+    html = `
+      <div class="detail-hero" style="background-image:url('${PHOTOS.airplane}');"></div>
+      <div class="detail-body">
+        <span class="detail-eyebrow">${f.from} → ${f.to} · ${f.type}</span>
+        <h2>${f.airline} ${f.no}</h2>
+        <div class="detail-meta"><strong>${f.dep}</strong> → <strong>${f.arr}</strong> · ${f.dur} · ${f.price}</div>
+        <p>${f.notes}</p>
+        <div class="detail-tags">${f.tags.map(t => `<span class="ftag ${t[1]}">${t[0]}</span>`).join('')} <span class="ftag">Kids: ${'⭐'.repeat(f.kids)}</span></div>
+        <h3>Book this flight</h3>
+        <div class="booking-links">${flightBookingLinks(f)}</div>
+      </div>`;
+  } else if (type === 'hotel') {
+    const h = hotelsKL.find(x => x.id === id) || hotelsLGK.find(x => x.id === id);
+    if (!h) { showToast('Hotel not found'); return; }
+    html = `
+      <div class="detail-hero" style="background-image:url('${h.photo}'), url('https://picsum.photos/seed/${h.id}/800/500');"></div>
+      <div class="detail-body">
+        <span class="detail-eyebrow">${'★'.repeat(h.stars)} · ${h.area}</span>
+        <h2>${h.name}</h2>
+        <div class="detail-meta"><strong>${h.group}</strong> · ${h.price}/night</div>
+        <p>${h.desc}</p>
+        <div class="detail-tags">${h.amenities.slice(0,5).map(a => `<span class="amenity-pill">${a}</span>`).join('')}</div>
+        <h3>Book this hotel</h3>
+        <div class="booking-links">${hotelBookingLinks(h)}</div>
+        <h3 style="margin-top:18px;">Location</h3>
+        <a class="map-link" href="${googleMapsURL(h)}" target="_blank" rel="noopener" style="display:inline-flex;">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          View on Google Maps
+        </a>
+      </div>`;
+  } else if (type === 'activity') {
+    const [d, i] = id.split('-').map(Number);
+    const day = _currentPlanDays[d];
+    const item = day && day.items[i];
+    if (!item) { showToast('Activity not found'); return; }
+    const fallbackPhoto = `https://picsum.photos/seed/${encodeURIComponent((item.title||'').replace(/'/g,''))}/800/500`;
+    html = `
+      <div class="detail-hero" style="background-image:url('${item.photo || fallbackPhoto}'), url('${fallbackPhoto}');"></div>
+      <div class="detail-body">
+        <span class="detail-eyebrow">${day.date} · Day ${day.day} · ${item.label}</span>
+        <h2>${item.title}</h2>
+        <div class="detail-meta"><strong>${item.time}</strong></div>
+        <p>${item.desc}</p>
+        <div class="detail-tags">${item.tags.map(t => `<span class="time-tag ${t[1]}">${t[0]}</span>`).join('')}</div>
+        ${item.book ? `
+          <h3>Book this experience</h3>
+          <div class="booking-links">${item.book.map(b => bookingChipBig(b[0], b[1])).join('')}</div>
+        ` : `
+          <h3>Search options</h3>
+          <div class="booking-links">${activityBookingLinks(item.title)}</div>
+        `}
+      </div>`;
+  }
+  document.getElementById('detailContent').innerHTML = html;
+  document.getElementById('detailModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  document.getElementById('detailModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// ESC to close modal
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeDetail();
+});
 
 function bookingChipBig(site, query) {
   const sites = {
