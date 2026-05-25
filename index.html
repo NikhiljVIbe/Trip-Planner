@@ -1,0 +1,3138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Malaysia Trip Planner · Bangalore → KL → Langkawi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf8f3;
+    --bg-tint: #f1ede1;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --ink-soft: #4b5563;
+    --muted: #9ca3af;
+    --line: #e7e2d4;
+    --brand: #0f766e;
+    --brand-light: #ccfbf1;
+    --accent: #ea580c;
+    --accent-light: #fed7aa;
+    --gold: #d97706;
+    --success: #16a34a;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+    --shadow-md: 0 8px 28px -10px rgba(0,0,0,.15), 0 2px 4px rgba(0,0,0,.04);
+    --shadow-lg: 0 24px 50px -20px rgba(0,0,0,.22);
+    --radius: 16px;
+    --radius-lg: 24px;
+    --font: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --serif: 'Fraunces', Georgia, serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  input { font-family: inherit; }
+
+  /* HEADER */
+  .header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250, 248, 243, 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto;
+    padding: 18px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 800; font-size: 17px; letter-spacing: -0.01em;
+    cursor: pointer;
+  }
+  .logo-icon { font-size: 22px; }
+  .logo-text small { color: var(--muted); font-weight: 500; margin-left: 6px; }
+  .header-nav { display: flex; gap: 8px; align-items: center; }
+  .btn-ghost {
+    padding: 9px 16px; border-radius: 999px; font-size: 14px; font-weight: 600;
+    color: var(--ink-soft); transition: all .2s ease;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-ghost:hover { background: var(--bg-tint); color: var(--ink); }
+  .btn-ghost.active { background: var(--ink); color: #fff; }
+  .saved-badge {
+    background: var(--accent); color: #fff;
+    font-size: 11px; font-weight: 700;
+    padding: 2px 7px; border-radius: 999px;
+    min-width: 20px; text-align: center;
+  }
+
+  /* PROGRESS */
+  .progress-bar {
+    max-width: 1200px; margin: 0 auto;
+    padding: 18px 28px 0;
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .progress-step {
+    flex: 1; min-width: 90px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-size: 13px;
+    transition: all .25s ease;
+  }
+  .progress-step.done { background: var(--brand-light); border-color: var(--brand); color: var(--brand); }
+  .progress-step.current { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .progress-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.08);
+    font-weight: 700; font-size: 11px;
+    flex-shrink: 0;
+  }
+  .progress-step.done .progress-num { background: var(--brand); color: #fff; }
+  .progress-step.current .progress-num { background: rgba(255,255,255,.2); color: #fff; }
+  .progress-label { font-weight: 600; line-height: 1.2; }
+
+  /* CONTAINER */
+  .container {
+    max-width: 1200px; margin: 0 auto;
+    padding: 40px 28px 80px;
+  }
+
+  /* SCREEN */
+  .screen { display: none; animation: fadeUp .4s ease-out; }
+  .screen.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* HEADINGS */
+  .eyebrow {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--brand);
+    background: rgba(15,118,110,0.08);
+    padding: 6px 12px; border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .screen-head h2 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .screen-head p {
+    color: var(--ink-soft);
+    font-size: 16px;
+    max-width: 640px;
+    margin-bottom: 36px;
+  }
+  .screen-head .em { color: var(--brand); font-weight: 600; }
+
+  /* WELCOME */
+  .welcome-hero {
+    background:
+      radial-gradient(ellipse 70% 70% at 20% 20%, rgba(56,189,248,0.4), transparent 60%),
+      radial-gradient(ellipse 60% 60% at 80% 80%, rgba(251,146,60,0.45), transparent 60%),
+      linear-gradient(135deg, #0c4a6e 0%, #0f766e 60%, #134e4a 100%);
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: 44px 40px;
+    margin-bottom: 28px;
+    position: relative; overflow: hidden;
+  }
+  .welcome-hero::before {
+    content: '🌴';
+    position: absolute;
+    top: 18px; right: 28px;
+    font-size: 56px;
+    opacity: 0.22;
+    transform: rotate(-15deg);
+  }
+  .welcome-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 12px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .welcome-pill .dot {
+    width: 7px; height: 7px; background: #4ade80;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(74,222,128,0.3);
+  }
+  .welcome-hero h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(28px, 4.2vw, 44px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-bottom: 12px;
+  }
+  .welcome-hero h1 .accent {
+    background: linear-gradient(135deg, #fde68a, #fb923c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+  }
+  .welcome-hero p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.85);
+    max-width: 540px;
+    margin-bottom: 22px;
+  }
+  .welcome-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 600px;
+  }
+  .welcome-stat {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
+  .welcome-stat .num {
+    font-family: var(--serif);
+    font-size: 22px; font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .welcome-stat .lbl {
+    font-size: 10.5px; opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  @media (max-width: 640px) {
+    .welcome-hero { padding: 32px 22px; }
+    .welcome-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .start-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--ink);
+    color: #fff;
+    padding: 16px 28px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 15px;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all .2s ease;
+  }
+  .btn-primary:hover { transform: translateY(-1px); background: var(--brand); }
+  .btn-primary svg { transition: transform .2s ease; }
+  .btn-primary:hover svg { transform: translateX(3px); }
+
+  .btn-secondary {
+    background: var(--card);
+    color: var(--ink);
+    padding: 15px 26px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    font-weight: 600;
+    font-size: 15px;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all .2s ease;
+  }
+  .btn-secondary:hover { border-color: var(--ink); }
+
+  /* FEATURES */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 16px;
+  }
+  @media (max-width: 820px) { .features { grid-template-columns: 1fr; } }
+  .feature {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+  }
+  .feature-icon {
+    width: 44px; height: 44px;
+    background: var(--brand-light);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+  .feature h4 {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .feature p {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+  }
+
+  /* CITY TOGGLE */
+  .city-toggle {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    flex-wrap: wrap;
+  }
+  .city-toggle-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-right: 8px;
+  }
+  .city-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 22px;
+    background: var(--bg);
+    border: 2px solid var(--line);
+    border-radius: 14px;
+    transition: all .2s ease;
+    font-family: var(--font);
+  }
+  .city-btn:hover { border-color: var(--ink); }
+  .city-btn.active {
+    background: linear-gradient(135deg, var(--brand-light), #fff);
+    border-color: var(--brand);
+  }
+  .city-btn .city-code {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .city-btn.active .city-code { color: var(--brand); }
+  .city-btn .city-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  /* FILTERS */
+  .filters {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .filter-label {
+    font-size: 12px; font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 9px 0 9px 0;
+    margin-right: 6px;
+  }
+  .chip {
+    padding: 9px 16px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    transition: all .2s ease;
+    cursor: pointer;
+  }
+  .chip:hover { border-color: var(--ink); color: var(--ink); }
+  .chip.active {
+    background: var(--ink); color: #fff;
+    border-color: var(--ink);
+  }
+  .chip.accor.active { background: #c8102e; border-color: #c8102e; }
+
+  /* CARDS GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* FLIGHT CARD */
+  .flight-card {
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px;
+    cursor: pointer;
+    transition: all .25s ease;
+    position: relative;
+  }
+  .flight-card:hover { border-color: var(--ink); transform: translateY(-2px); }
+  .flight-card.selected {
+    border-color: var(--brand);
+    background: linear-gradient(135deg, #f0fdfa, #ffffff);
+    box-shadow: var(--shadow-md);
+  }
+  .flight-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px;
+  }
+  .airline {
+    font-weight: 700; font-size: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .airline-logo {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; color: #fff;
+  }
+  .lg-ai { background: #ff0202; }
+  .lg-ai2 { background: linear-gradient(135deg, #e63b27, #f59e0b); }
+  .lg-mh { background: #006dba; }
+  .lg-id { background: #001f5b; }
+  .lg-od { background: #c8102e; }
+  .lg-fy { background: #fec01e; color: #001f5b; }
+  .lg-tr { background: #5f259f; }
+  .price { font-weight: 700; font-family: var(--serif); font-size: 18px; }
+
+  .flight-route {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 16px;
+  }
+  .route-point { text-align: center; flex-shrink: 0; min-width: 80px; }
+  .route-point .time {
+    font-family: var(--serif);
+    font-size: 26px; font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .route-point .code {
+    font-size: 12px; color: var(--muted);
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .route-line {
+    flex: 1;
+    height: 2px; background: var(--line);
+    position: relative;
+  }
+  .route-line::before {
+    content: '✈';
+    position: absolute; top: -10px; left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+    background: var(--card);
+    padding: 0 6px;
+    font-size: 14px;
+    color: var(--brand);
+  }
+  .route-meta {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+  .flight-tags {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .ftag {
+    font-size: 11px; font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: var(--bg-tint);
+    color: var(--ink-soft);
+  }
+  .ftag.green { background: #dcfce7; color: #15803d; }
+  .ftag.amber { background: #fef3c7; color: #92400e; }
+  .ftag.red { background: #fee2e2; color: #b91c1c; }
+  .kids-rating {
+    display: inline-flex; gap: 2px;
+    font-size: 12px;
+  }
+  .selected-badge {
+    position: absolute;
+    top: -10px; right: 18px;
+    background: var(--brand);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    display: none;
+  }
+  .flight-card.selected .selected-badge { display: block; }
+
+  /* FLIGHT BOOKING ROW */
+  .flight-book-row {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+  }
+  .fbook-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-right: 4px;
+  }
+  .fbook {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 11px;
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    transition: all .15s ease;
+    line-height: 1;
+  }
+  .fbook:hover {
+    background: var(--c, var(--brand));
+    color: #fff;
+    border-color: var(--c, var(--brand));
+    transform: translateY(-1px);
+  }
+
+  /* HOTEL CARD */
+  .hotel-card {
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .25s ease;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .hotel-card:hover { border-color: var(--ink); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .hotel-card.selected {
+    border-color: var(--brand);
+    box-shadow: var(--shadow-lg);
+  }
+  .hotel-image {
+    height: 200px;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #134e4a, #0c4a6e);
+  }
+  .hotel-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .6s ease;
+  }
+  .hotel-card:hover .hotel-image img { transform: scale(1.06); }
+  .hotel-image::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.35));
+    pointer-events: none;
+  }
+
+  /* DISTANCE */
+  .distance-row {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px;
+    color: var(--ink);
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .distance-row .icon-dot {
+    width: 22px; height: 22px;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .distance-row strong { font-weight: 700; color: var(--brand); }
+
+  /* INDIAN RATING */
+  .indian-rating {
+    display: flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, #fff7ed, #fef3c7);
+    border: 1px solid #fed7aa;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+  }
+  .indian-rating .flag {
+    width: 28px; height: 20px;
+    background: linear-gradient(180deg, #ff9933 33%, #fff 33%, #fff 66%, #138808 66%);
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.1);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .indian-rating .flag::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    border: 1px solid #1e3a8a;
+  }
+  .indian-rating .score {
+    font-weight: 700;
+    color: #92400e;
+    font-size: 14px;
+  }
+  .indian-rating .quote {
+    color: #78350f;
+    font-style: italic;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* VEG FOOD */
+  .veg-section {
+    margin-top: 4px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+  }
+  .veg-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .veg-title .veg-dot {
+    width: 12px; height: 12px;
+    background: #fff;
+    border: 2px solid #16a34a;
+    border-radius: 3px;
+    position: relative;
+  }
+  .veg-title .veg-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 5px; height: 5px;
+    background: #16a34a;
+    border-radius: 50%;
+  }
+  .veg-list { display: flex; flex-direction: column; gap: 6px; }
+  .veg-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px;
+    color: var(--ink);
+    padding: 6px 0;
+  }
+  .veg-item .vname { font-weight: 600; flex: 1; min-width: 0; font-size: 13px; }
+  .veg-item .vmeta { color: var(--muted); font-size: 12px; }
+  .veg-item .vemoji { font-size: 16px; flex-shrink: 0; }
+  .veg-item .vtype {
+    font-size: 10.5px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #15803d;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  /* FAMILY PICK BADGE */
+  .family-pick {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    padding: 5px 12px;
+    background: linear-gradient(135deg, #f59e0b, #ea580c);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .family-pick::before { content: '⭐'; font-size: 11px; }
+
+  .brand-badge {
+    position: absolute;
+    top: 14px; left: 14px;
+    z-index: 2;
+    padding: 5px 11px;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 999px;
+  }
+  .brand-badge.accor { background: #c8102e; }
+  .stars-badge {
+    position: absolute;
+    top: 14px; right: 14px;
+    z-index: 2;
+    padding: 5px 11px;
+    background: rgba(255,255,255,0.95);
+    color: #d97706;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 999px;
+  }
+  .hotel-body { padding: 22px 22px 24px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .hotel-card h3 {
+    font-family: var(--serif);
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .hotel-meta-row {
+    display: flex; gap: 12px;
+    font-size: 13px; color: var(--ink-soft);
+    align-items: center;
+  }
+  .hotel-meta-row .dot { color: var(--muted); }
+  .hotel-area { font-weight: 600; }
+  .hotel-price { font-weight: 700; color: var(--ink); }
+  .hotel-desc { font-size: 14px; color: var(--ink-soft); }
+  .hotel-amenities {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 4px;
+  }
+  .amenity-pill {
+    font-size: 12px;
+    padding: 5px 10px;
+    background: var(--bg-tint);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-soft);
+  }
+  .kid-score {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px;
+  }
+  .hotel-card.selected .selected-tick {
+    position: absolute; top: 14px; right: 14px;
+    z-index: 3;
+    background: var(--brand);
+    color: #fff;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px;
+  }
+  .hotel-card .selected-tick { display: none; }
+  .hotel-card.selected .stars-badge { display: none; }
+
+  /* ITINERARY DAY */
+  .day-section {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .day-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 4px;
+    background: linear-gradient(90deg, var(--brand), var(--accent));
+  }
+  .day-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .day-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--brand);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .day-title {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .day-date {
+    font-size: 13px; color: var(--muted);
+    margin-top: 4px;
+  }
+  .day-pill {
+    background: var(--brand-light);
+    color: var(--brand);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  .timeline-block { display: flex; flex-direction: column; gap: 18px; }
+  .time-item {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 18px;
+    padding: 18px;
+    background: var(--bg);
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    transition: all .2s ease;
+    align-items: start;
+  }
+  .time-item.with-photo {
+    grid-template-columns: 90px minmax(0, 1fr) 120px;
+  }
+  .time-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-tint);
+    flex-shrink: 0;
+    grid-column: 3;
+  }
+  .time-content { min-width: 0; }
+  .time-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s ease;
+  }
+  .time-item:hover .time-photo img { transform: scale(1.06); }
+  .time-item:hover { background: var(--bg-tint); border-color: var(--brand); }
+  .time-book {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .book-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 6px 12px;
+    background: var(--bc, var(--brand));
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform .2s ease, opacity .2s ease;
+  }
+  .book-chip:hover { transform: translateY(-1px); opacity: 0.92; }
+  .time-block {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--brand);
+    letter-spacing: 0.02em;
+  }
+  .time-block .label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-family: var(--font);
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .time-content h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .time-content p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .time-tags {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .time-tag {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .time-tag.eat { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+  .time-tag.see { background: #ccfbf1; color: #0f766e; border-color: #99f6e4; }
+  .time-tag.move { background: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
+  .time-tag.rest { background: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
+  @media (max-width: 820px) {
+    .time-item, .time-item.with-photo { grid-template-columns: 1fr; gap: 12px; padding: 16px; }
+    .time-photo { width: 100%; height: 180px; grid-column: auto; order: 3; }
+    .day-section { padding: 24px; }
+  }
+
+  /* NAVIGATION FOOTER */
+  .step-nav {
+    display: flex; justify-content: space-between; gap: 12px;
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .btn-back {
+    padding: 13px 22px;
+    border-radius: 999px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink-soft);
+    transition: all .2s ease;
+  }
+  .btn-back:hover { background: var(--bg-tint); }
+
+  /* SUMMARY SECTION */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 720px) { .summary-grid { grid-template-columns: 1fr; } }
+  .summary-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+  .summary-card .lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .summary-card .val {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .summary-card .sub {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  /* SAVE INPUT */
+  .save-section {
+    background: linear-gradient(135deg, #f0fdfa, #fff);
+    border: 1px solid var(--brand-light);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+  .save-section h3 {
+    font-family: var(--serif);
+    font-size: 24px;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .save-section p { color: var(--ink-soft); margin-bottom: 20px; font-size: 14.5px; }
+  .save-row {
+    display: flex; gap: 10px; max-width: 480px; margin: 0 auto;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .save-input {
+    flex: 1; min-width: 200px;
+    padding: 13px 18px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 14.5px;
+    background: #fff;
+    outline: none;
+    transition: border-color .2s ease;
+  }
+  .save-input:focus { border-color: var(--brand); }
+  .btn-save {
+    background: var(--brand);
+    color: #fff;
+    padding: 13px 24px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14.5px;
+    transition: all .2s ease;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-save:hover { background: #0d5752; transform: translateY(-1px); }
+  .save-confirm {
+    color: var(--success);
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 14px;
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+  .save-confirm.show { opacity: 1; }
+
+  /* SAVED ITINERARIES */
+  .saved-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+  }
+  .saved-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all .25s ease;
+    position: relative;
+    cursor: pointer;
+  }
+  .saved-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--brand); }
+  .saved-card:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .sc-thumbs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    height: 150px;
+    background: var(--line);
+  }
+  .sc-thumb {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-tint);
+  }
+  .sc-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .5s ease;
+  }
+  .saved-card:hover .sc-thumb img { transform: scale(1.06); }
+  .sc-thumb-lbl {
+    position: absolute;
+    bottom: 8px; left: 8px;
+    padding: 4px 10px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 11.5px;
+    font-weight: 700;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+  .sc-body {
+    padding: 22px 24px 24px;
+  }
+  .stale-warn {
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+    color: #78350f;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .saved-card h4 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .saved-date {
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+  .saved-detail {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    padding: 8px 0;
+    display: flex; gap: 8px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .saved-detail:last-of-type { border-bottom: none; }
+  .saved-detail strong { color: var(--ink); min-width: 90px; }
+  .saved-actions {
+    display: flex; gap: 8px; margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  .btn-mini {
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all .2s ease;
+  }
+  .btn-mini.view { background: var(--ink); color: #fff; }
+  .btn-mini.view:hover { background: var(--brand); }
+  .btn-mini.delete { color: #b91c1c; background: #fef2f2; }
+  .btn-mini.delete:hover { background: #fee2e2; }
+  .empty-state {
+    text-align: center; padding: 80px 24px;
+    background: var(--card);
+    border: 2px dashed var(--line);
+    border-radius: var(--radius-lg);
+  }
+  .empty-state .emoji { font-size: 64px; margin-bottom: 16px; }
+  .empty-state h3 {
+    font-family: var(--serif);
+    font-size: 22px; margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .empty-state p { color: var(--ink-soft); margin-bottom: 24px; }
+
+  /* CALLOUT */
+  .callout {
+    background: linear-gradient(135deg, #fef3c7, #fef9c3);
+    border-left: 4px solid var(--gold);
+    padding: 18px 22px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+  .callout strong { color: #78350f; font-weight: 700; }
+  .callout p { color: #78350f; font-size: 14.5px; margin: 0; }
+
+  /* HOTEL CONTEXT */
+  .selected-context {
+    background: linear-gradient(135deg, var(--brand-light), #fff);
+    border: 1px solid var(--brand);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 14px;
+  }
+  .selected-context .icon {
+    width: 38px; height: 38px;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .selected-context strong { font-weight: 700; }
+
+  /* ==== VIEW PLAN (Visual saved itinerary) ==== */
+  .vp-hero {
+    background: linear-gradient(135deg, #0c4a6e 0%, #0f766e 60%, #134e4a 100%);
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: 28px 32px 16px;
+    margin-bottom: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .vp-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 30%, rgba(56,189,248,0.4), transparent 60%),
+      radial-gradient(ellipse 50% 50% at 80% 80%, rgba(251,146,60,0.45), transparent 60%);
+    pointer-events: none;
+  }
+  .vp-hero-inner { position: relative; z-index: 1; }
+  .vp-eyebrow {
+    display: inline-block;
+    font-size: 10.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .vp-hero h2 {
+    font-family: var(--serif);
+    font-size: clamp(22px, 3.2vw, 32px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .vp-hero .vp-meta {
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 18px;
+  }
+  .flight-arc-wrap {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .flight-arc {
+    width: 100%;
+    height: 180px;
+    overflow: visible;
+  }
+  .arc-city { fill: #fff; }
+  .arc-city-ring { fill: rgba(255,255,255,0.2); }
+  .arc-label {
+    fill: #fff;
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .arc-sub {
+    fill: rgba(255,255,255,0.65);
+    font-family: var(--font);
+    font-weight: 500;
+    font-size: 11px;
+  }
+  .arc-plane {
+    fill: #fbbf24;
+  }
+  .arc-line-out {
+    stroke: #fbbf24;
+    stroke-width: 2.5;
+    fill: none;
+    stroke-dasharray: 8,5;
+    animation: dashmove 30s linear infinite;
+  }
+  .arc-line-hop {
+    stroke: #fbbf24;
+    stroke-width: 2.5;
+    fill: none;
+    stroke-dasharray: 8,5;
+    animation: dashmove 30s linear infinite;
+  }
+  .arc-line-back {
+    stroke: rgba(255,255,255,0.4);
+    stroke-width: 2;
+    fill: none;
+    stroke-dasharray: 4,5;
+  }
+  @keyframes dashmove {
+    to { stroke-dashoffset: -200; }
+  }
+
+  /* VP SECTIONS */
+  .vp-section {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .vp-section-head {
+    padding: 24px 28px 18px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .vp-section-title {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .vp-icon {
+    width: 38px; height: 38px;
+    background: var(--brand-light);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .vp-section-title h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .vp-section-title .vp-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .vp-section-body { padding: 22px 28px 26px; }
+
+  /* BOOKING LINKS */
+  .booking-links {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .blink {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 16px;
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    transition: all .2s ease;
+  }
+  .blink:hover {
+    transform: translateY(-2px);
+    border-color: var(--bcolor, var(--brand));
+    color: var(--bcolor, var(--brand));
+    box-shadow: 0 6px 14px -4px rgba(0,0,0,0.1);
+  }
+  .blink .blink-logo {
+    width: 22px; height: 22px;
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 11px;
+    background: var(--bcolor, var(--brand));
+  }
+
+  /* DOT TIMELINE */
+  .dot-timeline {
+    margin-top: 14px;
+    position: relative;
+  }
+  .dt-day-head {
+    display: flex; align-items: center; gap: 14px;
+    margin: 24px 0 18px;
+  }
+  .dt-day-num {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-2), var(--brand));
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 17px;
+    flex-shrink: 0;
+    box-shadow: 0 6px 14px -4px rgba(15,118,110,0.4);
+  }
+  .dt-day-meta .dh-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .dt-day-meta .dh-date {
+    font-size: 13px; color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+  .dt-list {
+    position: relative;
+    padding-left: 24px;
+    margin-left: 22px;
+    border-left: 2px dashed var(--line);
+  }
+  .dt-item {
+    position: relative;
+    padding: 14px 0 18px;
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 16px;
+  }
+  .dt-item::before {
+    content: '';
+    position: absolute;
+    left: -33px;
+    top: 24px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--brand);
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--line);
+  }
+  .dt-item:hover::before { background: var(--brand-2); }
+  .dt-time {
+    font-family: var(--serif);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.2;
+  }
+  .dt-time .dt-label {
+    display: block;
+    font-family: var(--font);
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--brand);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .dt-content { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .dt-photo-wrap {
+    width: 100%; max-width: 380px;
+    height: 160px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 4px;
+    background: var(--bg-tint);
+  }
+  .dt-photo-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .5s ease;
+  }
+  .dt-item:hover .dt-photo-wrap img { transform: scale(1.04); }
+  .dt-content h4 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .dt-content p {
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .dt-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  @media (max-width: 720px) {
+    .dt-item { grid-template-columns: 1fr; gap: 8px; }
+    .dt-photo-wrap { height: 200px; max-width: 100%; }
+    .dt-list { padding-left: 22px; margin-left: 16px; }
+    .dt-item::before { left: -31px; }
+    .vp-hero { padding: 36px 24px 20px; }
+    .vp-section-body { padding: 20px 22px; }
+    .vp-section-head { padding: 22px 22px 16px; }
+  }
+
+  /* PLAN STYLE TABS */
+  .plan-style-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 720px) { .plan-style-tabs { grid-template-columns: 1fr; } }
+  .pst {
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: all .2s ease;
+    text-align: left;
+    display: flex; flex-direction: column; gap: 6px;
+    font-family: var(--font);
+  }
+  .pst:hover { border-color: var(--ink); transform: translateY(-2px); }
+  .pst.active {
+    border-color: var(--brand);
+    background: linear-gradient(135deg, #f0fdfa, #fff);
+    box-shadow: var(--shadow-md);
+  }
+  .pst-header {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .pst-icon {
+    font-size: 22px;
+    width: 36px; height: 36px;
+    background: var(--bg-tint);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pst.active .pst-icon { background: var(--brand-light); }
+  .pst-name {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .pst-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  /* TOAST */
+  .app-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-size: 14.5px;
+    font-weight: 600;
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,.4);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all .3s ease;
+  }
+  .app-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* SCROLL-INTO-VIEW */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo" onclick="goTo('welcome')">
+      <span class="logo-icon">🌴</span>
+      <span class="logo-text">Malaysia Planner <small>· 2026</small></span>
+    </div>
+    <nav class="header-nav">
+      <button class="btn-ghost" onclick="goTo('welcome')">Plan New</button>
+      <button class="btn-ghost" onclick="goTo('saved')" id="savedNav">
+        Saved <span class="saved-badge" id="savedCount">0</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar" id="progressBar" style="display:none;">
+    <div class="progress-step" data-step="flightKL"><span class="progress-num">1</span><span class="progress-label">KL Flight</span></div>
+    <div class="progress-step" data-step="hotelKL"><span class="progress-num">2</span><span class="progress-label">KL Hotel</span></div>
+    <div class="progress-step" data-step="planKL"><span class="progress-num">3</span><span class="progress-label">KL Plan</span></div>
+    <div class="progress-step" data-step="flightLGK"><span class="progress-num">4</span><span class="progress-label">LGK Flight</span></div>
+    <div class="progress-step" data-step="hotelLGK"><span class="progress-num">5</span><span class="progress-label">LGK Hotel</span></div>
+    <div class="progress-step" data-step="planLGK"><span class="progress-num">6</span><span class="progress-label">LGK Plan</span></div>
+    <div class="progress-step" data-step="summary"><span class="progress-num">7</span><span class="progress-label">Save</span></div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- WELCOME SCREEN -->
+  <section class="screen active" id="welcome">
+    <div class="welcome-hero">
+      <div class="welcome-pill">
+        <span class="dot"></span>
+        <span>Family · 2 toddlers · Jun 30 — Jul 5, 2026</span>
+      </div>
+      <h1>Plan your <span class="accent">Malaysia</span><br/>family escape.</h1>
+      <p>A guided 7-step planner that picks the right flights, the most kid-friendly hotels, and builds a relaxed day-by-day itinerary for Kuala Lumpur and Langkawi.</p>
+      <div class="welcome-stats">
+        <div class="welcome-stat"><div class="num">6</div><div class="lbl">Days</div></div>
+        <div class="welcome-stat"><div class="num">2</div><div class="lbl">Cities</div></div>
+        <div class="welcome-stat"><div class="num">2</div><div class="lbl">Families</div></div>
+        <div class="welcome-stat"><div class="num">∞</div><div class="lbl">Save plans</div></div>
+      </div>
+    </div>
+
+    <div class="start-actions">
+      <button class="btn-primary" onclick="startPlanning()">
+        Start planning
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+      <button class="btn-secondary" onclick="goTo('saved')">
+        View saved itineraries
+      </button>
+    </div>
+
+    <div class="features" style="margin-top: 48px;">
+      <div class="feature">
+        <div class="feature-icon">✈️</div>
+        <h4>Real flight options</h4>
+        <p>Hand-picked Bangalore ↔ KL ↔ Langkawi flights, ranked by toddler-friendliness.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🏨</div>
+        <h4>Accor vs Non-Accor</h4>
+        <p>Filter by hotel brand group and area. Every pick is family-tested for Indian travelers.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📋</div>
+        <h4>Save unlimited plans</h4>
+        <p>Build multiple itineraries, save each with a name, revisit any time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 1: KL FLIGHT -->
+  <section class="screen" id="flightKL">
+    <div class="screen-head">
+      <span class="eyebrow">Step 1 · Outbound</span>
+      <h2>Pick your flight to <span class="em">Kuala Lumpur</span></h2>
+      <p>Choose your departure city, then pick the flight that works best with your kids' schedule.</p>
+    </div>
+
+    <div class="city-toggle">
+      <div class="city-toggle-label">Flying from:</div>
+      <button class="city-btn active" data-city="BLR" onclick="setCity('BLR')">
+        <span class="city-code">BLR</span>
+        <span class="city-name">Bangalore</span>
+      </button>
+      <button class="city-btn" data-city="BOM" onclick="setCity('BOM')">
+        <span class="city-code">BOM</span>
+        <span class="city-name">Mumbai</span>
+      </button>
+    </div>
+
+    <div class="callout">
+      <p><strong>Recommended:</strong> Mid-morning departure landing in KL by mid-afternoon — gives you a hotel check-in window without disturbing nap time.</p>
+    </div>
+    <div class="grid" id="flightsKL"></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo('welcome')">← Back</button>
+      <button class="btn-primary" onclick="next('flightKL', 'hotelKL')" id="next-flightKL" disabled style="opacity:.4;cursor:not-allowed;">
+        Continue to hotels
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- STEP 2: KL HOTEL -->
+  <section class="screen" id="hotelKL">
+    <div class="screen-head">
+      <span class="eyebrow">Step 2 · Where you stay</span>
+      <h2>Pick your <span class="em">Kuala Lumpur hotel</span></h2>
+      <p id="hotelKL-intro">All hotels picked for kid-friendly pools, accessible Indian food, and family-sized rooms. Filter by brand group or neighborhood.</p>
+    </div>
+    <div class="selected-context" id="flightContextKL" style="display:none;">
+      <div class="icon">✈</div>
+      <div>
+        <strong>Your KL arrival:</strong> <span id="arrivalSummary"></span>
+      </div>
+    </div>
+    <div class="filters">
+      <span class="filter-label">Brand:</span>
+      <button class="chip active" data-filter="brand" data-value="all">All</button>
+      <button class="chip accor" data-filter="brand" data-value="accor">Accor Group</button>
+      <button class="chip" data-filter="brand" data-value="non-accor">Non-Accor</button>
+      <span class="filter-label" style="margin-left:14px;">Area:</span>
+      <button class="chip active" data-filter="area" data-value="all">All Areas</button>
+      <button class="chip" data-filter="area" data-value="KLCC">KLCC</button>
+      <button class="chip" data-filter="area" data-value="Bukit Bintang">Bukit Bintang</button>
+      <button class="chip" data-filter="area" data-value="Bangsar">Bangsar</button>
+      <button class="chip" data-filter="area" data-value="Damansara">Damansara</button>
+      <button class="chip" data-filter="area" data-value="KL Sentral">KL Sentral</button>
+      <button class="chip" data-filter="area" data-value="KLIA">KLIA (airport)</button>
+    </div>
+    <div class="grid" id="hotelsKL"></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo('flightKL')">← Back</button>
+      <button class="btn-primary" onclick="next('hotelKL', 'planKL')" id="next-hotelKL" disabled style="opacity:.4;cursor:not-allowed;">
+        See KL itinerary
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- STEP 3: KL PLAN -->
+  <section class="screen" id="planKL">
+    <div class="screen-head">
+      <span class="eyebrow">Step 3 · Day-by-day</span>
+      <h2>Your <span class="em">2 days in Kuala Lumpur</span></h2>
+      <p id="planKL-sub">Pick a plan style that fits your kids — switch any time.</p>
+    </div>
+    <div class="plan-style-tabs" id="planStyleTabsKL"></div>
+    <div id="planKLContent"></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo('hotelKL')">← Back</button>
+      <button class="btn-primary" onclick="goTo('flightLGK')">
+        Continue to Langkawi flight
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- STEP 4: LGK FLIGHT -->
+  <section class="screen" id="flightLGK">
+    <div class="screen-head">
+      <span class="eyebrow">Step 4 · Island hop</span>
+      <h2>Pick your flight <span class="em">KL to Langkawi</span></h2>
+      <p>It's a short 1-hour hop. With kids, comfort &gt; cost — pick a daytime slot with assigned seats so you can stay together.</p>
+    </div>
+    <div class="callout">
+      <p><strong>Best with kids:</strong> Malaysia Airlines from KLIA — full service, free snacks, free baby food on request, friendlier crew with infants. Firefly from Subang (SZB) is also great if your KL hotel is on the west side.</p>
+    </div>
+    <div class="grid" id="flightsLGK"></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo('planKL')">← Back</button>
+      <button class="btn-primary" onclick="next('flightLGK', 'hotelLGK')" id="next-flightLGK" disabled style="opacity:.4;cursor:not-allowed;">
+        Continue to Langkawi hotels
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- STEP 5: LGK HOTEL -->
+  <section class="screen" id="hotelLGK">
+    <div class="screen-head">
+      <span class="eyebrow">Step 5 · Beach stay</span>
+      <h2>Pick your <span class="em">Langkawi resort</span></h2>
+      <p>Beach resorts with calm shallow water, kids' clubs, and easy access to Indian / multi-cuisine food.</p>
+    </div>
+    <div class="callout">
+      <p><strong>Heads up:</strong> Accor group has a small footprint in Langkawi. Most flagship family resorts here are luxury independents (St. Regis, Westin, The Andaman, Four Seasons, Ritz-Carlton).</p>
+    </div>
+    <div class="filters">
+      <span class="filter-label">Brand:</span>
+      <button class="chip active" data-filter="brandL" data-value="all">All</button>
+      <button class="chip accor" data-filter="brandL" data-value="accor">Accor Group</button>
+      <button class="chip" data-filter="brandL" data-value="non-accor">Non-Accor</button>
+      <span class="filter-label" style="margin-left:14px;">Area:</span>
+      <button class="chip active" data-filter="areaL" data-value="all">All Areas</button>
+      <button class="chip" data-filter="areaL" data-value="Datai Bay">Datai Bay</button>
+      <button class="chip" data-filter="areaL" data-value="Tanjung Rhu">Tanjung Rhu</button>
+      <button class="chip" data-filter="areaL" data-value="Pantai Cenang">Pantai Cenang</button>
+      <button class="chip" data-filter="areaL" data-value="Pantai Tengah">Pantai Tengah</button>
+      <button class="chip" data-filter="areaL" data-value="Pantai Kok">Pantai Kok</button>
+      <button class="chip" data-filter="areaL" data-value="Teluk Nibung">Teluk Nibung</button>
+      <button class="chip" data-filter="areaL" data-value="Awana">Awana</button>
+      <button class="chip" data-filter="areaL" data-value="Kuah">Kuah</button>
+    </div>
+    <div class="grid" id="hotelsLGK"></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo('flightLGK')">← Back</button>
+      <button class="btn-primary" onclick="next('hotelLGK', 'planLGK')" id="next-hotelLGK" disabled style="opacity:.4;cursor:not-allowed;">
+        See Langkawi itinerary
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- STEP 6: LGK PLAN -->
+  <section class="screen" id="planLGK">
+    <div class="screen-head">
+      <span class="eyebrow">Step 6 · Island days</span>
+      <h2>Your <span class="em">3 days in Langkawi</span></h2>
+      <p>Choose a Langkawi style — switch any time to compare.</p>
+    </div>
+    <div class="plan-style-tabs" id="planStyleTabsLGK"></div>
+    <div id="planLGKContent"></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo('hotelLGK')">← Back</button>
+      <button class="btn-primary" onclick="goTo('summary')">
+        Review &amp; save
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- STEP 7: SUMMARY -->
+  <section class="screen" id="summary">
+    <div class="screen-head">
+      <span class="eyebrow">Step 7 · Done</span>
+      <h2>Your <span class="em">Malaysia plan</span> at a glance</h2>
+      <p>Review everything below and save this plan to come back to it any time.</p>
+    </div>
+    <div class="summary-grid" id="summaryGrid"></div>
+
+    <div class="save-section">
+      <h3>Save this itinerary</h3>
+      <p>Give it a name — you can build multiple versions and compare later.</p>
+      <div class="save-row">
+        <input type="text" class="save-input" id="planName" placeholder="e.g. Malaysia trip v1 — June" />
+        <button class="btn-save" onclick="saveItinerary()">
+          💾 Save plan
+        </button>
+      </div>
+      <div class="save-confirm" id="saveConfirm">✓ Saved! Opening visual plan…</div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo('planLGK')">← Back</button>
+      <button class="btn-primary" onclick="goTo('welcome')">Plan another →</button>
+    </div>
+  </section>
+
+  <!-- VIEW PLAN (visual) -->
+  <section class="screen" id="viewPlan">
+    <div id="viewPlanContent"></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo('saved')">← Back to saved</button>
+      <button class="btn-primary" onclick="startPlanning()">+ Plan another</button>
+    </div>
+  </section>
+
+  <!-- SAVED -->
+  <section class="screen" id="saved">
+    <div class="screen-head">
+      <span class="eyebrow">Your collection</span>
+      <h2>Saved <span class="em">itineraries</span></h2>
+      <p>Every plan you've saved. Click any to view its details.</p>
+    </div>
+    <div id="savedContent"></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo('welcome')">← Home</button>
+      <button class="btn-primary" onclick="startPlanning()">+ New plan</button>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ==================================================
+   DATA
+   ================================================== */
+
+const flightsByCity = {
+  BLR: [
+    { id:'blr-ak14', airline:'AirAsia', logo:'lg-ai', no:'AK 14', dep:'07:00', arr:'13:55', from:'BLR', to:'KUL', dur:'4h 25m', type:'Direct', price:'₹18,500', kids:5, notes:'Best for toddlers — daytime, lands at lunch.', tags:[['Day flight','green'],['Direct','green']] },
+    { id:'blr-od216', airline:'Batik Air', logo:'lg-od', no:'OD 216', dep:'05:35', arr:'12:15', from:'BLR', to:'KUL', dur:'4h 10m', type:'Direct', price:'₹19,800', kids:4, notes:'Early but kids sleep on flight; arrives midday.', tags:[['Early morning','amber'],['Direct','green']] },
+    { id:'blr-6e1043', airline:'IndiGo', logo:'lg-id', no:'6E 1043', dep:'11:10', arr:'17:55', from:'BLR', to:'KUL', dur:'4h 15m', type:'Direct', price:'₹17,200', kids:4, notes:'Late afternoon arrival; expect tired kids at check-in.', tags:[['Direct','green'],['Pre-dinner','amber']] },
+    { id:'blr-mh193', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 193', dep:'23:55', arr:'07:00⁺¹', from:'BLR', to:'KUL', dur:'4h 35m', type:'Direct · Red-eye', price:'₹24,500', kids:3, notes:'Full-service red-eye. Bassinet on request. Land fresh.', tags:[['Red-eye','red'],['Free meals','green'],['Bassinet','green']] },
+    { id:'blr-ak16', airline:'AirAsia', logo:'lg-ai', no:'AK 16', dep:'22:55', arr:'05:55⁺¹', from:'BLR', to:'KUL', dur:'4h 30m', type:'Direct · Red-eye', price:'₹15,900', kids:2, notes:'Cheapest but pre-dawn arrival is rough with toddlers.', tags:[['Red-eye','red'],['Cheapest','green']] }
+  ],
+  BOM: [
+    { id:'bom-mh195', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 195', dep:'08:55', arr:'17:00', from:'BOM', to:'KUL', dur:'5h 35m', type:'Direct', price:'₹26,500', kids:5, notes:'Best with kids — full service, meals, bassinet on request.', tags:[['Day flight','green'],['Free meals','green'],['Bassinet','green']] },
+    { id:'bom-6e1051', airline:'IndiGo', logo:'lg-id', no:'6E 1051', dep:'09:30', arr:'17:30', from:'BOM', to:'KUL', dur:'5h 30m', type:'Direct', price:'₹19,800', kids:4, notes:'Affordable day flight, IndiGo reliability. No frills.', tags:[['Day flight','green'],['Direct','green']] },
+    { id:'bom-ak12', airline:'AirAsia', logo:'lg-ai', no:'AK 12', dep:'13:30', arr:'21:00', from:'BOM', to:'KUL', dur:'5h 00m', type:'Direct', price:'₹16,200', kids:3, notes:'Afternoon flight; arrives late evening — straight to bed.', tags:[['Afternoon','amber'],['Cheapest','green']] },
+    { id:'bom-ai1396', airline:'Air India', logo:'lg-ai2', no:'AI 1396', dep:'12:45', arr:'20:30', from:'BOM', to:'KUL', dur:'5h 15m', type:'Direct', price:'₹23,800', kids:4, notes:'Full service Indian carrier — meals, Hindi-speaking crew.', tags:[['Free meals','green'],['Direct','green']] },
+    { id:'bom-od204', airline:'Batik Air', logo:'lg-od', no:'OD 204', dep:'06:00', arr:'13:30', from:'BOM', to:'KUL', dur:'5h 00m', type:'Direct', price:'₹17,900', kids:4, notes:'Early but kids nap on flight; arrives at lunch.', tags:[['Early morning','amber'],['Direct','green']] },
+    { id:'bom-mh197', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 197', dep:'23:30', arr:'07:00⁺¹', from:'BOM', to:'KUL', dur:'5h 00m', type:'Direct · Red-eye', price:'₹25,500', kids:3, notes:'Overnight in full service — best if your kids sleep on planes.', tags:[['Red-eye','red'],['Free meals','green'],['Bassinet','green']] }
+  ]
+};
+let flightsKL = flightsByCity.BLR;
+
+const flightsLGK = [
+  { id:'mh1432', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 1432', dep:'10:00', arr:'11:00', from:'KUL', to:'LGK', dur:'1h 00m', type:'Direct', price:'₹3,800', kids:5, notes:'Best with kids — full service, free snacks, assigned seats.', tags:[['Recommended','green'],['Free meal','green']] },
+  { id:'fy3104', airline:'Firefly', logo:'lg-fy', no:'FY 3104', dep:'11:30', arr:'12:30', from:'SZB', to:'LGK', dur:'1h 00m', type:'Direct · From Subang', price:'₹3,500', kids:5, notes:'Subang airport is closer to KL city — less travel hassle.', tags:[['Subang SZB','amber'],['Boutique','green']] },
+  { id:'ak6260', airline:'AirAsia', logo:'lg-ai', no:'AK 6260', dep:'13:15', arr:'14:15', from:'KUL', to:'LGK', dur:'1h 00m', type:'Direct', price:'₹2,400', kids:3, notes:'Cheapest, most frequent. No frills. Pay extra to sit together.', tags:[['Cheapest','green'],['No meals','amber']] },
+  { id:'od1582', airline:'Batik Air', logo:'lg-od', no:'OD 1582', dep:'14:50', arr:'15:50', from:'KUL', to:'LGK', dur:'1h 00m', type:'Direct', price:'₹2,900', kids:4, notes:'Newer fleet, decent service. Mid-afternoon slot.', tags:[['Direct','green']] },
+  { id:'ak6266', airline:'AirAsia', logo:'lg-ai', no:'AK 6266', dep:'18:30', arr:'19:30', from:'KUL', to:'LGK', dur:'1h 00m', type:'Direct', price:'₹2,200', kids:2, notes:'Late arrival — skip dinner stress, eat at resort.', tags:[['Evening','amber']] }
+];
+
+const hotelsKL = [
+  { id:'pullman-bb', name:'Pullman Kuala Lumpur City Centre', brand:'accor', group:'Accor · Pullman', area:'Bukit Bintang', stars:5, photo:'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&auto=format&fit=crop&q=80', price:'RM 620',
+    distance:{km:1.2, time:'15 min', mode:'walk', via:'via Pavilion bridge'},
+    desc:'Modern 5-star in central KL with one of the best kids pools in the city. Walk to Pavilion mall and Jalan Alor street food.',
+    amenities:['Kids pool','Family rooms','Indian breakfast','Spa','Gym'], kids:5, familyPick:true,
+    indian:{score:4.6, quote:'"Felt at home — Indian breakfast every morning"'},
+    food:[{name:'Sangeetha Bukit Bintang', type:'Indian veg', dist:'400 m', emoji:'🇮🇳'},{name:'PizzaExpress Pavilion', type:'Pizza · veg menu', dist:'500 m', emoji:'🍕'},{name:'Restoran Nirwana Maju', type:'Banana leaf', dist:'600 m', emoji:'🥬'},{name:'Sushi Zanmai', type:'Japanese · veg sushi', dist:'500 m', emoji:'🍣'},{name:'Pita Pit', type:'Mediterranean veg', dist:'400 m', emoji:'🥙'}] },
+
+  { id:'sofitel-d', name:'Sofitel Kuala Lumpur Damansara', brand:'accor', group:'Accor · Sofitel', area:'Damansara', stars:5, photo:'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&auto=format&fit=crop&q=80', price:'RM 780',
+    distance:{km:10, time:'20 min', mode:'drive', via:'via Jln Damansara'},
+    desc:'Luxe French-Asian hotel above a quiet mall in upscale Damansara. Vast rooms, infinity pool, kids menu in every restaurant.',
+    amenities:['Infinity pool','Cribs','Kids menu','Spa','Club lounge'], kids:5, familyPick:true,
+    indian:{score:4.7, quote:'"Quietest 5-star in KL — perfect with toddlers"'},
+    food:[{name:'Ganga Cafe', type:'Indian veg', dist:'2 km', emoji:'🇮🇳'},{name:'Saravanaa Bhavan The Curve', type:'Pure veg', dist:'3 km', emoji:'🇮🇳'},{name:'Pizza Hut 1 Utama', type:'Pizza', dist:'2 km', emoji:'🍕'},{name:'Sushi Tei', type:'Japanese · veg menu', dist:'2 km', emoji:'🍣'},{name:'Levant', type:'Lebanese veg', dist:'3 km', emoji:'🥙'}] },
+
+  { id:'novotel-cc', name:'Novotel Kuala Lumpur City Centre', brand:'accor', group:'Accor · Novotel', area:'Bukit Bintang', stars:4, photo:'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&auto=format&fit=crop&q=80', price:'RM 380',
+    distance:{km:1.5, time:'18 min', mode:'walk', via:'via Jln Sultan Ismail'},
+    desc:'Practical 4-star with a dedicated kids zone, free stays for under-16s, and walking distance to KLCC + Bukit Bintang.',
+    amenities:['Kids stay free','Play area','Family rooms','Outdoor pool'], kids:4, familyPick:true,
+    indian:{score:4.4, quote:'"Best value 4-star — kids stay free is a steal"'},
+    food:[{name:'Saravanaa Bhavan KLCC', type:'Indian veg', dist:'1.5 km', emoji:'🇮🇳'},{name:'Domino\'s Pizza', type:'Pizza · veg', dist:'500 m', emoji:'🍕'},{name:'Genki Sushi', type:'Japanese veg', dist:'1 km', emoji:'🍣'},{name:'Tony Roma\'s', type:'Veg burgers · salads', dist:'1.5 km', emoji:'🍔'},{name:'Mamak hawker stalls', type:'Roti · dal', dist:'300 m', emoji:'🌯'}] },
+
+  { id:'pullman-bangsar', name:'Pullman Kuala Lumpur Bangsar', brand:'accor', group:'Accor · Pullman', area:'Bangsar', stars:5, photo:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&auto=format&fit=crop&q=80', price:'RM 520',
+    distance:{km:6, time:'15 min', mode:'drive', via:'via Federal Highway'},
+    desc:'Stylish hotel in Bangsar — KL\'s most cosmopolitan neighborhood, packed with Indian restaurants and cafes.',
+    amenities:['Pool','Indian food everywhere','Kid amenities','Spa'], kids:4,
+    indian:{score:4.5, quote:'"Bangsar = best Indian food in KL. Walk to dinner!"'},
+    food:[{name:'Annalakshmi Bangsar', type:'Indian pure veg', dist:'1 km', emoji:'🇮🇳'},{name:'Devi\'s Corner', type:'Banana leaf', dist:'800 m', emoji:'🥬'},{name:'Plan B Bangsar', type:'Pizza · pasta', dist:'1.1 km', emoji:'🍕'},{name:'Sushi Hinata', type:'Japanese veg', dist:'1 km', emoji:'🍣'},{name:'Hadramawt Restaurant', type:'Yemeni veg', dist:'1 km', emoji:'🥙'}] },
+
+  { id:'mercure-bb', name:'Mercure Kuala Lumpur Shaw Parade', brand:'accor', group:'Accor · Mercure', area:'Bukit Bintang', stars:4, photo:'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800&auto=format&fit=crop&q=80', price:'RM 290',
+    distance:{km:1.8, time:'20 min', mode:'walk', via:'via Changkat'},
+    desc:'Smart-value 4-star with rooftop pool and bigger-than-average family rooms.',
+    amenities:['Rooftop pool','Family rooms','Pet-friendly','Breakfast'], kids:3,
+    indian:{score:4.2, quote:'"Affordable + spotless — great for short trips"'},
+    food:[{name:'Sangeetha', type:'Indian veg', dist:'600 m', emoji:'🇮🇳'},{name:'Domino\'s Pizza', type:'Pizza', dist:'700 m', emoji:'🍕'},{name:'Restoran Nirwana Maju', type:'Banana leaf', dist:'1 km', emoji:'🥬'},{name:'Bask Bear Coffee', type:'Cafe · sandwiches', dist:'500 m', emoji:'☕'},{name:'Tealive', type:'Bubble tea', dist:'200 m', emoji:'🧋'}] },
+
+  { id:'shangri-la', name:'Shangri-La Kuala Lumpur', brand:'non-accor', group:'Shangri-La Group', area:'Bukit Bintang', stars:5, photo:'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&auto=format&fit=crop&q=80', price:'RM 850',
+    distance:{km:1.0, time:'12 min', mode:'walk', via:'via Jln Sultan Ismail'},
+    desc:'The gold standard for Indian families in KL. Huge kids pool, dedicated baby cot setup, and the famous Lemon Garden breakfast.',
+    amenities:['Big kids pool','Indian breakfast','Baby cribs','Lemon Garden','Spa'], kids:5, familyPick:true,
+    indian:{score:4.9, quote:'"Our family\'s favorite — masala dosa at breakfast!"'},
+    food:[{name:'Sangeetha Bukit Bintang', type:'Indian veg', dist:'500 m', emoji:'🇮🇳'},{name:'PizzaExpress Pavilion', type:'Pizza · veg', dist:'800 m', emoji:'🍕'},{name:'Vegetarian Heaven', type:'Multi-cuisine veg', dist:'800 m', emoji:'🥗'},{name:'Sushi Zanmai', type:'Japanese · veg sushi', dist:'700 m', emoji:'🍣'},{name:'Antipodean Cafe', type:'Cafe · pasta · pizza', dist:'1 km', emoji:'🍝'}] },
+
+  { id:'mandarin', name:'Mandarin Oriental Kuala Lumpur', brand:'non-accor', group:'Mandarin Oriental', area:'KLCC', stars:5, photo:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&auto=format&fit=crop&q=80', price:'RM 1,050',
+    distance:{km:0.3, time:'4 min', mode:'walk', via:'across KLCC Park'},
+    desc:'The closest 5-star to Petronas Towers, with park-facing rooms and an absolutely stunning pool deck. Premium but worth it.',
+    amenities:['Twin Towers view','Pool deck','Spa','Concierge','Kids club'], kids:5, familyPick:true,
+    indian:{score:4.8, quote:'"Wake up to Petronas view. Worth every rupee."'},
+    food:[{name:'Saravanaa Bhavan Suria KLCC', type:'Indian pure veg', dist:'300 m', emoji:'🇮🇳'},{name:'PizzaExpress KLCC', type:'Pizza · veg menu', dist:'400 m', emoji:'🍕'},{name:'Aliyaa Indian Cuisine', type:'Sri Lankan veg', dist:'500 m', emoji:'🥥'},{name:'Sushi Zanmai KLCC', type:'Japanese veg', dist:'400 m', emoji:'🍣'},{name:'Levain Bakery', type:'Bakery · pastries', dist:'400 m', emoji:'🥐'}] },
+
+  { id:'ritz', name:'The Ritz-Carlton Kuala Lumpur', brand:'non-accor', group:'Marriott · Ritz-Carlton', area:'Bukit Bintang', stars:5, photo:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&auto=format&fit=crop&q=80', price:'RM 920',
+    distance:{km:1.5, time:'18 min', mode:'walk', via:'via Pavilion bridge'},
+    desc:'Old-school luxury with the most attentive service in KL. Beautiful pool, Ritz Kids program, butler service in every room.',
+    amenities:['Ritz Kids','Butler','Pool','Spa','Tea lounge'], kids:5, familyPick:true,
+    indian:{score:4.7, quote:'"Butler service spoiled us — kids loved Ritz Kids"'},
+    food:[{name:'Sangeetha Bukit Bintang', type:'Indian veg', dist:'400 m', emoji:'🇮🇳'},{name:'PizzaExpress', type:'Pizza · veg', dist:'600 m', emoji:'🍕'},{name:'Restoran Nirwana Maju', type:'Banana leaf', dist:'700 m', emoji:'🥬'},{name:'Sushi King', type:'Japanese veg', dist:'500 m', emoji:'🍣'},{name:'Tealive', type:'Bubble tea', dist:'300 m', emoji:'🧋'}] },
+
+  { id:'traders', name:'Traders Hotel Kuala Lumpur', brand:'non-accor', group:'Shangri-La Group', area:'KLCC', stars:5, photo:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop&q=80', price:'RM 680',
+    distance:{km:0.4, time:'6 min', mode:'walk', via:'across KLCC Park'},
+    desc:'Iconic SkyBar pool with the best Twin Towers view in the city. Excellent for families — bridge connected to KLCC park.',
+    amenities:['Sky pool','Twin Towers view','Bridge to KLCC park','Breakfast'], kids:4, familyPick:true,
+    indian:{score:4.6, quote:'"Sky pool with Petronas view — kids couldn\'t stop staring"'},
+    food:[{name:'Saravanaa Bhavan Suria KLCC', type:'Indian pure veg', dist:'400 m', emoji:'🇮🇳'},{name:'Aliyaa Indian Cuisine', type:'Sri Lankan veg', dist:'600 m', emoji:'🥥'},{name:'PizzaExpress KLCC', type:'Pizza · veg menu', dist:'500 m', emoji:'🍕'},{name:'Sushi Zanmai', type:'Japanese veg sushi', dist:'500 m', emoji:'🍣'},{name:'Suria KLCC food court', type:'Multi-cuisine', dist:'400 m', emoji:'🍽️'}] },
+
+  { id:'grand-hyatt', name:'Grand Hyatt Kuala Lumpur', brand:'non-accor', group:'Hyatt', area:'KLCC', stars:5, photo:'https://images.unsplash.com/photo-1455587734955-081b22074882?w=800&auto=format&fit=crop&q=80', price:'RM 880',
+    distance:{km:0.3, time:'4 min', mode:'walk', via:'across KLCC Park'},
+    desc:'Statement architecture with a glass-bottom pool and one of the best Sunday brunches in KL. Generous family rooms.',
+    amenities:['Glass pool','Family rooms','Spa','Brunch','Park view'], kids:4,
+    indian:{score:4.7, quote:'"THIRTY8 brunch was a dream — kids ate everything"'},
+    food:[{name:'Saravanaa Bhavan Suria KLCC', type:'Indian pure veg', dist:'350 m', emoji:'🇮🇳'},{name:'Aliyaa Indian Cuisine', type:'Sri Lankan veg', dist:'550 m', emoji:'🥥'},{name:'PizzaExpress KLCC', type:'Pizza · veg menu', dist:'400 m', emoji:'🍕'},{name:'Sushi Zanmai', type:'Japanese veg', dist:'400 m', emoji:'🍣'},{name:'Le Petit Four', type:'French bakery', dist:'500 m', emoji:'🥐'}] },
+
+  { id:'westin-kl', name:'The Westin Kuala Lumpur', brand:'non-accor', group:'Marriott · Westin', area:'Bukit Bintang', stars:5, photo:'https://images.unsplash.com/photo-1559508551-44bff1de756b?w=800&auto=format&fit=crop&q=80', price:'RM 720',
+    distance:{km:1.4, time:'17 min', mode:'walk', via:'via Pavilion bridge'},
+    desc:'Heavenly Beds, family-friendly suites, and a great location with Pavilion KL one underground walkway away.',
+    amenities:['Westin Kids','Heavenly Beds','Pool','Spa','Family suites'], kids:5, familyPick:true,
+    indian:{score:4.7, quote:'"Westin Kids amenities made the trip — kids never wanted to leave"'},
+    food:[{name:'Sangeetha Bukit Bintang', type:'Indian veg', dist:'400 m', emoji:'🇮🇳'},{name:'PizzaExpress Pavilion', type:'Pizza · veg', dist:'300 m', emoji:'🍕'},{name:'Annapoorna', type:'Indian pure veg', dist:'1.2 km', emoji:'🇮🇳'},{name:'Sushi Zanmai', type:'Japanese veg', dist:'500 m', emoji:'🍣'},{name:'Crystal Jade La Mian', type:'Chinese veg noodles', dist:'400 m', emoji:'🍜'}] },
+
+  { id:'jw-marriott', name:'JW Marriott Kuala Lumpur', brand:'non-accor', group:'Marriott · JW', area:'Bukit Bintang', stars:5, photo:'https://images.unsplash.com/photo-1568084680786-a84f91d1153c?w=800&auto=format&fit=crop&q=80', price:'RM 790',
+    distance:{km:1.6, time:'19 min', mode:'walk', via:'via Pavilion bridge'},
+    desc:'Reliable Marriott luxury, walking distance to Starhill Gallery and Pavilion. Spacious club-floor rooms.',
+    amenities:['Club lounge','Pool','Spa','Family rooms','Concierge'], kids:4,
+    indian:{score:4.6, quote:'"Club lounge breakfast was a winner with picky toddlers"'},
+    food:[{name:'Sangeetha Bukit Bintang', type:'Indian veg', dist:'450 m', emoji:'🇮🇳'},{name:'Annapoorna', type:'Indian pure veg', dist:'1.3 km', emoji:'🇮🇳'},{name:'PizzaExpress Pavilion', type:'Pizza · veg', dist:'400 m', emoji:'🍕'},{name:'Genji Japanese (in-hotel)', type:'Japanese veg', dist:'on-site', emoji:'🍣'},{name:'Crystal Jade La Mian', type:'Chinese veg noodles', dist:'500 m', emoji:'🍜'}] },
+
+  { id:'hilton-kl', name:'Hilton Kuala Lumpur', brand:'non-accor', group:'Hilton', area:'KL Sentral', stars:5, photo:'https://images.unsplash.com/photo-1551918120-9739cb430c6d?w=800&auto=format&fit=crop&q=80', price:'RM 580',
+    distance:{km:3, time:'10 min', mode:'drive', via:'via Jln Tun Sambanthan'},
+    desc:'Right above KL Sentral — direct train to airport. Great if you have an early flight or short stay. Big pool, kids menus.',
+    amenities:['Direct airport train','Pool','Family rooms','Multi-cuisine'], kids:4, familyPick:true,
+    indian:{score:4.6, quote:'"Direct train to KL Sentral is gold with luggage + kids"'},
+    food:[{name:'Vishal Food & Catering', type:'Indian pure veg', dist:'400 m', emoji:'🇮🇳'},{name:'Sri Paandi Brickfields', type:'Banana leaf', dist:'500 m', emoji:'🥬'},{name:'PizzaExpress NU Sentral', type:'Pizza · veg', dist:'300 m', emoji:'🍕'},{name:'Sushi Zanmai NU Sentral', type:'Japanese veg', dist:'300 m', emoji:'🍣'},{name:'Brickfields Little India', type:'Street food', dist:'600 m', emoji:'🌯'}] },
+
+  { id:'doubletree', name:'DoubleTree by Hilton Kuala Lumpur', brand:'non-accor', group:'Hilton · DoubleTree', area:'KLCC', stars:5, photo:'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&auto=format&fit=crop&q=80', price:'RM 510',
+    distance:{km:1.0, time:'13 min', mode:'walk', via:'via Jln Ampang'},
+    desc:'Warm-cookie welcome (kids love it!), large pool deck, and one of the most family-friendly 5-stars in KLCC.',
+    amenities:['Welcome cookies','Family-sized rooms','Pool deck','Multi-cuisine'], kids:5, familyPick:true,
+    indian:{score:4.7, quote:'"Warm cookies at check-in won the kids over immediately"'},
+    food:[{name:'Saravanaa Bhavan KLCC', type:'Indian pure veg', dist:'1.1 km', emoji:'🇮🇳'},{name:'Aliyaa Indian Cuisine', type:'Sri Lankan veg', dist:'1 km', emoji:'🥥'},{name:'PizzaExpress KLCC', type:'Pizza · veg', dist:'1 km', emoji:'🍕'},{name:'Sushi King Avenue K', type:'Japanese veg', dist:'900 m', emoji:'🍣'},{name:'Tony Roma\'s', type:'Veg burgers · salad', dist:'1.1 km', emoji:'🍔'}] },
+
+  { id:'le-meridien', name:'Le Méridien Kuala Lumpur', brand:'non-accor', group:'Marriott · Le Méridien', area:'KL Sentral', stars:5, photo:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&auto=format&fit=crop&q=80', price:'RM 540',
+    distance:{km:3.2, time:'11 min', mode:'drive', via:'via NU Sentral'},
+    desc:'Connected to KL Sentral and NU Sentral mall via skybridge. Famously good buffet at Latest Recipe.',
+    amenities:['Skybridge to mall','Pool','Latest Recipe buffet','Family rooms'], kids:4, familyPick:true,
+    indian:{score:4.5, quote:'"Buffet had Indian + Italian + Chinese — picky kids happy"'},
+    food:[{name:'Vishal Food & Catering', type:'Indian pure veg', dist:'500 m', emoji:'🇮🇳'},{name:'Saravanaa Bhavan Brickfields', type:'Indian veg', dist:'600 m', emoji:'🇮🇳'},{name:'PizzaExpress NU Sentral', type:'Pizza · veg', dist:'200 m', emoji:'🍕'},{name:'Sushi Zanmai NU Sentral', type:'Japanese veg', dist:'200 m', emoji:'🍣'},{name:'Latest Recipe (in-hotel)', type:'Multi-cuisine veg', dist:'on-site', emoji:'🥗'}] },
+
+  { id:'four-seasons-kl', name:'Four Seasons Hotel Kuala Lumpur', brand:'non-accor', group:'Four Seasons', area:'KLCC', stars:5, photo:'https://images.unsplash.com/photo-1551918120-9739cb430c6d?w=800&auto=format&fit=crop&q=80', price:'RM 1,250',
+    distance:{km:0.4, time:'5 min', mode:'walk', via:'next to KLCC Park'},
+    desc:'Newest luxury hotel by Petronas — gorgeous infinity pool, dedicated Kids For All Seasons program, fine dining downstairs.',
+    amenities:['Kids program','Infinity pool','Spa','Park view','Premium service'], kids:5, familyPick:true,
+    indian:{score:4.9, quote:'"Kids program was outstanding — felt like our own concierge"'},
+    food:[{name:'Saravanaa Bhavan Suria KLCC', type:'Indian pure veg', dist:'400 m', emoji:'🇮🇳'},{name:'Aliyaa Indian Cuisine', type:'Sri Lankan veg', dist:'500 m', emoji:'🥥'},{name:'PizzaExpress KLCC', type:'Pizza · veg', dist:'400 m', emoji:'🍕'},{name:'Yun House (in-hotel)', type:'Chinese veg dim sum', dist:'on-site', emoji:'🥟'},{name:'Suria KLCC food court', type:'Multi-cuisine', dist:'400 m', emoji:'🍽️'}] },
+
+  { id:'ibis-klcc', name:'ibis Kuala Lumpur City Centre', brand:'accor', group:'Accor · ibis', area:'KLCC', stars:3, photo:'https://images.unsplash.com/photo-1568084680786-a84f91d1153c?w=800&auto=format&fit=crop&q=80', price:'RM 220',
+    distance:{km:0.9, time:'12 min', mode:'walk', via:'via Jln Yap Kwan Seng'},
+    desc:'Budget Accor option a short walk from KLCC. Smart smaller rooms, sweet dreams beds, clean modern interiors — easy on the wallet.',
+    amenities:['Free WiFi','Compact rooms','24h reception','Coffee bar'], kids:3,
+    indian:{score:4.3, quote:'"Cheap, clean, 10 min walk to Petronas. Big win for short stays"'},
+    food:[{name:'Saravanaa Bhavan KLCC', type:'Indian pure veg', dist:'900 m', emoji:'🇮🇳'},{name:'Aliyaa Indian Cuisine', type:'Sri Lankan veg', dist:'700 m', emoji:'🥥'},{name:'PizzaExpress Avenue K', type:'Pizza · veg', dist:'800 m', emoji:'🍕'},{name:'Sushi King Avenue K', type:'Japanese veg', dist:'700 m', emoji:'🍣'},{name:'Tealive', type:'Bubble tea', dist:'200 m', emoji:'🧋'}] },
+
+  { id:'movenpick-klia', name:'Mövenpick Hotel & Residences Kuala Lumpur', brand:'accor', group:'Accor · Mövenpick', area:'KL Sentral', stars:5, photo:'https://images.unsplash.com/photo-1455587734955-081b22074882?w=800&auto=format&fit=crop&q=80', price:'RM 460',
+    distance:{km:3.2, time:'12 min', mode:'drive', via:'via Brickfields'},
+    desc:'Brand-new Accor flagship near KL Sentral — direct ERL train to KLIA in 28 minutes. Famous Mövenpick chocolate hour for kids!',
+    amenities:['Chocolate hour','Family suites','Pool','Train to airport','Spa'], kids:5, familyPick:true,
+    indian:{score:4.6, quote:'"Free chocolate hour at 4 PM — kids talked about it for months"'},
+    food:[{name:'Vishal Food & Catering', type:'Indian pure veg', dist:'700 m', emoji:'🇮🇳'},{name:'Saravanaa Bhavan Brickfields', type:'Indian veg', dist:'800 m', emoji:'🇮🇳'},{name:'PizzaExpress NU Sentral', type:'Pizza · veg', dist:'500 m', emoji:'🍕'},{name:'Sushi Zanmai NU Sentral', type:'Japanese veg', dist:'500 m', emoji:'🍣'},{name:'Brickfields Little India', type:'Street food', dist:'1 km', emoji:'🌯'}] },
+
+  { id:'pullman-klia', name:'Pullman Kuala Lumpur Airport', brand:'accor', group:'Accor · Pullman', area:'KLIA', stars:5, photo:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&auto=format&fit=crop&q=80', price:'RM 420',
+    distance:{km:55, time:'45 min', mode:'drive', via:'via airport highway'},
+    desc:'5 mins from KLIA terminal — perfect for early flights or pre-Langkawi night. Quiet, modern, big pool, no city stress.',
+    amenities:['Airport shuttle','Big pool','Family rooms','Spa','Quiet'], kids:4,
+    indian:{score:4.4, quote:'"Saved us before a 6 AM flight to Langkawi — godsend with kids"'},
+    food:[{name:'In-hotel Indian buffet', type:'Indian veg', dist:'on-site', emoji:'🇮🇳'},{name:'Italian (in-hotel)', type:'Pizza · pasta veg', dist:'on-site', emoji:'🍕'},{name:'KLIA food court', type:'Multi-cuisine', dist:'1 km', emoji:'🍽️'},{name:'Plaza Premium Lounge', type:'Buffet veg', dist:'2 km', emoji:'🥗'},{name:'Limited external options', type:'Mainly airport', dist:'2 km', emoji:'🍔'}] },
+
+  { id:'mercure-trion', name:'Mercure Kuala Lumpur Trion', brand:'accor', group:'Accor · Mercure', area:'KL Sentral', stars:4, photo:'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800&auto=format&fit=crop&q=80', price:'RM 310',
+    distance:{km:4.5, time:'14 min', mode:'drive', via:'via Cheras'},
+    desc:'Newer Mercure (opened 2023) with infinity pool overlooking KL skyline. Modern family rooms, great rate-to-quality ratio.',
+    amenities:['Infinity pool','Skyline view','Family rooms','Gym','Restaurant'], kids:4, familyPick:true,
+    indian:{score:4.4, quote:'"Newer hotel, fewer crowds, pool view is incredible at night"'},
+    food:[{name:'Saravanaa Bhavan KLCC', type:'Indian pure veg', dist:'4 km', emoji:'🇮🇳'},{name:'Domino\'s Pizza', type:'Pizza · veg', dist:'500 m', emoji:'🍕'},{name:'Sushi King', type:'Japanese veg', dist:'600 m', emoji:'🍣'},{name:'In-hotel restaurant', type:'Multi-cuisine veg', dist:'on-site', emoji:'🥗'},{name:'Tealive', type:'Bubble tea', dist:'300 m', emoji:'🧋'}] }
+];
+
+const hotelsLGK = [
+  { id:'mercure-lgk-cenang', name:'Mercure Langkawi Pantai Cenang', brand:'accor', group:'Accor · Mercure', area:'Pantai Cenang', stars:4, photo:'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800&auto=format&fit=crop&q=80', price:'RM 360',
+    distance:{km:0.5, time:'6 min', mode:'walk', via:'to Pantai Cenang beach'},
+    desc:'Accor\'s flagship in Langkawi — modern 4-star a short walk from Pantai Cenang beach. Family rooms, rooftop pool, kids welcome program. Best Accor pick on the island.',
+    amenities:['Rooftop pool','Family rooms','Walk to beach','Modern design','Kid menus'], kids:4, familyPick:true,
+    indian:{score:4.5, quote:'"Newest Accor property on the island — clean, modern, value"'},
+    food:[{name:'Haveli Restaurant', type:'Indian pure veg', dist:'500 m', emoji:'🇮🇳'},{name:'Pizza Hut Pantai Cenang', type:'Pizza · veg', dist:'400 m', emoji:'🍕'},{name:'Yellow Cafe', type:'Italian · pizza', dist:'600 m', emoji:'🍕'},{name:'Restoran Tomato Nasi Kandar', type:'Local · veg', dist:'300 m', emoji:'🌯'},{name:'Restoran Khaleel', type:'Mamak · veg', dist:'500 m', emoji:'🥬'}] },
+
+  { id:'novotel-lgk-cenang', name:'Novotel Langkawi Pantai Cenang', brand:'accor', group:'Accor · Novotel', area:'Pantai Cenang', stars:4, photo:'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&auto=format&fit=crop&q=80', price:'RM 420',
+    distance:{km:0.4, time:'5 min', mode:'walk', via:'to Pantai Cenang beach'},
+    desc:'Family-first Accor pick — Novotel\'s signature "Kids stay & eat free" program, kids zone, large family rooms, walk to the beach.',
+    amenities:['Kids stay free','Kids eat free','Kids zone','Pool','Walk to beach'], kids:5, familyPick:true,
+    indian:{score:4.6, quote:'"Free kids meals saved us so much. Walking distance to beach + food"'},
+    food:[{name:'Haveli Restaurant', type:'Indian pure veg', dist:'400 m', emoji:'🇮🇳'},{name:'Pizza Hut Pantai Cenang', type:'Pizza · veg', dist:'300 m', emoji:'🍕'},{name:'Yellow Cafe', type:'Italian · pizza', dist:'500 m', emoji:'🍕'},{name:'Restoran Tomato Nasi Kandar', type:'Local · veg', dist:'250 m', emoji:'🌯'},{name:'Putumayo', type:'International veg', dist:'600 m', emoji:'🥗'}] },
+
+  { id:'st-regis', name:'The St. Regis Langkawi', brand:'non-accor', group:'Marriott · St. Regis', area:'Kuah', stars:5, photo:'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&auto=format&fit=crop&q=80', price:'RM 1,650',
+    distance:{km:14, time:'25 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Over-water villas, butler service for every room, and a calm bay perfect for toddlers learning to wade.',
+    amenities:['Butler','Over-water villas','Kids program','Spa','Private beach'], kids:5, familyPick:true,
+    indian:{score:4.8, quote:'"Butler arranged daily Indian meals — incredible service"'},
+    food:[{name:'In-resort Indian (by request)', type:'Indian pure veg', dist:'on-site', emoji:'🇮🇳'},{name:'L\'Atelier (Italian, in-resort)', type:'Italian veg', dist:'on-site', emoji:'🍕'},{name:'Kayuputi (Asian, in-resort)', type:'Asian veg', dist:'on-site', emoji:'🍜'},{name:'Restoran Indian Express', type:'Indian veg', dist:'5 km', emoji:'🇮🇳'},{name:'Saraswathi Kitchen', type:'Indian pure veg', dist:'6 km', emoji:'🇮🇳'}] },
+
+  { id:'andaman', name:'The Andaman, a Luxury Collection Resort', brand:'non-accor', group:'Marriott · Luxury Collection', area:'Datai Bay', stars:5, photo:'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&auto=format&fit=crop&q=80', price:'RM 1,380',
+    distance:{km:28, time:'45 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Rainforest meets beach. Young Explorers kids club, calm shallow water, and the best naturalists on the island.',
+    amenities:['Young Explorers club','Private beach','Rainforest tours','Indian cuisine'], kids:5, familyPick:true,
+    indian:{score:4.7, quote:'"Indian chef on staff — biryani in the rainforest!"'},
+    food:[{name:'In-resort Indian menu', type:'Indian veg', dist:'on-site', emoji:'🇮🇳'},{name:'Tepian Laut (resort)', type:'Multi-cuisine veg', dist:'on-site', emoji:'🍽️'},{name:'Jentayu (in-resort)', type:'Italian veg · pizza', dist:'on-site', emoji:'🍕'},{name:'The Restaurant', type:'International veg', dist:'on-site', emoji:'🥗'},{name:'Closest external Indian', type:'Indian veg', dist:'25 km', emoji:'🇮🇳'}] },
+
+  { id:'datai', name:'The Datai Langkawi', brand:'non-accor', group:'Datai Hotels', area:'Datai Bay', stars:5, photo:'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&auto=format&fit=crop&q=80', price:'RM 2,400',
+    distance:{km:28, time:'45 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'The most prestigious resort in Langkawi. Spectacular rainforest setting, world-class spa, intimate.',
+    amenities:['Private villas','Spa','Beach club','Jungle treks','Fine dining'], kids:4,
+    indian:{score:4.6, quote:'"Most beautiful resort we\'ve stayed at. Chef accommodates"'},
+    food:[{name:'The Pavilion (in-resort)', type:'Thai veg menu', dist:'on-site', emoji:'🍜'},{name:'The Gulai House (in-resort)', type:'Indian veg', dist:'on-site', emoji:'🇮🇳'},{name:'The Beach Club', type:'Italian · pizza veg', dist:'on-site', emoji:'🍕'},{name:'The Dining Room', type:'International veg', dist:'on-site', emoji:'🥗'},{name:'External Indian', type:'Indian veg', dist:'25 km', emoji:'🇮🇳'}] },
+
+  { id:'westin', name:'The Westin Langkawi Resort & Spa', brand:'non-accor', group:'Marriott · Westin', area:'Kuah', stars:5, photo:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&auto=format&fit=crop&q=80', price:'RM 780',
+    distance:{km:13, time:'22 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Big resort, big pools, Westin Kids Club, generous family rooms — easiest of the lot with toddlers in tow.',
+    amenities:['Westin Kids Club','3 pools','Family rooms','Indian breakfast','Spa'], kids:5, familyPick:true,
+    indian:{score:4.8, quote:'"Hands down best with kids. Three pools, kids club ❤️"'},
+    food:[{name:'In-resort Indian breakfast', type:'Indian veg', dist:'on-site', emoji:'🇮🇳'},{name:'Tide Pool Bar & Grill', type:'Italian veg · pizza', dist:'on-site', emoji:'🍕'},{name:'Seasonal Tastes', type:'Multi-cuisine veg', dist:'on-site', emoji:'🥗'},{name:'Restoran Indian Express', type:'Indian veg', dist:'4 km', emoji:'🇮🇳'},{name:'Saraswathi Kitchen', type:'Indian pure veg', dist:'5 km', emoji:'🇮🇳'}] },
+
+  { id:'four-seasons', name:'Four Seasons Resort Langkawi', brand:'non-accor', group:'Four Seasons', area:'Tanjung Rhu', stars:5, photo:'https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=800&auto=format&fit=crop&q=80', price:'RM 2,100',
+    distance:{km:32, time:'50 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Pavilion-style villas on Tanjung Rhu — the most beautiful beach in Malaysia. Best kids program on the island.',
+    amenities:['Kids for All Seasons','Pavilions','Spa','Watersports','Cooking class'], kids:5, familyPick:true,
+    indian:{score:4.9, quote:'"Kids program is unbelievable. Veg meals arranged daily."'},
+    food:[{name:'Ikan-Ikan (Indian dishes)', type:'Indian veg avail', dist:'on-site', emoji:'🇮🇳'},{name:'Serai (Italian wood-fired)', type:'Pizza · pasta veg', dist:'on-site', emoji:'🍕'},{name:'Kelapa Grill', type:'International veg', dist:'on-site', emoji:'🥗'},{name:'Rhu Bar (snacks)', type:'Cafe · sandwiches', dist:'on-site', emoji:'🥪'},{name:'In-villa Indian', type:'Indian pure veg request', dist:'on-site', emoji:'🇮🇳'}] },
+
+  { id:'ritz-lgk', name:'The Ritz-Carlton, Langkawi', brand:'non-accor', group:'Marriott · Ritz-Carlton', area:'Tanjung Rhu', stars:5, photo:'https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=800&auto=format&fit=crop&q=80', price:'RM 1,250',
+    distance:{km:32, time:'50 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Hillside villas with private pools, in a quiet cove. Ritz Kids program is genuinely excellent.',
+    amenities:['Private pools','Ritz Kids','Spa','Beach','Snorkeling'], kids:5, familyPick:true,
+    indian:{score:4.8, quote:'"Private pool villa + Ritz Kids = parents finally relaxed"'},
+    food:[{name:'Hai Yan (Asian veg)', type:'Asian veg menu', dist:'on-site', emoji:'🍜'},{name:'Horizon (Italian veg)', type:'Pizza · pasta', dist:'on-site', emoji:'🍕'},{name:'Beach Grill', type:'BBQ · veg avail', dist:'on-site', emoji:'🥗'},{name:'In-room Indian', type:'Indian veg request', dist:'on-site', emoji:'🇮🇳'},{name:'External Indian', type:'Indian veg', dist:'30 km', emoji:'🇮🇳'}] },
+
+  { id:'meritus', name:'Meritus Pelangi Beach Resort & Spa', brand:'non-accor', group:'Meritus', area:'Pantai Cenang', stars:5, photo:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&auto=format&fit=crop&q=80', price:'RM 620',
+    distance:{km:0, time:'on the beach', mode:'walk', via:'on Pantai Cenang'},
+    desc:'Sprawling village-style resort on Pantai Cenang — KL\'s favorite family beach. Lazy river, kids club, easy food access.',
+    amenities:['Lazy river','Kids club','Family rooms','Pantai Cenang beach'], kids:5, familyPick:true,
+    indian:{score:4.6, quote:'"Walked to Indian restaurants every night — perfect location"'},
+    food:[{name:'Haveli Restaurant', type:'Indian pure veg', dist:'400 m', emoji:'🇮🇳'},{name:'Pizza Hut Pantai Cenang', type:'Pizza · veg', dist:'300 m', emoji:'🍕'},{name:'Yellow Cafe', type:'Italian · pizza', dist:'500 m', emoji:'🍕'},{name:'Restoran Tomato Nasi Kandar', type:'Local · veg avail', dist:'200 m', emoji:'🌯'},{name:'Restoran Khaleel', type:'Mamak · veg', dist:'600 m', emoji:'🥬'}] },
+
+  { id:'berjaya', name:'Berjaya Langkawi Resort', brand:'non-accor', group:'Berjaya Hotels', area:'Pantai Cenang', stars:4, photo:'https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&auto=format&fit=crop&q=80', price:'RM 480',
+    distance:{km:6, time:'12 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Iconic chalet-on-stilts resort over the bay. Slightly older but unique with kids — they love the wooden walkways.',
+    amenities:['Chalet-style','Pool','Indian restaurant','Spa','Beach'], kids:4,
+    indian:{score:4.4, quote:'"Has its own Indian restaurant on property — rare!"'},
+    food:[{name:'Taj (in-resort Indian)', type:'Indian pure veg', dist:'on-site', emoji:'🇮🇳'},{name:'Pahn Thai (in-resort)', type:'Thai veg', dist:'on-site', emoji:'🍜'},{name:'Haveli Restaurant', type:'Indian pure veg', dist:'6 km', emoji:'🇮🇳'},{name:'Pizza Hut Pantai Cenang', type:'Pizza · veg', dist:'6 km', emoji:'🍕'},{name:'Restoran Tomato', type:'Local · veg avail', dist:'6 km', emoji:'🥬'}] },
+
+  { id:'dash', name:'Dash Resort Langkawi', brand:'non-accor', group:'Independent', area:'Pantai Cenang', stars:4, photo:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&auto=format&fit=crop&q=80', price:'RM 320',
+    distance:{km:0.5, time:'8 min', mode:'walk', via:'to Pantai Cenang beach'},
+    desc:'Modern, design-forward 4-star with a fun pool — value pick if you want resort-style without the price tag.',
+    amenities:['Design pool','Family rooms','Walk to beach'], kids:3,
+    indian:{score:4.3, quote:'"Best value on Pantai Cenang. Pool is fun for kids."'},
+    food:[{name:'Haveli Restaurant', type:'Indian pure veg', dist:'600 m', emoji:'🇮🇳'},{name:'Pizza Hut Pantai Cenang', type:'Pizza · veg', dist:'400 m', emoji:'🍕'},{name:'Yellow Cafe', type:'Italian · pizza', dist:'500 m', emoji:'🍕'},{name:'Restoran Tomato Nasi Kandar', type:'Local · veg', dist:'400 m', emoji:'🌯'},{name:'Restoran Khaleel', type:'Mamak · veg', dist:'500 m', emoji:'🥬'}] },
+
+  { id:'the-danna', name:'The Danna Langkawi', brand:'non-accor', group:'Independent Luxury', area:'Pantai Kok', stars:5, photo:'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&auto=format&fit=crop&q=80', price:'RM 980',
+    distance:{km:11, time:'18 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Colonial-style luxury with the longest pool in Langkawi (90m!). Quiet bay, white sand, generous family rooms.',
+    amenities:['90m pool','Family rooms','Spa','Private beach'], kids:5, familyPick:true,
+    indian:{score:4.7, quote:'"The pool alone is worth it — kids were in heaven for hours"'},
+    food:[{name:'Straits (in-resort)', type:'Multi-cuisine veg', dist:'on-site', emoji:'🥗'},{name:'Plantain (in-resort)', type:'Italian veg · pizza', dist:'on-site', emoji:'🍕'},{name:'Indian veg request', type:'Indian veg', dist:'on-site', emoji:'🇮🇳'},{name:'Haveli Restaurant', type:'Indian pure veg', dist:'11 km', emoji:'🇮🇳'},{name:'Cable car town stalls', type:'Local · veg', dist:'2 km', emoji:'🌯'}] },
+
+  { id:'tanjung-rhu-resort', name:'Tanjung Rhu Resort', brand:'non-accor', group:'Independent', area:'Tanjung Rhu', stars:5, photo:'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&auto=format&fit=crop&q=80', price:'RM 720',
+    distance:{km:30, time:'48 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Adults-quiet by day, kids-welcome by program — sits on the same Tanjung Rhu beach as Four Seasons but at half the price.',
+    amenities:['Beach','Pool','Kayaking','Family chalets'], kids:4, familyPick:true,
+    indian:{score:4.5, quote:'"Half the price, same beach as Four Seasons. Win."'},
+    food:[{name:'Rhu (in-resort)', type:'Multi-cuisine veg', dist:'on-site', emoji:'🥗'},{name:'Pacifica (in-resort)', type:'Italian veg', dist:'on-site', emoji:'🍕'},{name:'Indian request menu', type:'Indian veg', dist:'on-site', emoji:'🇮🇳'},{name:'Closest external', type:'Local · veg', dist:'28 km', emoji:'🌯'},{name:'Wonderland Food Store, Kuah', type:'Multi-cuisine', dist:'25 km', emoji:'🍽️'}] },
+
+  { id:'casa-del-mar', name:'Casa del Mar Langkawi', brand:'non-accor', group:'Boutique', area:'Pantai Cenang', stars:5, photo:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&auto=format&fit=crop&q=80', price:'RM 720',
+    distance:{km:0, time:'on the beach', mode:'walk', via:'on Pantai Cenang'},
+    desc:'Small boutique resort on Pantai Cenang — feels intimate, food is exceptional, perfect for parents who want a quieter base.',
+    amenities:['Beachfront','Pool','Boutique','Award-winning food'], kids:4,
+    indian:{score:4.6, quote:'"Quieter than the big resorts. Sand straight from the room."'},
+    food:[{name:'La Sal (in-resort fine dining)', type:'Italian veg · pizza', dist:'on-site', emoji:'🍕'},{name:'Haveli Restaurant', type:'Indian pure veg', dist:'500 m', emoji:'🇮🇳'},{name:'Pizza Hut Pantai Cenang', type:'Pizza · veg', dist:'400 m', emoji:'🍕'},{name:'Yellow Cafe', type:'Italian · pizza', dist:'600 m', emoji:'🍕'},{name:'Restoran Tomato', type:'Local · veg', dist:'400 m', emoji:'🌯'}] },
+
+  { id:'lanai-beach', name:'Lanai Beach Resort & Spa', brand:'non-accor', group:'Independent', area:'Pantai Tengah', stars:4, photo:'https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&auto=format&fit=crop&q=80', price:'RM 380',
+    distance:{km:2.5, time:'8 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Affordable beachfront 4-star with two pools and a quiet stretch of sand south of Pantai Cenang. Great value pick.',
+    amenities:['2 pools','Beachfront','Family suites','Spa'], kids:4, familyPick:true,
+    indian:{score:4.4, quote:'"Cheaper than 5-stars, beach is calmer + cleaner — surprise win"'},
+    food:[{name:'Lanai (in-resort)', type:'Multi-cuisine veg', dist:'on-site', emoji:'🥗'},{name:'Haveli Restaurant', type:'Indian pure veg', dist:'2 km', emoji:'🇮🇳'},{name:'Pizza Hut Pantai Cenang', type:'Pizza · veg', dist:'2 km', emoji:'🍕'},{name:'Putumayo', type:'International veg', dist:'2 km', emoji:'🥗'},{name:'Restoran Tomato', type:'Local · veg', dist:'2 km', emoji:'🌯'}] },
+
+  { id:'sheraton-lgk', name:'Sheraton Langkawi Beach Resort', brand:'non-accor', group:'Marriott · Sheraton', area:'Teluk Nibung', stars:5, photo:'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&auto=format&fit=crop&q=80', price:'RM 690',
+    distance:{km:18, time:'30 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Hidden gem on a private cove near Telaga Harbour — quiet beach, kid-loved waterslides at the pool, large family rooms. Marriott Bonvoy friendly.',
+    amenities:['Pool with waterslides','Private cove','Family rooms','Kids club','Watersports'], kids:5, familyPick:true,
+    indian:{score:4.7, quote:'"Waterslides in the pool? Our 3yo refused to leave the property"'},
+    food:[{name:'In-resort Indian buffet', type:'Indian veg', dist:'on-site', emoji:'🇮🇳'},{name:'Pahn Thai (in-resort)', type:'Thai veg', dist:'on-site', emoji:'🍜'},{name:'Sands (Italian, in-resort)', type:'Pizza · pasta veg', dist:'on-site', emoji:'🍕'},{name:'Telaga Harbour cafes', type:'Multi-cuisine', dist:'2 km', emoji:'🥗'},{name:'External Indian', type:'Indian veg', dist:'15 km', emoji:'🇮🇳'}] },
+
+  { id:'holiday-inn-lgk', name:'Holiday Inn Resort Langkawi Damai Beach', brand:'non-accor', group:'IHG · Holiday Inn', area:'Teluk Nibung', stars:4, photo:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&auto=format&fit=crop&q=80', price:'RM 420',
+    distance:{km:17, time:'28 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Family-first IHG resort — Kids Stay & Eat Free program, dedicated kids pool with mini-slide, baby cribs in every family room.',
+    amenities:['Kids stay free','Kids eat free','Kids pool','Family rooms','Beachfront'], kids:5, familyPick:true,
+    indian:{score:4.6, quote:'"Kids ate free at every meal — saved us a fortune"'},
+    food:[{name:'In-resort Indian menu', type:'Indian veg', dist:'on-site', emoji:'🇮🇳'},{name:'Pizza & pasta night', type:'Italian veg', dist:'on-site', emoji:'🍕'},{name:'Multi-cuisine buffet', type:'Asian + Western veg', dist:'on-site', emoji:'🥗'},{name:'Telaga Harbour Pizza Hut', type:'Pizza · veg', dist:'2 km', emoji:'🍕'},{name:'Yellow Cafe', type:'Italian · pizza', dist:'15 km', emoji:'🍕'}] },
+
+  { id:'resorts-world-lgk', name:'Resorts World Langkawi', brand:'non-accor', group:'Genting · Resorts World', area:'Awana', stars:4, photo:'https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&auto=format&fit=crop&q=80', price:'RM 360',
+    distance:{km:13, time:'22 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Marina-side resort near Telaga Harbour and the SkyCab cable car base. Big rooms, free kids stay, great value for money.',
+    amenities:['Marina view','Pool','Family rooms','Kids stay free','Near SkyCab'], kids:4, familyPick:true,
+    indian:{score:4.4, quote:'"Walk to the cable car — convenient + clean + decently priced"'},
+    food:[{name:'In-resort Indian buffet', type:'Indian veg', dist:'on-site', emoji:'🇮🇳'},{name:'Italian Cafe (in-resort)', type:'Pizza · veg', dist:'on-site', emoji:'🍕'},{name:'Telaga Harbour restaurants', type:'Multi-cuisine', dist:'1 km', emoji:'🥗'},{name:'Putumayo Telaga', type:'International veg', dist:'1.5 km', emoji:'🥗'},{name:'Charlie\'s Place', type:'Western veg avail', dist:'1 km', emoji:'🍔'}] },
+
+  { id:'aseania-lgk', name:'The Aseania Resort Langkawi', brand:'non-accor', group:'Aseania Group', area:'Pantai Cenang', stars:4, photo:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&auto=format&fit=crop&q=80', price:'RM 280',
+    distance:{km:0.3, time:'4 min', mode:'walk', via:'to Pantai Cenang beach'},
+    desc:'Famous for the longest pool in Langkawi (650 ft!) with two kids slides. Mid-tier prices, beach-walk location, very family-popular.',
+    amenities:['650 ft pool','Kids waterslides','Walk to beach','Family rooms'], kids:5, familyPick:true,
+    indian:{score:4.5, quote:'"That pool is INSANE. Our kids didn\'t want to leave Langkawi"'},
+    food:[{name:'Haveli Restaurant', type:'Indian pure veg', dist:'500 m', emoji:'🇮🇳'},{name:'Pizza Hut Pantai Cenang', type:'Pizza · veg', dist:'400 m', emoji:'🍕'},{name:'Yellow Cafe', type:'Italian · pizza', dist:'600 m', emoji:'🍕'},{name:'Restoran Tomato Nasi Kandar', type:'Local · veg', dist:'300 m', emoji:'🌯'},{name:'Putumayo', type:'International veg', dist:'500 m', emoji:'🥗'}] },
+
+  { id:'bayview-lgk', name:'Bayview Hotel Langkawi', brand:'non-accor', group:'Bayview Hotels', area:'Kuah', stars:4, photo:'https://images.unsplash.com/photo-1551918120-9739cb430c6d?w=800&auto=format&fit=crop&q=80', price:'RM 240',
+    distance:{km:14, time:'25 min', mode:'drive', via:'from Pantai Cenang'},
+    desc:'Solid Kuah town 4-star near the jetty + duty-free shops. Best pick if your itinerary involves ferry trips or Kuah-side activities.',
+    amenities:['Pool','Walk to jetty','Walk to duty-free','Family rooms'], kids:3,
+    indian:{score:4.3, quote:'"Practical Kuah base — walked to dinner + duty-free every night"'},
+    food:[{name:'Restoran Indian Express', type:'Indian veg', dist:'400 m', emoji:'🇮🇳'},{name:'Saraswathi Kitchen', type:'Indian pure veg', dist:'1 km', emoji:'🇮🇳'},{name:'Pizza Hut Kuah', type:'Pizza · veg', dist:'600 m', emoji:'🍕'},{name:'Wonderland Food Store', type:'Multi-cuisine', dist:'500 m', emoji:'🍽️'},{name:'Sushi King Kuah', type:'Japanese veg', dist:'700 m', emoji:'🍣'}] }
+];
+
+/* ==================================================
+   ITINERARY GENERATOR
+   ================================================== */
+
+// All photo URLs use the picsum service which is guaranteed to load,
+// seeded so each scene gets a consistent (but different) image.
+const PHOTOS = {
+  airport: 'https://picsum.photos/seed/klairport/600/400',
+  hotel: 'https://picsum.photos/seed/hotelkl/600/400',
+  pool: 'https://picsum.photos/seed/poolresort/600/400',
+  petronas: 'https://picsum.photos/seed/petronas/600/400',
+  klccPark: 'https://picsum.photos/seed/klccpark/600/400',
+  aquaria: 'https://picsum.photos/seed/aquaria/600/400',
+  jalanAlor: 'https://picsum.photos/seed/jalanalor/600/400',
+  pavilion: 'https://picsum.photos/seed/pavilionkl/600/400',
+  batuCaves: 'https://picsum.photos/seed/batucaves/600/400',
+  birdPark: 'https://picsum.photos/seed/birdpark/600/400',
+  indianFood: 'https://picsum.photos/seed/indianfood/600/400',
+  beach: 'https://picsum.photos/seed/lgkbeach/600/400',
+  mangrove: 'https://picsum.photos/seed/mangrove/600/400',
+  underwater: 'https://picsum.photos/seed/underwater/600/400',
+  pantaiCenang: 'https://picsum.photos/seed/pantaicenang/600/400',
+  sunset: 'https://picsum.photos/seed/lgksunset/600/400',
+  eagleSquare: 'https://picsum.photos/seed/eaglesquare/600/400',
+  islandFood: 'https://picsum.photos/seed/islandfood/600/400',
+  airplane: 'https://picsum.photos/seed/airplane/600/400'
+};
+
+function getKLPlan(hotel, flight, style = 'relaxed') {
+  const arrTime = parseInt(flight.arr.split(':')[0]);
+  const isEvening = arrTime >= 17 || flight.arr.includes('⁺¹');
+  const isAfternoon = arrTime >= 13 && arrTime < 17 && !flight.arr.includes('⁺¹');
+
+  const areaFood = {
+    'KLCC': { breakfast:'Hotel buffet', lunch:'Saravanaa Bhavan KLCC', dinner:'Vishal Food & Catering, Brickfields', sights:'KLCC Park & Twin Towers' },
+    'Bukit Bintang': { breakfast:'Hotel buffet', lunch:'Restoran Nirwana Maju (banana leaf)', dinner:'Jalan Alor street food + Sri Paandi', sights:'Pavilion & Jalan Alor at sunset' },
+    'Bangsar': { breakfast:'Devi\'s Corner Bangsar', lunch:'Annalakshmi Bangsar', dinner:'Sri Paandi or Bangsar Village dining', sights:'Bangsar Village & Telawi street' },
+    'Damansara': { breakfast:'Hotel buffet', lunch:'Aliyaa Indian Cuisine', dinner:'1 Utama mall food court', sights:'1 Utama mall & rainforest deck' },
+    'KL Sentral': { breakfast:'Hotel buffet', lunch:'Vishal Food & Catering, Brickfields', dinner:'Sri Paandi Brickfields', sights:'Brickfields Little India + KLCC' }
+  };
+
+  const local = areaFood[hotel.area] || areaFood['KLCC'];
+
+  const day1 = isEvening ? {
+    pill: 'Arrival',
+    items: [
+      { time:'Evening', label:'Arrival', title:'Land at KLIA / KLIA2', desc:`Private transfer to ${hotel.name} (~1 hr). Skip taxi queue — pre-book Grab or hotel car.`, photo:PHOTOS.airport, tags:[['Transfer','move']], book:[['klook','airport-transfer-kuala-lumpur']] },
+      { time:'9:00 PM', label:'Dinner', title:'In-room dinner', desc:'Room service or quick bite at hotel. Don\'t try to do anything tonight.', photo:PHOTOS.hotel, tags:[['Eat','eat'],['Rest','rest']] }
+    ]
+  } : isAfternoon ? {
+    pill:'Arrival',
+    items: [
+      { time:'Afternoon', label:'Arrival', title:'Land + check in', desc:`Private transfer to ${hotel.name}. Settle in.`, photo:PHOTOS.airport, tags:[['Transfer','move']], book:[['klook','airport-transfer-kuala-lumpur']] },
+      { time:'5:30 PM', label:'Light walk', title:local.sights, desc:'Easy first evening — stroll, photos, fountain show at 8/9/10 PM.', photo:PHOTOS.petronas, tags:[['See','see']] },
+      { time:'8:00 PM', label:'Dinner', title:local.dinner, desc:'Comfort food close to hotel. Early sleep wins.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] }
+    ]
+  } : {
+    pill:'Arrival + light explore',
+    items: [
+      { time:'Afternoon', label:'Arrival', title:'Land + check in', desc:`Transfer to ${hotel.name}. Quick nap.`, photo:PHOTOS.airport, tags:[['Transfer','move']], book:[['klook','airport-transfer-kuala-lumpur']] },
+      { time:'4:30 PM', label:'Pool time', title:'Hotel pool', desc:'Let the kids decompress in the water. Critical step.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'7:00 PM', label:'Evening', title:local.sights, desc:'Twin Towers fountain show OR Jalan Alor (whichever is closer to your hotel).', photo:PHOTOS.petronas, tags:[['See','see']] },
+      { time:'8:30 PM', label:'Dinner', title:local.dinner, desc:'South Indian banana leaf or buffet — kids eat what they know.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] }
+    ]
+  };
+
+  const day2Relaxed = {
+    pill:'Relaxed family day', title:'KLCC + Aquaria',
+    items: [
+      { time:'8:30 AM', label:'Breakfast', title:local.breakfast, desc:'Big breakfast — masala dosa, fresh fruits, idli, parathas. Don\'t skip.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'10:30 AM', label:'Activity 1', title:'Aquaria KLCC', desc:'Indoor aquarium, stroller-friendly, walk-through shark tunnel. Pre-book skip-the-line.', photo:PHOTOS.aquaria, tags:[['See','see'],['Indoor','rest']], book:[['klook','aquaria-klcc-tickets'],['getyourguide','aquaria-klcc']] },
+      { time:'1:00 PM', label:'Lunch', title:local.lunch, desc:'South Indian / Tamil — kid-safe spice levels, served fast.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'2:30 PM', label:'Rest', title:'Back to hotel — nap & pool', desc:'Non-negotiable. KL is hot. Kids and adults all benefit from a 2-hour reset.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'5:30 PM', label:'Move', title:`Grab to ${hotel.area === 'KLCC' ? 'KLCC Park playground' : 'KLCC'}`, desc:'Park playground + wading fountain. Free, shaded, kids LOVE it.', photo:PHOTOS.klccPark, tags:[['Move','move'],['See','see']] },
+      { time:'8:00 PM', label:'Show', title:'Petronas fountain show', desc:'Free water + light show every hour. Best viewpoint: KLCC Park lake.', photo:PHOTOS.petronas, tags:[['See','see']], book:[['klook','petronas-twin-towers-tickets'],['getyourguide','petronas-towers']] },
+      { time:'8:45 PM', label:'Dinner', title:local.dinner, desc:'Wind-down dinner — leave room for ice cream and a slow stroll.', photo:PHOTOS.jalanAlor, tags:[['Eat','eat']] }
+    ]
+  };
+
+  const day2Explorer = {
+    pill:'Active explorer day', title:'Batu Caves + KL Tower',
+    items: [
+      { time:'7:30 AM', label:'Breakfast', title:local.breakfast, desc:'Early big breakfast — fuel for a long day.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'9:00 AM', label:'Adventure', title:'Batu Caves (Murugan Temple)', desc:'30-min Grab. 272 rainbow steps + 42m golden statue. Toddlers stay at the base — monkeys are mischievous!', photo:PHOTOS.batuCaves, tags:[['See','see'],['Move','move']], book:[['klook','batu-caves-tour'],['getyourguide','batu-caves-kuala-lumpur']] },
+      { time:'12:00 PM', label:'Lunch', title:'Sri Aaroos Restaurant (Batu Caves)', desc:'Authentic banana leaf right outside the temple — staff used to families.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'1:30 PM', label:'Rest', title:'Quick nap at hotel', desc:'1-hour reset. KL afternoons are brutal.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'3:30 PM', label:'See', title:'KL Tower observation deck + Sky Box', desc:'Skip the climb at Petronas — this is the better view and far less queue. Glass Sky Box for the brave.', photo:PHOTOS.petronas, tags:[['See','see']], book:[['klook','kl-tower-observation-deck'],['getyourguide','kl-tower-skydeck']] },
+      { time:'6:00 PM', label:'Walk', title:'KLCC Park + Twin Towers up close', desc:'Walk down through the park. Playground stop if kids need it.', photo:PHOTOS.klccPark, tags:[['See','see'],['Move','move']] },
+      { time:'8:00 PM', label:'Show', title:'Petronas fountain show + photos', desc:'Iconic KL photo op. Wait for the 8 or 9 PM show.', photo:PHOTOS.petronas, tags:[['See','see']] },
+      { time:'8:45 PM', label:'Dinner', title:'Jalan Alor street food', desc:'KL\'s most famous street eats. Veg satay, roti, sugarcane juice.', photo:PHOTOS.jalanAlor, tags:[['Eat','eat']] }
+    ]
+  };
+
+  const day2Indoor = {
+    pill:'Indoor & AC-heavy', title:'Mall + Aquaria',
+    items: [
+      { time:'9:00 AM', label:'Breakfast', title:local.breakfast, desc:'Slow indoor breakfast. AC on all day.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'10:30 AM', label:'See', title:'Aquaria KLCC', desc:'Fully indoor. Walk-through shark tunnel. 2-3 hours easy.', photo:PHOTOS.aquaria, tags:[['See','see'],['Indoor','rest']], book:[['klook','aquaria-klcc-tickets']] },
+      { time:'1:00 PM', label:'Lunch', title:'Suria KLCC food court (Signatures)', desc:'Massive food court — Indian, Italian, Japanese, Chinese veg, Korean. Everyone happy.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'2:30 PM', label:'Mall', title:'Pavilion KL — kids floor + Lot 10 indoor playground', desc:'Skybridge from KLCC to Pavilion. Take Pavilion\'s connector tunnel — no sun at all.', photo:PHOTOS.pavilion, tags:[['See','see'],['Indoor','rest']] },
+      { time:'4:30 PM', label:'Rest', title:'Back to hotel pool (indoor if available)', desc:'Pool time — most KL 5-star pools have shaded sections.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'7:00 PM', label:'See', title:'Petronas fountain show (quick outdoor stop)', desc:'5-min photo stop, then back into the mall. Promise.', photo:PHOTOS.petronas, tags:[['See','see']] },
+      { time:'8:00 PM', label:'Dinner', title:'TRX or Pavilion food court', desc:'AC-friendly dining. Kids eat well, parents relax.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] }
+    ]
+  };
+
+  const day2 = style === 'explorer' ? day2Explorer : style === 'indoor' ? day2Indoor : day2Relaxed;
+
+  return [
+    { day:1, date:'Tue · Jun 30', title:'Arrive in KL', pill:day1.pill, items:day1.items },
+    { day:2, date:'Wed · Jul 1', title:day2.title, pill:day2.pill, items:day2.items }
+  ];
+}
+
+function getLGKPlan(hotel, style = 'beach') {
+  const area = hotel.area;
+  const remote = area === 'Datai Bay' || area === 'Tanjung Rhu';
+  const beachy = area === 'Pantai Cenang';
+
+  // Day 1 is the same for all styles — arrival is arrival.
+  const day1 = { day:1, date:'Thu · Jul 2', title:'Land + slow start', pill:'Arrival', items: [
+    { time:'Morning', label:'Travel', title:'KL → Langkawi (LGK)', desc:'Short 1-hour flight. Resort pickup at LGK airport.', photo:PHOTOS.airplane, tags:[['Move','move']] },
+    { time:'1:00 PM', label:'Check-in', title:`Arrive at ${hotel.name}`, desc:`Welcome drink, settle in. ${remote ? 'You\'re tucked into a quiet bay — perfect.' : 'You\'re right by the action — bonus.'}`, photo:PHOTOS.hotel, tags:[['Rest','rest']] },
+    { time:'3:00 PM', label:'Pool / Beach', title:'Toddler-pace beach time', desc:`Shallow water at ${area === 'Datai Bay' ? 'Datai Bay (calm, private)' : area === 'Tanjung Rhu' ? 'Tanjung Rhu (prettiest beach in Malaysia)' : 'Pantai Cenang'}. Sandcastles, no agenda.`, photo:PHOTOS.beach, tags:[['Rest','rest']] },
+    { time:'6:30 PM', label:'Sunset', title:'Beach walk + photos', desc:'Langkawi sunsets are unreal. Grab a coconut, sit on the sand, breathe.', photo:PHOTOS.sunset, tags:[['See','see']] },
+    { time:'7:30 PM', label:'Dinner', title:'In-resort dinner', desc:'Early dinner, early bedtime. Tomorrow is the big day.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] }
+  ]};
+
+  // STYLE: BEACH (default — relaxed)
+  const beachPlan = [day1,
+    { day:2, date:'Fri · Jul 3', title:'Mangroves + eagles', pill:'Beach + chill', items: [
+      { time:'7:30 AM', label:'Breakfast', title:'Resort breakfast', desc:'Eat well — you\'ll be on a boat for half the day.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'9:00 AM', label:'Adventure', title:'Kilim Geoforest mangrove + eagle tour', desc:'Private covered boat (book ahead, ~RM 600 per family). 4 hours through limestone caves, eagle feeding, mangrove canopy. Toddler-safe.', photo:PHOTOS.mangrove, tags:[['See','see'],['Move','move']], book:[['klook','langkawi-mangrove-tour'],['getyourguide','kilim-geoforest-langkawi']] },
+      { time:'12:30 PM', label:'Lunch', title:'Floating fish farm restaurant', desc:'Inside the geopark. Fresh seafood + veg options. Fish swim under your table.', photo:PHOTOS.islandFood, tags:[['Eat','eat'],['See','see']] },
+      { time:'2:30 PM', label:'Rest', title:'Back to resort — nap', desc:'Long morning. Everyone needs a reset.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'5:00 PM', label:'Activity 2', title:beachy ? 'Underwater World Langkawi' : 'Sunset beach walk', desc:beachy ? 'Indoor aquarium at Pantai Cenang — penguins, rainforest dome.' : 'Long walk on your private beach, golden-hour magic.', photo:beachy ? PHOTOS.underwater : PHOTOS.sunset, tags:[['See','see']], book:beachy ? [['klook','underwater-world-langkawi']] : null },
+      { time:'7:30 PM', label:'Dinner', title:beachy ? 'Pantai Cenang beachfront' : 'In-resort fine dining', desc:beachy ? 'Casual beachfront with sand under your feet.' : 'Romantic enough for parents, kid-friendly menu.', photo:PHOTOS.pantaiCenang, tags:[['Eat','eat']] }
+    ]},
+    { day:3, date:'Sat · Jul 4', title:'Slow island day', pill:'Beach + culture', items: [
+      { time:'8:30 AM', label:'Breakfast', title:'Long, slow breakfast', desc:'No rush.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'10:30 AM', label:'See', title:'Eagle Square + Kuah town', desc:'Iconic 12m eagle statue, 30-min photo stop + waterfront walk.', photo:PHOTOS.eagleSquare, tags:[['See','see']] },
+      { time:'12:30 PM', label:'Lunch', title:beachy ? 'Restoran Tomato Nasi Kandar' : 'Wonderland Food Store, Kuah', desc:'Cheap, kid-friendly, local.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
+      { time:'2:00 PM', label:'Rest', title:'Hotel pool + nap', desc:'Earned it.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'5:00 PM', label:'Shop', title:'Beach + duty-free shopping', desc:'Langkawi is duty-free — chocolate, perfumes, baby formula. The Zon / Coco Valley.', photo:PHOTOS.beach, tags:[['See','see']] },
+      { time:'7:30 PM', label:'Dinner', title:'The Cliff Restaurant', desc:'Sunset cliff dining if you can get a 6:30 PM table.', photo:PHOTOS.sunset, tags:[['Eat','eat']] }
+    ]}
+  ];
+
+  // STYLE: ADVENTURE
+  const adventurePlan = [day1,
+    { day:2, date:'Fri · Jul 3', title:'Island hopping + cable car', pill:'Adventure', items: [
+      { time:'7:30 AM', label:'Breakfast', title:'Resort breakfast', desc:'Fuel up — long day on water and at altitude.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'8:30 AM', label:'Adventure', title:'Island Hopping Tour (3 islands)', desc:'Pulau Dayang Bunting (Pregnant Maiden Lake) + Eagle Feeding + Pulau Beras Basah. Private speedboat option safer with toddlers.', photo:PHOTOS.beach, tags:[['See','see'],['Move','move']], book:[['klook','langkawi-island-hopping'],['getyourguide','langkawi-island-hopping']] },
+      { time:'1:00 PM', label:'Lunch', title:'Pantai Cenang seafood lunch', desc:'Back on land — quick refuel before afternoon.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
+      { time:'2:30 PM', label:'Rest', title:'Resort pool — quick recharge', desc:'1 hr only — kids will be excited.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'4:00 PM', label:'See', title:'Panorama Langkawi SkyCab + SkyBridge', desc:'World\'s steepest cable car. WARNING: very steep, scary for toddlers — assess your kids first. Older kids (3+) usually love it.', photo:PHOTOS.petronas, tags:[['See','see'],['Move','move']], book:[['klook','langkawi-skycab'],['getyourguide','langkawi-skybridge-cable-car']] },
+      { time:'7:00 PM', label:'Walk', title:'Oriental Village shops + dinner', desc:'Toy stores, ice cream, local crafts at the cable car base.', photo:PHOTOS.pantaiCenang, tags:[['Eat','eat']] }
+    ]},
+    { day:3, date:'Sat · Jul 4', title:'Snorkel + sunset cruise', pill:'Adventure', items: [
+      { time:'8:00 AM', label:'Breakfast', title:'Quick breakfast', desc:'Hit the water early.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'9:30 AM', label:'Snorkel', title:'Pulau Payar Marine Park (half-day)', desc:'Best snorkeling in Langkawi. Floating platform — even toddlers can splash in shallow corral pools.', photo:PHOTOS.underwater, tags:[['See','see'],['Move','move']], book:[['klook','pulau-payar-marine-park'],['getyourguide','pulau-payar-snorkel']] },
+      { time:'1:30 PM', label:'Lunch', title:'Lunch on Pulau Payar platform', desc:'Buffet on the floating platform. Fish swarm beneath you.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
+      { time:'3:30 PM', label:'Rest', title:'Resort + pool', desc:'Big nap. Sunset cruise after.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'5:30 PM', label:'Sail', title:'Sunset cruise (kid-friendly)', desc:'2-hour catamaran cruise — calm waters, soft drinks, sunset over Mat Cincang mountain.', photo:PHOTOS.sunset, tags:[['See','see']], book:[['klook','langkawi-sunset-cruise'],['getyourguide','langkawi-sunset-dinner-cruise']] },
+      { time:'8:00 PM', label:'Dinner', title:'On-board cruise dinner (or back on shore)', desc:'Many cruises include dinner. Otherwise, late dinner at Pantai Cenang.', photo:PHOTOS.pantaiCenang, tags:[['Eat','eat']] }
+    ]}
+  ];
+
+  // STYLE: CULTURE
+  const culturePlan = [day1,
+    { day:2, date:'Fri · Jul 3', title:'Legends + art', pill:'Culture', items: [
+      { time:'8:30 AM', label:'Breakfast', title:'Resort breakfast', desc:'Slow start — cultural sites open mid-morning.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'10:00 AM', label:'See', title:'Makam Mahsuri (Mahsuri\'s Tomb)', desc:'The cursed princess of Langkawi — legend says her wrongful execution cursed the island for 7 generations. Beautiful complex, stories your kids will remember.', photo:PHOTOS.eagleSquare, tags:[['See','see']] },
+      { time:'11:30 AM', label:'Art', title:'Atma Alam Batik Art Village', desc:'Kids paint their own batik fabric — they take home a real souvenir they made. Highlight of the trip.', photo:PHOTOS.batuCaves, tags:[['See','see']], book:[['klook','atma-alam-batik-langkawi']] },
+      { time:'1:00 PM', label:'Lunch', title:'Local restaurant in Padang Matsirat', desc:'Authentic Malay village food. Veg nasi lemak, roti canai.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
+      { time:'2:30 PM', label:'Rest', title:'Resort — nap & pool', desc:'Reset before evening culture.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'5:00 PM', label:'See', title:'Eagle Square + Kuah waterfront', desc:'12m red eagle statue — symbol of Langkawi. Photo stop + waterfront stroll.', photo:PHOTOS.eagleSquare, tags:[['See','see']] },
+      { time:'7:00 PM', label:'Dinner', title:'Wonderland Food Store, Kuah', desc:'Hawker stalls — Malay, Chinese, Indian veg side by side.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] }
+    ]},
+    { day:3, date:'Sat · Jul 4', title:'Museums + nature', pill:'Culture', items: [
+      { time:'8:30 AM', label:'Breakfast', title:'Slow breakfast', desc:'No rush.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'10:00 AM', label:'See', title:'Galeria Perdana (Dr. Mahathir Museum)', desc:'Surprisingly fun for kids — toy cars, models, gifts from world leaders. Air-conditioned.', photo:PHOTOS.pavilion, tags:[['See','see']] },
+      { time:'12:00 PM', label:'Lunch', title:'Local kopitiam in Kuah', desc:'Coffee shop noodles — easy on kids\' stomachs.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
+      { time:'1:30 PM', label:'Rest', title:'Resort pool + nap', desc:'Big midday rest.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'4:00 PM', label:'See', title:'Langkawi Wildlife Park', desc:'Walk-through aviary + petting zoo. Toddler-friendly, lots of hands-on. Air-conditioned reptile house.', photo:PHOTOS.birdPark, tags:[['See','see']], book:[['klook','langkawi-wildlife-park']] },
+      { time:'6:30 PM', label:'Sunset', title:'Pantai Cenang sunset', desc:'Coconut on the beach. Watch the sun melt.', photo:PHOTOS.sunset, tags:[['See','see']] },
+      { time:'7:30 PM', label:'Dinner', title:'Haveli Restaurant (Indian) or in-resort', desc:'Cultural day deserves a great Indian dinner.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] }
+    ]}
+  ];
+
+  return style === 'adventure' ? adventurePlan : style === 'culture' ? culturePlan : beachPlan;
+}
+
+/* ==================================================
+   STATE
+   ================================================== */
+
+const state = {
+  currentScreen: 'welcome',
+  departureCity: 'BLR',
+  flightKL: null,
+  hotelKL: null,
+  flightLGK: null,
+  hotelLGK: null,
+  planStyleKL: 'relaxed',
+  planStyleLGK: 'beach',
+  filterBrand: 'all',
+  filterArea: 'all',
+  filterBrandL: 'all',
+  filterAreaL: 'all'
+};
+
+const KL_PLAN_STYLES = {
+  relaxed:  { name:'Relaxed family',  icon:'😌', desc:'Slow pace, big naps, light evenings — best with toddlers' },
+  explorer: { name:'Active explorer', icon:'🗺️', desc:'More sights — Batu Caves, KL Tower, KLCC, fewer rest gaps' },
+  indoor:   { name:'Indoor / AC',     icon:'❄️', desc:'Beat the heat — malls, aquariums, covered spots' }
+};
+
+const LGK_PLAN_STYLES = {
+  beach:     { name:'Beach + chill',   icon:'🏖️', desc:'Pool, beach, sunset, one mangrove adventure' },
+  adventure: { name:'Adventure',       icon:'🛶', desc:'Island hop, SkyCab, snorkel — for older kids' },
+  culture:   { name:'Culture & sights',icon:'🎭', desc:'Eagle Square, batik art, museums, Mahsuri Tomb' }
+};
+
+function findFlightKL(id) {
+  for (const c of ['BLR','BOM']) {
+    const f = flightsByCity[c].find(x => x.id === id);
+    if (f) return f;
+  }
+  return null;
+}
+
+function setCity(city) {
+  state.departureCity = city;
+  flightsKL = flightsByCity[city];
+  state.flightKL = null;
+  document.querySelectorAll('.city-btn').forEach(b => b.classList.toggle('active', b.dataset.city === city));
+  renderFlights(flightsKL, 'flightsKL', 'flightKL', 'next-flightKL');
+  const btn = document.getElementById('next-flightKL');
+  btn.disabled = true; btn.style.opacity = .4; btn.style.cursor = 'not-allowed';
+}
+
+const STORAGE_KEY = 'malaysia-itineraries-v1';
+
+function loadSaved() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  } catch { return []; }
+}
+function saveSaved(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  updateSavedBadge();
+}
+function updateSavedBadge() {
+  document.getElementById('savedCount').textContent = loadSaved().length;
+}
+
+/* ==================================================
+   NAVIGATION
+   ================================================== */
+
+function goTo(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  state.currentScreen = screenId;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Toggle progress bar
+  const progress = document.getElementById('progressBar');
+  const showProgress = ['flightKL','hotelKL','planKL','flightLGK','hotelLGK','planLGK','summary'].includes(screenId);
+  progress.style.display = showProgress ? 'flex' : 'none';
+  updateProgress();
+
+  // Special renders per screen
+  if (screenId === 'saved') renderSaved();
+  if (screenId === 'planKL') renderPlanKL();
+  if (screenId === 'planLGK') renderPlanLGK();
+  if (screenId === 'summary') renderSummary();
+  if (screenId === 'hotelKL') updateFlightContext();
+}
+
+function updateProgress() {
+  const order = ['flightKL','hotelKL','planKL','flightLGK','hotelLGK','planLGK','summary'];
+  const currentIdx = order.indexOf(state.currentScreen);
+  document.querySelectorAll('.progress-step').forEach((el, idx) => {
+    el.classList.remove('done','current');
+    if (idx < currentIdx) el.classList.add('done');
+    else if (idx === currentIdx) el.classList.add('current');
+  });
+}
+
+function startPlanning() {
+  state.flightKL = null;
+  state.hotelKL = null;
+  state.flightLGK = null;
+  state.hotelLGK = null;
+  state.planStyleKL = 'relaxed';
+  state.planStyleLGK = 'beach';
+  goTo('flightKL');
+}
+
+function next(from, to) { goTo(to); }
+
+function updateFlightContext() {
+  if (state.flightKL) {
+    const f = flightsKL.find(x => x.id === state.flightKL);
+    document.getElementById('flightContextKL').style.display = 'flex';
+    document.getElementById('arrivalSummary').innerHTML = `${f.airline} ${f.no} lands at <strong>${f.arr}</strong> — ${f.notes}`;
+  }
+}
+
+/* ==================================================
+   RENDERERS
+   ================================================== */
+
+function renderFlights(list, mountId, stateKey, nextBtnId) {
+  const m = document.getElementById(mountId);
+  m.innerHTML = list.map(f => `
+    <div class="flight-card ${state[stateKey] === f.id ? 'selected' : ''}" data-id="${f.id}" onclick="selectFlight('${stateKey}', '${f.id}', '${nextBtnId}')">
+      <div class="selected-badge">✓ SELECTED</div>
+      <div class="flight-top">
+        <div class="airline">
+          <div class="airline-logo ${f.logo}">${f.airline.charAt(0)}</div>
+          <span>${f.airline} · ${f.no}</span>
+        </div>
+        <div class="price">${f.price}</div>
+      </div>
+      <div class="flight-route">
+        <div class="route-point">
+          <div class="time">${f.dep}</div>
+          <div class="code">${f.from}</div>
+        </div>
+        <div class="route-line"></div>
+        <div class="route-point">
+          <div class="time">${f.arr}</div>
+          <div class="code">${f.to}</div>
+        </div>
+      </div>
+      <div class="route-meta">${f.dur} · ${f.type}</div>
+      <div class="flight-tags">
+        ${f.tags.map(t => `<span class="ftag ${t[1]}">${t[0]}</span>`).join('')}
+        <span class="ftag">Kids: ${'⭐'.repeat(f.kids)}</span>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--ink-soft);">${f.notes}</div>
+      <div class="flight-book-row" onclick="event.stopPropagation();">
+        <div class="fbook-label">Book on:</div>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' site:makemytrip.com')}" style="--c:#eb2026;">MakeMyTrip</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' site:goibibo.com')}" style="--c:#fc4961;">Goibibo</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' site:yatra.com')}" style="--c:#fb6a3a;">Yatra</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.skyscanner.co.in/transport/flights/${f.from.toLowerCase()}/${f.to.toLowerCase()}/" style="--c:#0770e3;">Skyscanner</a>
+        <a class="fbook" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(f.airline + ' ' + f.no + ' ' + f.from + ' to ' + f.to + ' site:cleartrip.com')}" style="--c:#f47521;">Cleartrip</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectFlight(stateKey, id, btnId) {
+  state[stateKey] = id;
+  if (stateKey === 'flightKL') renderFlights(flightsKL, 'flightsKL', 'flightKL', 'next-flightKL');
+  if (stateKey === 'flightLGK') renderFlights(flightsLGK, 'flightsLGK', 'flightLGK', 'next-flightLGK');
+  const btn = document.getElementById(btnId);
+  btn.disabled = false; btn.style.opacity = 1; btn.style.cursor = 'pointer';
+}
+
+function renderHotels(list, mountId, stateKey, nextBtnId, filterBrandKey, filterAreaKey) {
+  const m = document.getElementById(mountId);
+  const filtered = list.filter(h =>
+    (state[filterBrandKey] === 'all' || h.brand === state[filterBrandKey]) &&
+    (state[filterAreaKey] === 'all' || h.area === state[filterAreaKey])
+  );
+  if (filtered.length === 0) {
+    m.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="emoji">🔍</div><h3>No hotels match these filters</h3><p>Try a different combination.</p></div>`;
+    return;
+  }
+  const landmark = stateKey === 'hotelKL' ? 'Petronas Towers' : 'Pantai Cenang';
+  m.innerHTML = filtered.map(h => `
+    <div class="hotel-card ${state[stateKey] === h.id ? 'selected' : ''}" data-id="${h.id}" onclick="selectHotel('${stateKey}', '${h.id}', '${nextBtnId}')">
+      <div class="hotel-image">
+        <img src="${h.photo}" alt="${h.name}" loading="lazy" onerror="this.onerror=null; this.src='https://picsum.photos/seed/${h.id}/800/500';" />
+        <span class="brand-badge ${h.brand === 'accor' ? 'accor' : ''}">${h.group}</span>
+        <span class="stars-badge">${'★'.repeat(h.stars)}</span>
+        ${h.familyPick ? '<span class="family-pick">Family pick</span>' : ''}
+        <span class="selected-tick">✓</span>
+      </div>
+      <div class="hotel-body">
+        <h3>${h.name}</h3>
+        <div class="hotel-meta-row">
+          <span class="hotel-area">📍 ${h.area}</span>
+          <span class="dot">·</span>
+          <span class="hotel-price">${h.price}/night</span>
+        </div>
+        <div class="distance-row">
+          <span class="icon-dot">${h.distance.mode === 'walk' ? '🚶' : '🚗'}</span>
+          <span><strong>${h.distance.km === 0 ? '0 km' : h.distance.km + ' km'}</strong> from ${landmark} · ${h.distance.time} ${h.distance.mode === 'walk' ? 'walk' : 'drive'} ${h.distance.via}</span>
+        </div>
+        <p class="hotel-desc">${h.desc}</p>
+        <div class="hotel-amenities">
+          ${h.amenities.slice(0,4).map(a => `<span class="amenity-pill">${a}</span>`).join('')}
+        </div>
+        <div class="indian-rating">
+          <span class="flag"></span>
+          <span class="score">${h.indian.score}/5</span>
+          <span class="quote">${h.indian.quote}</span>
+        </div>
+        <div class="veg-section">
+          <div class="veg-title"><span class="veg-dot"></span> Veg-friendly food nearby</div>
+          <div class="veg-list">
+            ${h.food.map(v => `
+              <div class="veg-item">
+                <span class="vemoji">${v.emoji}</span>
+                <span class="vname">${v.name}</span>
+                <span class="vtype">${v.type}</span>
+                <span class="vmeta">${v.dist}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="kid-score">
+          <span>Kid-friendly</span>
+          <span class="kids-rating">${'⭐'.repeat(h.kids)}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectHotel(stateKey, id, btnId) {
+  state[stateKey] = id;
+  if (stateKey === 'hotelKL') renderHotels(hotelsKL, 'hotelsKL', 'hotelKL', 'next-hotelKL', 'filterBrand', 'filterArea');
+  if (stateKey === 'hotelLGK') renderHotels(hotelsLGK, 'hotelsLGK', 'hotelLGK', 'next-hotelLGK', 'filterBrandL', 'filterAreaL');
+  const btn = document.getElementById(btnId);
+  btn.disabled = false; btn.style.opacity = 1; btn.style.cursor = 'pointer';
+}
+
+function renderPlanStyleTabs(mountId, stylesMap, currentStyle, onPickName) {
+  const m = document.getElementById(mountId);
+  if (!m) return;
+  m.innerHTML = Object.entries(stylesMap).map(([key, s]) => `
+    <button class="pst ${currentStyle === key ? 'active' : ''}" onclick="${onPickName}('${key}')">
+      <div class="pst-header">
+        <span class="pst-icon">${s.icon}</span>
+        <span class="pst-name">${s.name}</span>
+      </div>
+      <div class="pst-desc">${s.desc}</div>
+    </button>
+  `).join('');
+}
+
+function renderPlanKL() {
+  if (!state.hotelKL || !state.flightKL) return;
+  const hotel = hotelsKL.find(h => h.id === state.hotelKL);
+  const flight = findFlightKL(state.flightKL);
+  if (!hotel || !flight) return;
+  renderPlanStyleTabs('planStyleTabsKL', KL_PLAN_STYLES, state.planStyleKL, 'setPlanStyleKL');
+  const plan = getKLPlan(hotel, flight, state.planStyleKL);
+  const sty = KL_PLAN_STYLES[state.planStyleKL];
+  document.getElementById('planKL-sub').innerHTML = `<strong style="color:var(--brand)">${sty.icon} ${sty.name}</strong> · ${hotel.name} · arriving ${flight.airline} ${flight.no} at ${flight.arr}.`;
+  document.getElementById('planKLContent').innerHTML = plan.map(d => renderDay(d)).join('');
+}
+
+function setPlanStyleKL(style) {
+  state.planStyleKL = style;
+  renderPlanKL();
+}
+
+function renderPlanLGK() {
+  if (!state.hotelLGK) return;
+  const hotel = hotelsLGK.find(h => h.id === state.hotelLGK);
+  if (!hotel) return;
+  renderPlanStyleTabs('planStyleTabsLGK', LGK_PLAN_STYLES, state.planStyleLGK, 'setPlanStyleLGK');
+  const plan = getLGKPlan(hotel, state.planStyleLGK);
+  document.getElementById('planLGKContent').innerHTML = plan.map(d => renderDay(d)).join('');
+}
+
+function setPlanStyleLGK(style) {
+  state.planStyleLGK = style;
+  renderPlanLGK();
+}
+
+function renderDay(d) {
+  return `
+    <div class="day-section">
+      <div class="day-header">
+        <div>
+          <div class="day-num">Day ${d.day}</div>
+          <div class="day-title">${d.title}</div>
+          <div class="day-date">${d.date}</div>
+        </div>
+        <span class="day-pill">${d.pill}</span>
+      </div>
+      <div class="timeline-block">
+        ${d.items.map(i => `
+          <div class="time-item ${i.photo ? 'with-photo' : ''}">
+            <div class="time-block">
+              <span class="label">${i.label}</span>
+              ${i.time}
+            </div>
+            <div class="time-content">
+              <h4>${i.title}</h4>
+              <p>${i.desc}</p>
+              <div class="time-tags">
+                ${i.tags.map(t => `<span class="time-tag ${t[1]}">${t[0]}</span>`).join('')}
+              </div>
+              ${i.book ? `<div class="time-book">${i.book.map(b => bookingChip(b[0], b[1])).join('')}</div>` : ''}
+            </div>
+            ${i.photo ? `<div class="time-photo"><img src="${i.photo}" alt="${i.title}" loading="lazy" onerror="this.onerror=null; this.src='https://picsum.photos/seed/'+encodeURIComponent('${(i.title||'').replace(/'/g, '')}')+'/240/240';" /></div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function bookingChip(site, query) {
+  const sites = {
+    klook: { name:'Book on Klook', url:'https://www.klook.com/search/result/?query='+encodeURIComponent(query), color:'#ff5722' },
+    getyourguide: { name:'GetYourGuide', url:'https://www.getyourguide.com/s/?q='+encodeURIComponent(query), color:'#ff7300' },
+    viator: { name:'Viator', url:'https://www.viator.com/search?text='+encodeURIComponent(query), color:'#ed1c24' }
+  };
+  const s = sites[site] || sites.klook;
+  return `<a class="book-chip" target="_blank" rel="noopener" href="${s.url}" style="--bc:${s.color};">${s.name} →</a>`;
+}
+
+function renderSummary() {
+  const fKL = findFlightKL(state.flightKL);
+  const hKL = hotelsKL.find(h => h.id === state.hotelKL);
+  const fLGK = flightsLGK.find(f => f.id === state.flightLGK);
+  const hLGK = hotelsLGK.find(h => h.id === state.hotelLGK);
+
+  document.getElementById('summaryGrid').innerHTML = `
+    <div class="summary-card">
+      <div class="lbl">✈ Flight to KL</div>
+      <div class="val">${fKL ? `${fKL.airline} ${fKL.no}` : '—'}</div>
+      <div class="sub">${fKL ? `${fKL.dep} → ${fKL.arr} · ${fKL.dur} · ${fKL.price}` : ''}</div>
+    </div>
+    <div class="summary-card">
+      <div class="lbl">🏨 Stay in KL</div>
+      <div class="val">${hKL ? hKL.name : '—'}</div>
+      <div class="sub">${hKL ? `${hKL.group} · ${hKL.area} · ${hKL.price}/night × 2 nights` : ''}</div>
+    </div>
+    <div class="summary-card">
+      <div class="lbl">✈ Flight to Langkawi</div>
+      <div class="val">${fLGK ? `${fLGK.airline} ${fLGK.no}` : '—'}</div>
+      <div class="sub">${fLGK ? `${fLGK.dep} → ${fLGK.arr} · ${fLGK.dur} · ${fLGK.price}` : ''}</div>
+    </div>
+    <div class="summary-card">
+      <div class="lbl">🏝 Stay in Langkawi</div>
+      <div class="val">${hLGK ? hLGK.name : '—'}</div>
+      <div class="sub">${hLGK ? `${hLGK.group} · ${hLGK.area} · ${hLGK.price}/night × 3 nights` : ''}</div>
+    </div>
+  `;
+}
+
+function saveItinerary() {
+  try {
+    const nameInput = document.getElementById('planName');
+    const name = (nameInput && nameInput.value.trim()) || `Malaysia trip · ${new Date().toLocaleDateString()}`;
+    const list = loadSaved();
+    const newPlan = {
+      id: 'p_' + Date.now(),
+      name,
+      saved: new Date().toISOString(),
+      departureCity: state.departureCity,
+      flightKL: state.flightKL,
+      hotelKL: state.hotelKL,
+      flightLGK: state.flightLGK,
+      hotelLGK: state.hotelLGK,
+      planStyleKL: state.planStyleKL || 'relaxed',
+      planStyleLGK: state.planStyleLGK || 'beach'
+    };
+    list.unshift(newPlan);
+    saveSaved(list);
+    if (nameInput) nameInput.value = '';
+
+    // Show toast notification — instant feedback
+    showToast('✓ Plan saved! Opening visual itinerary…');
+
+    // Render & navigate immediately
+    try {
+      renderViewPlan(newPlan);
+      goTo('viewPlan');
+    } catch (err) {
+      console.error('renderViewPlan failed:', err);
+      goTo('saved');
+    }
+  } catch (err) {
+    console.error('saveItinerary failed:', err);
+    alert('Could not save plan. Please try again.\n\nError: ' + err.message);
+  }
+}
+
+function showToast(message) {
+  let toast = document.getElementById('appToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'appToast';
+    toast.className = 'app-toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+/* ========== VISUAL VIEW PLAN ========== */
+
+// Build a Google site-search URL — the most reliable way to land on the right hotel/flight page
+// since direct search URLs on these aggregators change frequently and often 404.
+function gSearch(query, site) {
+  return `https://www.google.com/search?q=${encodeURIComponent(query + ' site:' + site)}`;
+}
+
+function hotelBookingLinks(h) {
+  if (!h) return '';
+  const q = `${h.name} ${h.area || ''} Malaysia`;
+  const links = [
+    { site:'MakeMyTrip',  url:gSearch(q, 'makemytrip.com'),  color:'#eb2026', logo:'M' },
+    { site:'Goibibo',     url:gSearch(q, 'goibibo.com'),     color:'#fc4961', logo:'G' },
+    { site:'Booking.com', url:`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(h.name)}`, color:'#003580', logo:'B' },
+    { site:'Agoda',       url:`https://www.agoda.com/search?query=${encodeURIComponent(h.name)}`,             color:'#5392f9', logo:'A' },
+    { site:'Yatra',       url:gSearch(q, 'yatra.com'),       color:'#fb6a3a', logo:'Y' },
+    { site:'Trivago',     url:`https://www.trivago.in/en-IN/srl/hotels?query=${encodeURIComponent(h.name)}`,  color:'#FFC107', logo:'T' }
+  ];
+  if (h.brand === 'accor')                                    links.unshift({ site:'Accor (best rate)',    url:gSearch(h.name, 'all.accor.com'),       color:'#c8102e', logo:'A' });
+  if (h.group && h.group.includes('Marriott'))                links.unshift({ site:'Marriott (best rate)', url:gSearch(h.name, 'marriott.com'),        color:'#1c1c1c', logo:'M' });
+  if (h.group && h.group.includes('Hilton'))                  links.unshift({ site:'Hilton',               url:gSearch(h.name, 'hilton.com'),          color:'#003366', logo:'H' });
+  if (h.group && h.group.includes('Hyatt'))                   links.unshift({ site:'Hyatt',                url:gSearch(h.name, 'hyatt.com'),           color:'#2c2a29', logo:'H' });
+  if (h.group && h.group.includes('Shangri-La'))              links.unshift({ site:'Shangri-La',           url:gSearch(h.name, 'shangri-la.com'),      color:'#9b2235', logo:'S' });
+  if (h.group && h.group.includes('IHG'))                     links.unshift({ site:'IHG',                  url:gSearch(h.name, 'ihg.com'),             color:'#002a6c', logo:'I' });
+  return links.map(l => `<a class="blink" href="${l.url}" target="_blank" rel="noopener" style="--bcolor:${l.color};"><span class="blink-logo">${l.logo}</span>${l.site}</a>`).join('');
+}
+
+function flightBookingLinks(f) {
+  if (!f) return '';
+  const q = `${f.airline} ${f.no} ${f.from} to ${f.to} flight`;
+  const links = [
+    { site:'MakeMyTrip', url:gSearch(q, 'makemytrip.com'), color:'#eb2026', logo:'M' },
+    { site:'Goibibo',    url:gSearch(q, 'goibibo.com'),    color:'#fc4961', logo:'G' },
+    { site:'Yatra',      url:gSearch(q, 'yatra.com'),      color:'#fb6a3a', logo:'Y' },
+    { site:'Cleartrip',  url:gSearch(q, 'cleartrip.com'),  color:'#f47521', logo:'C' },
+    { site:'Skyscanner', url:`https://www.skyscanner.co.in/transport/flights/${(f.from||'').toLowerCase()}/${(f.to||'').toLowerCase()}/`, color:'#0770e3', logo:'S' },
+    { site:f.airline,    url:gSearch(`${f.airline} ${f.from} ${f.to} flight booking`, ''), color:'#0f766e', logo:'✈' }
+  ];
+  return links.map(l => `<a class="blink" href="${l.url}" target="_blank" rel="noopener" style="--bcolor:${l.color};"><span class="blink-logo">${l.logo}</span>${l.site}</a>`).join('');
+}
+
+function activityBookingLinks(query) {
+  const q = encodeURIComponent(query);
+  const links = [
+    { site:'Klook',         url:`https://www.klook.com/search/result/?query=${q}`,    color:'#ff5722', logo:'K' },
+    { site:'GetYourGuide',  url:`https://www.getyourguide.com/s/?q=${q}`,             color:'#ff7300', logo:'G' },
+    { site:'Viator',        url:`https://www.viator.com/search?text=${q}`,            color:'#ed1c24', logo:'V' },
+    { site:'MakeMyTrip',    url:gSearch(query + ' tour Malaysia', 'makemytrip.com'),  color:'#eb2026', logo:'M' }
+  ];
+  return links.map(l => `<a class="blink" href="${l.url}" target="_blank" rel="noopener" style="--bcolor:${l.color};"><span class="blink-logo">${l.logo}</span>${l.site}</a>`).join('');
+}
+
+function flightArc(depCity) {
+  const cityCoords = {
+    BLR: { x:90, y:200, label:'BLR', name:'Bangalore' },
+    BOM: { x:90, y:200, label:'BOM', name:'Mumbai' }
+  };
+  const dep = cityCoords[depCity] || cityCoords.BLR;
+  return `
+    <svg class="flight-arc" viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow"><feGaussianBlur stdDeviation="2"/></filter>
+      </defs>
+      <!-- Outbound arc: DEP → KUL -->
+      <path class="arc-line-out" d="M ${dep.x} ${dep.y} Q 280 30 480 200" />
+      <!-- Hop arc: KUL → LGK -->
+      <path class="arc-line-hop" d="M 480 200 Q 560 110 660 90" />
+      <!-- Return arc: LGK → DEP (dashed background) -->
+      <path class="arc-line-back" d="M 660 90 Q 380 -10 ${dep.x} ${dep.y - 5}" />
+
+      <!-- Plane icons on arcs -->
+      <text class="arc-plane" x="270" y="80" font-size="22" transform="rotate(-15 270 80)">✈</text>
+      <text class="arc-plane" x="568" y="135" font-size="18" transform="rotate(20 568 135)">✈</text>
+
+      <!-- Departure city -->
+      <circle class="arc-city-ring" cx="${dep.x}" cy="${dep.y}" r="14" />
+      <circle class="arc-city" cx="${dep.x}" cy="${dep.y}" r="7" />
+      <text class="arc-label" x="${dep.x}" y="${dep.y + 32}" text-anchor="middle">${dep.label}</text>
+      <text class="arc-sub" x="${dep.x}" y="${dep.y + 48}" text-anchor="middle">${dep.name}</text>
+
+      <!-- KUL -->
+      <circle class="arc-city-ring" cx="480" cy="200" r="14" />
+      <circle class="arc-city" cx="480" cy="200" r="7" />
+      <text class="arc-label" x="480" y="232" text-anchor="middle">KUL</text>
+      <text class="arc-sub" x="480" y="248" text-anchor="middle">Kuala Lumpur · 2 nights</text>
+
+      <!-- LGK -->
+      <circle class="arc-city-ring" cx="660" cy="90" r="14" />
+      <circle class="arc-city" cx="660" cy="90" r="7" />
+      <text class="arc-label" x="660" y="76" text-anchor="middle">LGK</text>
+      <text class="arc-sub" x="660" y="60" text-anchor="middle">Langkawi · 3 nights</text>
+    </svg>
+  `;
+}
+
+function renderViewPlan(plan) {
+  const f1 = findFlightKL(plan.flightKL);
+  const h1 = hotelsKL.find(h => h.id === plan.hotelKL);
+  const f2 = flightsLGK.find(f => f.id === plan.flightLGK);
+  const h2 = hotelsLGK.find(h => h.id === plan.hotelLGK);
+  const dep = plan.departureCity || 'BLR';
+
+  const klStyle = plan.planStyleKL || 'relaxed';
+  const lgkStyle = plan.planStyleLGK || 'beach';
+  const klPlan = (h1 && f1) ? getKLPlan(h1, f1, klStyle) : [];
+  const lgkPlan = h2 ? getLGKPlan(h2, lgkStyle) : [];
+
+  const html = `
+    <div class="vp-hero">
+      <div class="vp-hero-inner">
+        <span class="vp-eyebrow">Your saved trip</span>
+        <h2>${plan.name}</h2>
+        <div class="vp-meta">Jun 30 — Jul 5, 2026 · Family of 4 + 2 toddlers</div>
+        <div class="flight-arc-wrap">${flightArc(dep)}</div>
+      </div>
+    </div>
+
+    <div class="vp-section">
+      <div class="vp-section-head">
+        <div class="vp-section-title">
+          <div class="vp-icon">✈️</div>
+          <div>
+            <h3>Outbound flight · ${dep} → KUL</h3>
+            <div class="vp-sub">${f1 ? `${f1.airline} ${f1.no} · ${f1.dep} → ${f1.arr} · ${f1.price}` : '—'}</div>
+          </div>
+        </div>
+      </div>
+      <div class="vp-section-body">
+        ${f1 ? `<p style="color:var(--ink-soft);font-size:14.5px;">${f1.notes}</p>` : ''}
+        <div class="booking-links">${f1 ? flightBookingLinks(f1) : ''}</div>
+      </div>
+    </div>
+
+    <div class="vp-section">
+      <div class="vp-section-head">
+        <div class="vp-section-title">
+          <div class="vp-icon">🏨</div>
+          <div>
+            <h3>KL Stay · ${h1 ? h1.name : '—'}</h3>
+            <div class="vp-sub">${h1 ? `${h1.group} · ${h1.area} · ${h1.price}/night × 2 nights` : ''}</div>
+          </div>
+        </div>
+      </div>
+      <div class="vp-section-body">
+        ${h1 ? `<p style="color:var(--ink-soft);font-size:14.5px;">${h1.desc}</p>` : ''}
+        <div class="booking-links">${h1 ? hotelBookingLinks(h1) : ''}</div>
+      </div>
+    </div>
+
+    <div class="vp-section">
+      <div class="vp-section-head">
+        <div class="vp-section-title">
+          <div class="vp-icon">🗓️</div>
+          <div>
+            <h3>2 days in Kuala Lumpur</h3>
+            <div class="vp-sub">Day-by-day with photos and booking links</div>
+          </div>
+        </div>
+      </div>
+      <div class="vp-section-body">
+        <div class="dot-timeline">
+          ${klPlan.map(d => renderDayTimeline(d)).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-section">
+      <div class="vp-section-head">
+        <div class="vp-section-title">
+          <div class="vp-icon">✈️</div>
+          <div>
+            <h3>Island hop · KUL → LGK</h3>
+            <div class="vp-sub">${f2 ? `${f2.airline} ${f2.no} · ${f2.dep} → ${f2.arr} · ${f2.price}` : '—'}</div>
+          </div>
+        </div>
+      </div>
+      <div class="vp-section-body">
+        ${f2 ? `<p style="color:var(--ink-soft);font-size:14.5px;">${f2.notes}</p>` : ''}
+        <div class="booking-links">${f2 ? flightBookingLinks(f2) : ''}</div>
+      </div>
+    </div>
+
+    <div class="vp-section">
+      <div class="vp-section-head">
+        <div class="vp-section-title">
+          <div class="vp-icon">🏝️</div>
+          <div>
+            <h3>Langkawi Stay · ${h2 ? h2.name : '—'}</h3>
+            <div class="vp-sub">${h2 ? `${h2.group} · ${h2.area} · ${h2.price}/night × 3 nights` : ''}</div>
+          </div>
+        </div>
+      </div>
+      <div class="vp-section-body">
+        ${h2 ? `<p style="color:var(--ink-soft);font-size:14.5px;">${h2.desc}</p>` : ''}
+        <div class="booking-links">${h2 ? hotelBookingLinks(h2) : ''}</div>
+      </div>
+    </div>
+
+    <div class="vp-section">
+      <div class="vp-section-head">
+        <div class="vp-section-title">
+          <div class="vp-icon">🗓️</div>
+          <div>
+            <h3>3 days in Langkawi</h3>
+            <div class="vp-sub">Beach + adventure + culture</div>
+          </div>
+        </div>
+      </div>
+      <div class="vp-section-body">
+        <div class="dot-timeline">
+          ${lgkPlan.map(d => renderDayTimeline(d)).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('viewPlanContent').innerHTML = html;
+}
+
+function renderDayTimeline(d) {
+  return `
+    <div class="dt-day-head">
+      <div class="dt-day-num">${d.day}</div>
+      <div class="dt-day-meta">
+        <div class="dh-title">${d.title}</div>
+        <div class="dh-date">${d.date}</div>
+      </div>
+    </div>
+    <div class="dt-list">
+      ${d.items.map(i => `
+        <div class="dt-item">
+          <div class="dt-time">
+            <span class="dt-label">${i.label}</span>
+            ${i.time}
+          </div>
+          <div class="dt-content">
+            ${i.photo ? `<div class="dt-photo-wrap"><img src="${i.photo}" alt="${i.title}" loading="lazy" onerror="this.onerror=null; this.src='https://picsum.photos/seed/'+encodeURIComponent('${(i.title||'').replace(/'/g, '')}')+'/600/400';" /></div>` : ''}
+            <h4>${i.title}</h4>
+            <p>${i.desc}</p>
+            <div class="dt-tags">
+              ${i.tags.map(t => `<span class="time-tag ${t[1]}">${t[0]}</span>`).join('')}
+            </div>
+            ${i.book ? `<div class="booking-links">${i.book.map(b => bookingChipBig(b[0], b[1])).join('')}</div>` : ''}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function bookingChipBig(site, query) {
+  const sites = {
+    klook: { name:'Klook', color:'#ff5722', logo:'K' },
+    getyourguide: { name:'GetYourGuide', color:'#ff7300', logo:'G' },
+    viator: { name:'Viator', color:'#ed1c24', logo:'V' }
+  };
+  const s = sites[site] || sites.klook;
+  const url = site === 'klook' ? `https://www.klook.com/search/result/?query=${encodeURIComponent(query)}` :
+              site === 'getyourguide' ? `https://www.getyourguide.com/s/?q=${encodeURIComponent(query)}` :
+              `https://www.viator.com/search?text=${encodeURIComponent(query)}`;
+  return `<a class="blink" href="${url}" target="_blank" rel="noopener" style="--bcolor:${s.color};"><span class="blink-logo">${s.logo}</span>Book on ${s.name}</a>`;
+}
+
+function renderSaved() {
+  const list = loadSaved();
+  const m = document.getElementById('savedContent');
+  if (list.length === 0) {
+    m.innerHTML = `
+      <div class="empty-state">
+        <div class="emoji">📋</div>
+        <h3>No saved itineraries yet</h3>
+        <p>Plan a trip and save it — it'll appear here.</p>
+        <button class="btn-primary" onclick="startPlanning()">Start planning</button>
+      </div>`;
+    return;
+  }
+  m.innerHTML = `<div class="saved-list">${list.map(p => {
+    const fKL = findFlightKL(p.flightKL);
+    const hKL = hotelsKL.find(h => h.id === p.hotelKL);
+    const fLGK = flightsLGK.find(f => f.id === p.flightLGK);
+    const hLGK = hotelsLGK.find(h => h.id === p.hotelLGK);
+    const stale = (!fKL && p.flightKL) || (!hKL && p.hotelKL) || (!fLGK && p.flightLGK) || (!hLGK && p.hotelLGK);
+    const d = new Date(p.saved);
+    const klImg = hKL ? hKL.photo : 'https://picsum.photos/seed/kuala-lumpur/400/300';
+    const lgkImg = hLGK ? hLGK.photo : 'https://picsum.photos/seed/langkawi/400/300';
+    return `
+      <div class="saved-card" onclick="loadPlan('${p.id}')" role="button" tabindex="0">
+        <div class="sc-thumbs">
+          <div class="sc-thumb">
+            <img src="${klImg}" alt="${hKL ? hKL.name : 'KL'}" onerror="this.onerror=null;this.src='https://picsum.photos/seed/${p.hotelKL || 'kl'}/400/300';" />
+            <div class="sc-thumb-lbl">🏙️ KL</div>
+          </div>
+          <div class="sc-thumb">
+            <img src="${lgkImg}" alt="${hLGK ? hLGK.name : 'Langkawi'}" onerror="this.onerror=null;this.src='https://picsum.photos/seed/${p.hotelLGK || 'lgk'}/400/300';" />
+            <div class="sc-thumb-lbl">🏝️ Langkawi</div>
+          </div>
+        </div>
+        <div class="sc-body">
+          ${stale ? '<div class="stale-warn">⚠️ Saved with older data — some items may not display.</div>' : ''}
+          <h4>${p.name}</h4>
+          <div class="saved-date">Saved ${d.toLocaleDateString()} · ${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+          <div class="saved-detail"><strong>From</strong><span>${p.departureCity || 'BLR'}</span></div>
+          <div class="saved-detail"><strong>KL Flight</strong><span>${fKL ? `${fKL.airline} ${fKL.no} · ${fKL.dep}` : '— (not found)'}</span></div>
+          <div class="saved-detail"><strong>KL Hotel</strong><span>${hKL ? hKL.name : '— (not found)'}</span></div>
+          <div class="saved-detail"><strong>LGK Flight</strong><span>${fLGK ? `${fLGK.airline} ${fLGK.no}` : '— (not found)'}</span></div>
+          <div class="saved-detail"><strong>LGK Hotel</strong><span>${hLGK ? hLGK.name : '— (not found)'}</span></div>
+          <div class="saved-actions" onclick="event.stopPropagation();">
+            <button class="btn-mini view" onclick="loadPlan('${p.id}')">📋 View visual plan</button>
+            <button class="btn-mini delete" onclick="deletePlan('${p.id}')">Delete</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('')}</div>`;
+}
+
+function loadPlan(id) {
+  try {
+    const list = loadSaved();
+    const p = list.find(x => x.id === id);
+    if (!p) {
+      showToast('Plan not found');
+      return;
+    }
+    state.departureCity = p.departureCity || 'BLR';
+    state.flightKL = p.flightKL;
+    state.hotelKL = p.hotelKL;
+    state.flightLGK = p.flightLGK;
+    state.hotelLGK = p.hotelLGK;
+    state.planStyleKL = p.planStyleKL || 'relaxed';
+    state.planStyleLGK = p.planStyleLGK || 'beach';
+    renderViewPlan(p);
+    goTo('viewPlan');
+  } catch (err) {
+    console.error('loadPlan failed:', err);
+    showToast('Could not open this plan — check console');
+  }
+}
+
+function deletePlan(id) {
+  if (!confirm('Delete this saved plan?')) return;
+  const list = loadSaved().filter(x => x.id !== id);
+  saveSaved(list);
+  renderSaved();
+}
+
+/* ==================================================
+   FILTER HANDLERS
+   ================================================== */
+
+document.addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  const filter = chip.dataset.filter;
+  const value = chip.dataset.value;
+  if (!filter) return;
+  document.querySelectorAll(`.chip[data-filter="${filter}"]`).forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  if (filter === 'brand') { state.filterBrand = value; renderHotels(hotelsKL, 'hotelsKL', 'hotelKL', 'next-hotelKL', 'filterBrand', 'filterArea'); }
+  if (filter === 'area') { state.filterArea = value; renderHotels(hotelsKL, 'hotelsKL', 'hotelKL', 'next-hotelKL', 'filterBrand', 'filterArea'); }
+  if (filter === 'brandL') { state.filterBrandL = value; renderHotels(hotelsLGK, 'hotelsLGK', 'hotelLGK', 'next-hotelLGK', 'filterBrandL', 'filterAreaL'); }
+  if (filter === 'areaL') { state.filterAreaL = value; renderHotels(hotelsLGK, 'hotelsLGK', 'hotelLGK', 'next-hotelLGK', 'filterBrandL', 'filterAreaL'); }
+});
+
+/* ==================================================
+   BOOT
+   ================================================== */
+
+renderFlights(flightsKL, 'flightsKL', 'flightKL', 'next-flightKL');
+renderFlights(flightsLGK, 'flightsLGK', 'flightLGK', 'next-flightLGK');
+renderHotels(hotelsKL, 'hotelsKL', 'hotelKL', 'next-hotelKL', 'filterBrand', 'filterArea');
+renderHotels(hotelsLGK, 'hotelsLGK', 'hotelLGK', 'next-hotelLGK', 'filterBrandL', 'filterAreaL');
+updateSavedBadge();
+</script>
+</body>
+</html>
