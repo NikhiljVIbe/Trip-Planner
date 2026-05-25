@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <style>
   :root {
     --bg: #faf8f3;
@@ -1771,6 +1773,168 @@
     line-height: 1.4;
   }
 
+  /* HOTEL VIEW TOGGLE (List ↔ Map) */
+  .view-toggle {
+    display: inline-flex;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px;
+    margin-bottom: 18px;
+    gap: 0;
+  }
+  .vt-btn {
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    transition: all .2s ease;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .vt-btn:hover { color: var(--ink); }
+  .vt-btn.active {
+    background: var(--ink);
+    color: #fff;
+    box-shadow: 0 4px 12px -4px rgba(0,0,0,0.2);
+  }
+
+  /* MAP */
+  .hotel-map {
+    width: 100%;
+    height: 620px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--bg-tint);
+  }
+  .leaflet-container {
+    font-family: var(--font);
+    background: #e8e4d6;
+  }
+  /* Marker pin styles */
+  .map-pin {
+    width: 32px; height: 32px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    border: 2.5px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .map-pin span {
+    transform: rotate(45deg);
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .map-pin.pin-accor { background: #c8102e; }
+  .map-pin.pin-hotel { background: var(--brand); }
+  .map-pin.pin-airport { background: #ea580c; width: 40px; height: 40px; }
+  .map-pin.pin-airport span { font-size: 16px; }
+  .map-pin.pin-city { background: #1e40af; width: 40px; height: 40px; }
+  .map-pin.pin-city span { font-size: 16px; }
+
+  /* Map popup card */
+  .leaflet-popup-content-wrapper {
+    border-radius: 14px;
+    padding: 0;
+  }
+  .leaflet-popup-content {
+    margin: 0;
+    width: 240px !important;
+  }
+  .map-popup {
+    overflow: hidden;
+    border-radius: 14px;
+  }
+  .map-popup-photo {
+    width: 100%;
+    height: 110px;
+    overflow: hidden;
+    background: var(--bg-tint);
+  }
+  .map-popup-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .map-popup-body { padding: 12px 14px 14px; }
+  .map-popup-body h4 {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .map-popup-meta {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .map-popup-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .map-popup-btn {
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font);
+  }
+  .map-popup-btn:hover { background: #0d5752; }
+  .map-popup-distances {
+    display: flex; gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 6px 0 10px;
+    flex-wrap: wrap;
+  }
+  .map-popup-distances span {
+    padding: 3px 7px;
+    background: var(--bg-tint);
+    border-radius: 6px;
+    color: var(--ink-soft);
+  }
+
+  /* Map legend */
+  .map-legend {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 12px;
+    z-index: 999;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  }
+  .map-legend-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 5px;
+  }
+  .map-legend-row:last-child { margin-bottom: 0; }
+  .map-legend-dot {
+    width: 14px; height: 14px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    flex-shrink: 0;
+  }
+
   /* HORIZONTAL DAY STRIP (viewPlan redesign) */
   .vp-trip-row {
     display: grid;
@@ -2263,7 +2427,12 @@
       <button class="chip" data-filter="area" data-value="KL Sentral">KL Sentral</button>
       <button class="chip" data-filter="area" data-value="KLIA">KLIA (airport)</button>
     </div>
+    <div class="view-toggle">
+      <button class="vt-btn active" data-vslot="KL" data-view="list" onclick="setHotelView('KL','list')">📋 List view</button>
+      <button class="vt-btn" data-vslot="KL" data-view="map" onclick="setHotelView('KL','map')">🗺️ Map view</button>
+    </div>
     <div class="grid" id="hotelsKL"></div>
+    <div class="hotel-map" id="hotelsKLMap" style="display:none;"></div>
     <div class="step-nav">
       <button class="btn-back" onclick="goTo('flightKL')">← Back</button>
       <button class="btn-primary" onclick="next('hotelKL', 'planKL')" id="next-hotelKL" disabled style="opacity:.4;cursor:not-allowed;">
@@ -2349,7 +2518,12 @@
       <button class="chip" data-filter="areaL" data-value="Awana">Awana</button>
       <button class="chip" data-filter="areaL" data-value="Kuah">Kuah</button>
     </div>
+    <div class="view-toggle">
+      <button class="vt-btn active" data-vslot="LGK" data-view="list" onclick="setHotelView('LGK','list')">📋 List view</button>
+      <button class="vt-btn" data-vslot="LGK" data-view="map" onclick="setHotelView('LGK','map')">🗺️ Map view</button>
+    </div>
     <div class="grid" id="hotelsLGK"></div>
+    <div class="hotel-map" id="hotelsLGKMap" style="display:none;"></div>
     <div class="step-nav">
       <button class="btn-back" onclick="goTo('flightLGK')">← Back</button>
       <button class="btn-primary" onclick="next('hotelLGK', 'planLGK')" id="next-hotelLGK" disabled style="opacity:.4;cursor:not-allowed;">
@@ -3056,6 +3230,8 @@ const state = {
   todLGK: 'all',
   searchKL: '',
   searchLGK: '',
+  viewKL: 'list',
+  viewLGK: 'list',
   filterBrand: 'all',
   filterArea: 'all',
   filterBrandL: 'all',
@@ -3178,6 +3354,198 @@ function airportDistanceFor(stateKey, area) {
   return map[area] || { km:15, time:'20 min', mode:'drive', via:'from LGK airport' };
 }
 
+// === MAP / GEO ===
+
+const AREA_COORDS = {
+  KL: {
+    'KLCC':          [3.1579, 101.7124],
+    'Bukit Bintang': [3.1466, 101.7100],
+    'Bangsar':       [3.1310, 101.6789],
+    'Damansara':     [3.1572, 101.6320],
+    'KL Sentral':    [3.1340, 101.6864],
+    'KLIA':          [2.7456, 101.7099]
+  },
+  LGK: {
+    'Pantai Cenang': [6.2982, 99.7261],
+    'Pantai Tengah': [6.2898, 99.7282],
+    'Pantai Kok':    [6.3593, 99.6864],
+    'Kuah':          [6.3173, 99.8531],
+    'Datai Bay':     [6.4198, 99.6829],
+    'Tanjung Rhu':   [6.4665, 99.8060],
+    'Awana':         [6.3700, 99.6783],
+    'Teluk Nibung':  [6.3622, 99.6717]
+  }
+};
+
+const REFERENCE_POINTS = {
+  KL: {
+    airport:    { name: 'KLIA · Kuala Lumpur Airport', coords: [2.7456, 101.7099], emoji: '✈' },
+    cityCenter: { name: 'Petronas Towers · KLCC',      coords: [3.1579, 101.7124], emoji: '🏙' }
+  },
+  LGK: {
+    airport:    { name: 'LGK · Langkawi Airport', coords: [6.3297, 99.7287], emoji: '✈' },
+    cityCenter: { name: 'Pantai Cenang Beach',    coords: [6.2982, 99.7261], emoji: '🏖' }
+  }
+};
+
+function hashStr(s) {
+  let h = 0;
+  for (let i = 0; i < (s||'').length; i++) {
+    h = ((h << 5) - h) + s.charCodeAt(i);
+    h |= 0;
+  }
+  return h;
+}
+
+function getHotelCoords(hotel, stateKey) {
+  const key = stateKey === 'hotelKL' ? 'KL' : 'LGK';
+  const base = AREA_COORDS[key][hotel.area] || (key === 'KL' ? [3.1579, 101.7124] : [6.2982, 99.7261]);
+  const h = hashStr(hotel.id);
+  // Jitter within ~700m so markers don't stack
+  const offsetLat = ((h & 0xff) - 128) / 35000;
+  const offsetLng = (((h >> 8) & 0xff) - 128) / 35000;
+  return [base[0] + offsetLat, base[1] + offsetLng];
+}
+
+let _hotelMaps = { hotelKL: null, hotelLGK: null };
+
+function setHotelView(slot, view) {
+  const stateKey = 'view' + slot;
+  state[stateKey] = view;
+  document.querySelectorAll(`.vt-btn[data-vslot="${slot}"]`).forEach(b => {
+    b.classList.toggle('active', b.dataset.view === view);
+  });
+  const listEl = document.getElementById('hotels' + slot);
+  const mapEl = document.getElementById('hotels' + slot + 'Map');
+  if (view === 'list') {
+    listEl.style.display = '';
+    mapEl.style.display = 'none';
+  } else {
+    listEl.style.display = 'none';
+    mapEl.style.display = '';
+    renderHotelMap(slot === 'KL' ? 'hotelKL' : 'hotelLGK');
+  }
+}
+
+function renderHotelMap(stateKey) {
+  const slot = stateKey === 'hotelKL' ? 'KL' : 'LGK';
+  const mountId = 'hotels' + slot + 'Map';
+  const mount = document.getElementById(mountId);
+  if (!mount || typeof L === 'undefined') return;
+
+  // Reset existing map if any
+  if (_hotelMaps[stateKey]) {
+    _hotelMaps[stateKey].remove();
+    _hotelMaps[stateKey] = null;
+  }
+  mount.innerHTML = '';
+
+  const list = stateKey === 'hotelKL' ? hotelsKL : hotelsLGK;
+  const searchKey = stateKey === 'hotelKL' ? 'searchKL' : 'searchLGK';
+  const brandKey = stateKey === 'hotelKL' ? 'filterBrand' : 'filterBrandL';
+  const areaKey = stateKey === 'hotelKL' ? 'filterArea' : 'filterAreaL';
+  const nextBtnId = stateKey === 'hotelKL' ? 'next-hotelKL' : 'next-hotelLGK';
+  const q = (state[searchKey] || '').trim().toLowerCase();
+  const filtered = list.filter(h =>
+    (state[brandKey] === 'all' || h.brand === state[brandKey]) &&
+    (state[areaKey] === 'all' || h.area === state[areaKey]) &&
+    (!q || h.name.toLowerCase().includes(q) || (h.group||'').toLowerCase().includes(q) || (h.area||'').toLowerCase().includes(q))
+  );
+
+  const refs = REFERENCE_POINTS[slot];
+
+  // Create map
+  const map = L.map(mount, { scrollWheelZoom: true, zoomControl: true });
+  _hotelMaps[stateKey] = map;
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19
+  }).addTo(map);
+
+  const pin = (cls, label) => L.divIcon({
+    className: '',
+    html: `<div class="map-pin ${cls}"><span>${label}</span></div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+  const refPin = (cls, label) => L.divIcon({
+    className: '',
+    html: `<div class="map-pin ${cls}"><span>${label}</span></div>`,
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40]
+  });
+
+  // Reference markers
+  L.marker(refs.airport.coords, { icon: refPin('pin-airport', refs.airport.emoji), zIndexOffset: 1000 })
+    .addTo(map)
+    .bindPopup(`<div style="padding:10px 14px;font-family:var(--font);"><strong>${refs.airport.name}</strong></div>`);
+  L.marker(refs.cityCenter.coords, { icon: refPin('pin-city', refs.cityCenter.emoji), zIndexOffset: 1000 })
+    .addTo(map)
+    .bindPopup(`<div style="padding:10px 14px;font-family:var(--font);"><strong>${refs.cityCenter.name}</strong></div>`);
+
+  // Hotel markers
+  const bounds = [refs.airport.coords, refs.cityCenter.coords];
+  filtered.forEach(h => {
+    const c = getHotelCoords(h, stateKey);
+    bounds.push(c);
+    const apDist = airportDistanceFor(stateKey, h.area);
+    const cityDist = h.distance;
+    const label = h.brand === 'accor' ? 'A' : '★';
+    const marker = L.marker(c, { icon: pin(h.brand === 'accor' ? 'pin-accor' : 'pin-hotel', label) }).addTo(map);
+    const isSelected = state[stateKey] === h.id;
+    marker.bindPopup(`
+      <div class="map-popup">
+        <div class="map-popup-photo"><img src="${h.photo}" alt="${h.name}" onerror="this.onerror=null;this.src='https://picsum.photos/seed/${h.id}/400/300';" /></div>
+        <div class="map-popup-body">
+          <h4>${h.name}</h4>
+          <div class="map-popup-meta">${h.group} · ${h.area}</div>
+          <div class="map-popup-price">${h.price}/night · ${'★'.repeat(h.stars)}</div>
+          <div class="map-popup-distances">
+            <span>✈ ${apDist.km} km</span>
+            <span>${refs.cityCenter.emoji} ${cityDist.km} km</span>
+            <span>🇮🇳 ${h.indian.score}/5</span>
+          </div>
+          <button class="map-popup-btn" onclick="selectHotelFromMap('${stateKey}', '${h.id}', '${nextBtnId}')">${isSelected ? '✓ Selected' : 'Select this hotel'}</button>
+        </div>
+      </div>
+    `, { maxWidth: 260 });
+  });
+
+  // Center to fit all markers + refs
+  if (bounds.length > 0) {
+    map.fitBounds(bounds, { padding: [50, 50] });
+  } else {
+    map.setView(refs.cityCenter.coords, 12);
+  }
+
+  // Legend overlay
+  const legend = L.control({ position: 'topright' });
+  legend.onAdd = () => {
+    const div = L.DomUtil.create('div', 'map-legend');
+    div.innerHTML = `
+      <div class="map-legend-row"><div class="map-legend-dot" style="background:#ea580c;"></div>Airport</div>
+      <div class="map-legend-row"><div class="map-legend-dot" style="background:#1e40af;"></div>City center</div>
+      <div class="map-legend-row"><div class="map-legend-dot" style="background:#0f766e;"></div>Non-Accor</div>
+      <div class="map-legend-row"><div class="map-legend-dot" style="background:#c8102e;"></div>Accor</div>
+      <div style="margin-top:6px;color:var(--muted);font-size:11px;">${filtered.length} hotels shown</div>
+    `;
+    return div;
+  };
+  legend.addTo(map);
+
+  // Trigger size recalculation since the container was just shown
+  setTimeout(() => map.invalidateSize(), 100);
+}
+
+function selectHotelFromMap(stateKey, id, nextBtnId) {
+  selectHotel(stateKey, id, nextBtnId);
+  // Re-render map to update Selected state in popups
+  renderHotelMap(stateKey);
+  showToast('✓ Hotel selected');
+}
+
 function googleMapsURL(h) {
   const city = (h.area && (h.area === 'Datai Bay' || h.area === 'Tanjung Rhu' || h.area === 'Pantai Cenang' || h.area === 'Pantai Tengah' || h.area === 'Pantai Kok' || h.area === 'Awana' || h.area === 'Teluk Nibung' || h.area === 'Kuah')) ? 'Langkawi Malaysia' : 'Kuala Lumpur Malaysia';
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(h.name + ' ' + city)}`;
@@ -3190,6 +3558,11 @@ function setHotelSearch(slot, value) {
   row.classList.toggle('has-value', !!value);
   if (slot === 'KL') renderHotels(hotelsKL, 'hotelsKL', 'hotelKL', 'next-hotelKL', 'filterBrand', 'filterArea');
   else renderHotels(hotelsLGK, 'hotelsLGK', 'hotelLGK', 'next-hotelLGK', 'filterBrandL', 'filterAreaL');
+  // Also refresh map if we're in map view
+  const viewKey = slot === 'KL' ? 'viewKL' : 'viewLGK';
+  if (state[viewKey] === 'map') {
+    renderHotelMap(slot === 'KL' ? 'hotelKL' : 'hotelLGK');
+  }
 }
 
 function clearHotelSearch(slot) {
@@ -3402,10 +3775,6 @@ function renderHotels(list, mountId, stateKey, nextBtnId, filterBrandKey, filter
             <span><strong>${a.km} km</strong> from ${stateKey === 'hotelKL' ? 'KLIA' : 'LGK airport'} · ${a.time} ${a.mode}</span>
           </div>
         `; })()}
-        <a class="map-link" href="${googleMapsURL(h)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          View on Google Maps
-        </a>
         <p class="hotel-desc">${h.desc}</p>
         <div class="hotel-amenities">
           ${h.amenities.slice(0,4).map(a => `<span class="amenity-pill">${a}</span>`).join('')}
@@ -3862,11 +4231,6 @@ function openDetail(type, id) {
         <div class="detail-tags">${h.amenities.slice(0,5).map(a => `<span class="amenity-pill">${a}</span>`).join('')}</div>
         <h3>Book this hotel</h3>
         <div class="booking-links">${hotelBookingLinks(h)}</div>
-        <h3 style="margin-top:18px;">Location</h3>
-        <a class="map-link" href="${googleMapsURL(h)}" target="_blank" rel="noopener" style="display:inline-flex;">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          View on Google Maps
-        </a>
       </div>`;
   } else if (type === 'activity') {
     const [d, i] = id.split('-').map(Number);
@@ -4163,10 +4527,10 @@ document.addEventListener('click', (e) => {
   if (!filter) return;
   document.querySelectorAll(`.chip[data-filter="${filter}"]`).forEach(c => c.classList.remove('active'));
   chip.classList.add('active');
-  if (filter === 'brand') { state.filterBrand = value; renderHotels(hotelsKL, 'hotelsKL', 'hotelKL', 'next-hotelKL', 'filterBrand', 'filterArea'); }
-  if (filter === 'area') { state.filterArea = value; renderHotels(hotelsKL, 'hotelsKL', 'hotelKL', 'next-hotelKL', 'filterBrand', 'filterArea'); }
-  if (filter === 'brandL') { state.filterBrandL = value; renderHotels(hotelsLGK, 'hotelsLGK', 'hotelLGK', 'next-hotelLGK', 'filterBrandL', 'filterAreaL'); }
-  if (filter === 'areaL') { state.filterAreaL = value; renderHotels(hotelsLGK, 'hotelsLGK', 'hotelLGK', 'next-hotelLGK', 'filterBrandL', 'filterAreaL'); }
+  if (filter === 'brand') { state.filterBrand = value; renderHotels(hotelsKL, 'hotelsKL', 'hotelKL', 'next-hotelKL', 'filterBrand', 'filterArea'); if (state.viewKL === 'map') renderHotelMap('hotelKL'); }
+  if (filter === 'area') { state.filterArea = value; renderHotels(hotelsKL, 'hotelsKL', 'hotelKL', 'next-hotelKL', 'filterBrand', 'filterArea'); if (state.viewKL === 'map') renderHotelMap('hotelKL'); }
+  if (filter === 'brandL') { state.filterBrandL = value; renderHotels(hotelsLGK, 'hotelsLGK', 'hotelLGK', 'next-hotelLGK', 'filterBrandL', 'filterAreaL'); if (state.viewLGK === 'map') renderHotelMap('hotelLGK'); }
+  if (filter === 'areaL') { state.filterAreaL = value; renderHotels(hotelsLGK, 'hotelsLGK', 'hotelLGK', 'next-hotelLGK', 'filterBrandL', 'filterAreaL'); if (state.viewLGK === 'map') renderHotelMap('hotelLGK'); }
 });
 
 /* ==================================================
