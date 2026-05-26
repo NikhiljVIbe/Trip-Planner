@@ -4118,58 +4118,62 @@
    DATA
    ================================================== */
 
-// Flight data verified Nov 2025 from EaseMyTrip / FlightRadar24 / FlightsFrom.
-// Real flight numbers and typical operating times. VERIFY exact date on airline site.
+// Flight data — ONLY direct flights confirmed via PlaneMapper, Airportia,
+// FlightConnections, FlightsFrom (verified Nov 2025).
+// Times reflect typical operating schedules. Verify exact date on airline site.
 const flightsByCity = {
-  // BLR → KUL: 5 verified direct daily flights (MH × 2, AK, OD, 6E)
+  // BLR → KUL: 5 verified direct daily flights (4 airlines: MH × 2, AK, OD, 6E).
   BLR: [
-    { id:'blr-mh105',  airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 105',   dep:'11:55', arr:'18:45',    from:'BLR', to:'KUL', dur:'4h 20m', type:'Direct',           price:'₹17,500', kids:5, notes:'BEST with toddlers — day flight, full service, lands in time for hotel check-in.',          tags:[['Day flight','green'],['Free meals','green'],['Bassinet','green']] },
-    { id:'blr-6e1037', airline:'IndiGo',            logo:'lg-id', no:'6E 1037',  dep:'14:00', arr:'21:00',    from:'BLR', to:'KUL', dur:'4h 30m', type:'Direct',           price:'₹15,300', kids:4, notes:'Afternoon departure, evening KUL arrival. Quick airport transfer + sleep.',                  tags:[['Afternoon','amber'],['Direct','green']] },
-    { id:'blr-od242',  airline:'Batik Air',         logo:'lg-od', no:'OD 242',   dep:'23:20', arr:'06:10⁺¹', from:'BLR', to:'KUL', dur:'4h 20m', type:'Direct · Red-eye', price:'₹14,200', kids:3, notes:'Newer fleet, snack included. Kids sleep on plane.',                                            tags:[['Red-eye','red'],['Direct','green']] },
-    { id:'blr-ak52',   airline:'AirAsia',           logo:'lg-ai', no:'AK 52',    dep:'23:25', arr:'06:10⁺¹', from:'BLR', to:'KUL', dur:'4h 15m', type:'Direct · Red-eye', price:'₹12,600', kids:2, notes:'Cheapest BLR-KUL but pre-dawn KLIA2 arrival is rough with toddlers.',                       tags:[['Red-eye','red'],['Cheapest','green']] },
+    { id:'blr-mh105',  airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 105',   dep:'11:55', arr:'18:50',    from:'BLR', to:'KUL', dur:'4h 25m', type:'Direct',           price:'₹17,500', kids:5, notes:'BEST with toddlers — daytime, full service. Land in time for hotel check-in + early sleep.', tags:[['Day flight','green'],['Free meals','green'],['Bassinet','green']] },
+    { id:'blr-6e1037', airline:'IndiGo',            logo:'lg-id', no:'6E 1037',  dep:'12:30', arr:'19:30',    from:'BLR', to:'KUL', dur:'4h 30m', type:'Direct',           price:'₹15,300', kids:4, notes:'Afternoon departure, evening KUL arrival. No-frills IndiGo.',                                tags:[['Day flight','green'],['Direct','green']] },
+    { id:'blr-ak52',   airline:'AirAsia',           logo:'lg-ai', no:'AK 52',    dep:'22:55', arr:'06:10⁺¹', from:'BLR', to:'KUL', dur:'4h 15m', type:'Direct · Red-eye', price:'₹12,600', kids:2, notes:'Cheapest BLR-KUL but pre-dawn KLIA2 arrival is rough with toddlers.',                       tags:[['Red-eye','red'],['Cheapest','green']] },
+    { id:'blr-od242',  airline:'Batik Air',         logo:'lg-od', no:'OD 242',   dep:'23:20', arr:'06:10⁺¹', from:'BLR', to:'KUL', dur:'4h 20m', type:'Direct · Red-eye', price:'₹14,200', kids:3, notes:'Newer Batik Air fleet, snack on board. Kids sleep on plane.',                                tags:[['Red-eye','red'],['Direct','green']] },
     { id:'blr-mh193',  airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 193',   dep:'00:40', arr:'07:30',    from:'BLR', to:'KUL', dur:'4h 20m', type:'Direct · Red-eye', price:'₹17,200', kids:4, notes:'Full-service red-eye — bassinet on request, free meals. Land fresh-ish at breakfast.',       tags:[['Red-eye','red'],['Free meals','green'],['Bassinet','green']] }
   ],
-  // BOM → KUL: only 3 verified direct flights (MH 175, MH 195, OD 216).
-  // IndiGo / Air India / AirAsia do NOT operate non-stop on this route.
+  // BOM → KUL: ONLY 3 verified direct flights (both by MH + 1 by OD).
+  // IndiGo, Air India, AirAsia do NOT operate non-stop on this route.
   BOM: [
-    { id:'bom-mh175',  airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 175',   dep:'13:00', arr:'21:00',    from:'BOM', to:'KUL', dur:'5h 30m', type:'Direct (Tue/Thu/Fri)', price:'₹26,500', kids:5, notes:'BEST with kids — afternoon day flight, full service, evening KUL arrival. Operates Tue/Thu/Fri only.', tags:[['Day flight','green'],['Free meals','green'],['Bassinet','green']] },
-    { id:'bom-mh195',  airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 195',   dep:'22:55', arr:'07:25⁺¹', from:'BOM', to:'KUL', dur:'5h 30m', type:'Direct · Red-eye',    price:'₹23,800', kids:4, notes:'Daily full-service red-eye — bassinet, free meals, kids sleep on board.',                                  tags:[['Red-eye','red'],['Free meals','green'],['Bassinet','green']] },
-    { id:'bom-od216',  airline:'Batik Air',         logo:'lg-od', no:'OD 216',   dep:'23:20', arr:'06:30⁺¹', from:'BOM', to:'KUL', dur:'5h 10m', type:'Direct · Red-eye',    price:'₹17,800', kids:3, notes:'Newer Batik Air fleet, snack included, mid-tier service.',                                                tags:[['Red-eye','red'],['Direct','green']] }
+    { id:'bom-mh175',  airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 175',   dep:'12:45', arr:'21:15',    from:'BOM', to:'KUL', dur:'5h 30m', type:'Direct (Tue/Thu/Fri)', price:'₹26,500', kids:5, notes:'BEST with kids — afternoon day flight, full service. Operates Tue/Thu/Fri only — check your date.', tags:[['Day flight','green'],['Tue/Thu/Fri only','amber'],['Free meals','green'],['Bassinet','green']] },
+    { id:'bom-mh195',  airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 195',   dep:'23:25', arr:'07:25⁺¹', from:'BOM', to:'KUL', dur:'5h 30m', type:'Direct · Red-eye',     price:'₹23,800', kids:4, notes:'Daily full-service red-eye — bassinet, free meals, kids sleep on board.',                                  tags:[['Red-eye','red'],['Free meals','green'],['Bassinet','green']] },
+    { id:'bom-od216',  airline:'Batik Air',         logo:'lg-od', no:'OD 216',   dep:'23:25', arr:'07:00⁺¹', from:'BOM', to:'KUL', dur:'5h 05m', type:'Direct · Red-eye',     price:'₹17,800', kids:3, notes:'Newer Batik Air fleet, snack served, mid-tier service. Daily.',                                            tags:[['Red-eye','red'],['Direct','green']] }
   ]
 };
 let flightsKL = flightsByCity.BLR;
 
 // LGK → home: no direct flights to India from Langkawi.
-// All options connect through Kuala Lumpur (KUL). Flight numbers match real
-// operating series (MH 14xx for KUL-LGK, MH 106/192/174 for KUL-BLR/BOM,
-// AK 6xxx for AirAsia LGK-KUL).  Single-ticket bookings (MH, OD) re-route
-// for free if leg 1 is delayed; self-transfer is cheaper but riskier.
+// All options connect through KUL. Return flight numbers verified at Langkawi
+// Airport (OD 2206, AK 6315, MH 1459, AK 6323).  Outbound-from-KUL legs
+// use the verified return pairings (MH 106, MH 192, MH 174, MH 194, AK 51,
+// AK 11, OD 215, OD 241).  Single-ticket bookings (MH, OD) re-route for free
+// if leg 1 is delayed; self-transfer is cheaper but riskier with kids.
 const flightsReturnByCity = {
   BLR: [
-    { id:'ret-blr-mh',      airline:'Malaysia Airlines', logo:'lg-mh',  no:'MH 1441 + MH 106', dep:'09:25', arr:'20:50',    from:'LGK', to:'BLR', via:'KUL · 3h layover',    dur:'9h 25m', type:'1 stop · KUL · single ticket', price:'₹25,800', kids:5, notes:'BEST return — single MH ticket with re-route protection, bassinet + free meals.', tags:[['Recommended','green'],['Single ticket','green'],['Free meals','green']] },
-    { id:'ret-blr-od',      airline:'Batik Air',         logo:'lg-od',  no:'OD 2206 + OD 241', dep:'17:55', arr:'02:30⁺¹', from:'LGK', to:'BLR', via:'KUL · 2h 30m layover', dur:'9h 10m', type:'1 stop · KUL · single ticket', price:'₹21,500', kids:3, notes:'Single Batik Air ticket. Newer fleet, snack on long leg.',                            tags:[['1 stop','amber']] },
-    { id:'ret-blr-ak',      airline:'AirAsia',           logo:'lg-ai',  no:'AK 6315 + AK 51',  dep:'18:30', arr:'03:00⁺¹', from:'LGK', to:'BLR', via:'KUL · 2h 15m layover', dur:'8h',     type:'1 stop · KUL · self-transfer', price:'₹18,500', kids:3, notes:'Cheapest. Self-transfer at KLIA2 — re-check bags. No protection if leg 1 delays.',  tags:[['Self-transfer','amber'],['Cheapest','green']] },
-    { id:'ret-blr-mh-late', airline:'Malaysia Airlines', logo:'lg-mh',  no:'MH 1459 + MH 192', dep:'20:25', arr:'05:30⁺¹', from:'LGK', to:'BLR', via:'KUL · 2h 30m layover', dur:'8h 35m', type:'1 stop · KUL · red-eye home',  price:'₹26,800', kids:4, notes:'Late LGK flight + overnight MH 192 to BLR. Kids sleep on the long leg.',           tags:[['Red-eye home','red'],['Free meals','green']] }
+    { id:'ret-blr-mh',      airline:'Malaysia Airlines', logo:'lg-mh',  no:'MH 1431 + MH 106', dep:'10:45', arr:'20:50',    from:'LGK', to:'BLR', via:'KUL · 2h 30m layover', dur:'8h 35m', type:'1 stop · KUL · single ticket', price:'₹25,800', kids:5, notes:'BEST return — single MH ticket. If leg 1 (LGK-KUL) delays, MH re-routes free. Bassinet + meals.', tags:[['Recommended','green'],['Single ticket','green'],['Free meals','green']] },
+    { id:'ret-blr-od',      airline:'Batik Air',         logo:'lg-od',  no:'OD 2206 + OD 241', dep:'17:55', arr:'02:30⁺¹', from:'LGK', to:'BLR', via:'KUL · 2h 30m layover', dur:'9h 10m', type:'1 stop · KUL · single ticket', price:'₹21,500', kids:3, notes:'Single Batik Air ticket. Newer fleet, snack on long leg.',                                          tags:[['1 stop','amber']] },
+    { id:'ret-blr-ak',      airline:'AirAsia',           logo:'lg-ai',  no:'AK 6315 + AK 51',  dep:'18:30', arr:'03:00⁺¹', from:'LGK', to:'BLR', via:'KUL · 2h 15m layover', dur:'8h',     type:'1 stop · KUL · self-transfer', price:'₹18,500', kids:3, notes:'Cheapest option. Self-transfer at KLIA2 — re-check bags. No protection if leg 1 delays.',     tags:[['Self-transfer','amber'],['Cheapest','green']] },
+    { id:'ret-blr-mh-late', airline:'Malaysia Airlines', logo:'lg-mh',  no:'MH 1459 + MH 192', dep:'20:25', arr:'05:30⁺¹', from:'LGK', to:'BLR', via:'KUL · 2h 30m layover', dur:'8h 35m', type:'1 stop · KUL · red-eye home',  price:'₹26,800', kids:4, notes:'Late LGK flight + overnight MH 192 to BLR. Kids sleep on the long leg.',                       tags:[['Red-eye home','red'],['Free meals','green']] }
   ],
   BOM: [
-    { id:'ret-bom-mh',      airline:'Malaysia Airlines', logo:'lg-mh',  no:'MH 1441 + MH 174', dep:'09:25', arr:'17:30',    from:'LGK', to:'BOM', via:'KUL · 2h 30m layover', dur:'9h 35m', type:'1 stop · KUL · single ticket', price:'₹28,200', kids:5, notes:'BEST return — single MH ticket with re-route protection, bassinet + free meals.', tags:[['Recommended','green'],['Single ticket','green'],['Free meals','green']] },
-    { id:'ret-bom-od',      airline:'Batik Air',         logo:'lg-od',  no:'OD 2206 + OD 215', dep:'17:55', arr:'01:30⁺¹', from:'LGK', to:'BOM', via:'KUL · 2h layover',     dur:'7h 35m', type:'1 stop · KUL · single ticket', price:'₹22,500', kids:4, notes:'Single Batik Air ticket — easier with kids than self-transfer.',                    tags:[['1 stop','amber']] },
-    { id:'ret-bom-ak',      airline:'AirAsia',           logo:'lg-ai',  no:'AK 6315 + AK 11',  dep:'18:30', arr:'02:00⁺¹', from:'LGK', to:'BOM', via:'KUL · 2h 15m layover', dur:'7h',     type:'1 stop · KUL · self-transfer', price:'₹18,200', kids:3, notes:'Cheapest. Self-transfer at KLIA2 — re-check bags.',                                  tags:[['Self-transfer','amber'],['Cheapest','green']] },
-    { id:'ret-bom-mh-late', airline:'Malaysia Airlines', logo:'lg-mh',  no:'MH 1459 + MH 194', dep:'20:25', arr:'03:30⁺¹', from:'LGK', to:'BOM', via:'KUL · 2h layover',     dur:'8h 35m', type:'1 stop · KUL · red-eye home',  price:'₹27,500', kids:4, notes:'Late LGK + overnight MH 194 to BOM. Kids sleep on the long leg.',                  tags:[['Red-eye home','red'],['Free meals','green']] }
+    { id:'ret-bom-mh',      airline:'Malaysia Airlines', logo:'lg-mh',  no:'MH 1431 + MH 174', dep:'10:45', arr:'17:30',    from:'LGK', to:'BOM', via:'KUL · 2h 30m layover', dur:'9h 15m', type:'1 stop · KUL · single ticket', price:'₹28,200', kids:5, notes:'BEST return — single MH ticket with re-route protection, bassinet + free meals. MH 174 operates Tue/Thu/Fri.', tags:[['Recommended','green'],['Single ticket','green'],['Tue/Thu/Fri','amber'],['Free meals','green']] },
+    { id:'ret-bom-od',      airline:'Batik Air',         logo:'lg-od',  no:'OD 2206 + OD 215', dep:'17:55', arr:'01:30⁺¹', from:'LGK', to:'BOM', via:'KUL · 2h layover',     dur:'7h 35m', type:'1 stop · KUL · single ticket', price:'₹22,500', kids:4, notes:'Single Batik Air ticket — easier with kids than self-transfer.',                                              tags:[['1 stop','amber']] },
+    { id:'ret-bom-mh-late', airline:'Malaysia Airlines', logo:'lg-mh',  no:'MH 1459 + MH 194', dep:'20:25', arr:'03:30⁺¹', from:'LGK', to:'BOM', via:'KUL · 2h layover',     dur:'8h 35m', type:'1 stop · KUL · red-eye home',  price:'₹27,500', kids:4, notes:'Late LGK + overnight MH 194 to BOM (daily). Kids sleep on the long leg.',                                tags:[['Red-eye home','red'],['Free meals','green']] }
   ]
 };
 
 let flightsReturn = flightsReturnByCity.BLR;
 
-// KUL → LGK: 14+ daily departures. Flight numbers match AirAsia AK 6300-series,
-// Malaysia Airlines MH 1430-1450-series, Batik Air OD 2200-series. ~1h flight.
+// KUL → LGK: 100 weekly flights (14/day avg) by 3 airlines + Firefly from Subang.
+// Flight numbers + times verified via FlightConnections, MakeMyTrip flight schedule.
+// Verified live arrivals at LGK include MH 1450, AK 6322. Earliest 07:05, latest 20:05.
 const flightsLGK = [
-  { id:'ak6300', airline:'AirAsia',           logo:'lg-ai', no:'AK 6300', dep:'08:30', arr:'09:35', from:'KUL', to:'LGK', dur:'1h 05m', type:'Direct',              price:'₹2,200', kids:3, notes:'Earliest direct — buy seats together. Light breakfast at KLIA2.',                       tags:[['Early morning','amber'],['Cheapest','green']] },
-  { id:'fy3104', airline:'Firefly',           logo:'lg-fy', no:'FY 3104', dep:'10:30', arr:'11:30', from:'SZB', to:'LGK', dur:'1h 00m', type:'Direct · From Subang', price:'₹3,500', kids:5, notes:'Subang (SZB) airport is 25 km closer to central KL than KLIA2 — saves an hour with kids.', tags:[['Subang SZB','amber'],['Boutique','green']] },
-  { id:'mh1442', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 1442', dep:'11:30', arr:'12:35', from:'KUL', to:'LGK', dur:'1h 05m', type:'Direct',              price:'₹3,800', kids:5, notes:'BEST with toddlers — assigned seats free, snack on board, full-service crew.',          tags:[['Recommended','green'],['Free snack','green']] },
+  { id:'ak6304', airline:'AirAsia',           logo:'lg-ai', no:'AK 6304', dep:'07:05', arr:'08:10', from:'KUL', to:'LGK', dur:'1h 05m', type:'Direct',              price:'₹2,200', kids:3, notes:'Earliest direct from KLIA2 — buy seats together. Light breakfast at the terminal.',     tags:[['Early morning','amber'],['Cheapest','green']] },
+  { id:'mh1432', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 1432', dep:'09:25', arr:'10:30', from:'KUL', to:'LGK', dur:'1h 05m', type:'Direct',              price:'₹3,800', kids:5, notes:'BEST with toddlers — full service, snack on board, assigned seats free.',                  tags:[['Recommended','green'],['Free snack','green']] },
+  { id:'fy3104', airline:'Firefly',           logo:'lg-fy', no:'FY 3104', dep:'10:25', arr:'11:25', from:'SZB', to:'LGK', dur:'1h 00m', type:'Direct · From Subang', price:'₹3,500', kids:5, notes:'Subang (SZB) airport is 25 km closer to central KL than KLIA2 — saves ~1 hr with kids.', tags:[['Subang SZB','amber'],['Boutique','green']] },
+  { id:'mh1438', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 1438', dep:'11:55', arr:'13:00', from:'KUL', to:'LGK', dur:'1h 05m', type:'Direct',              price:'₹3,800', kids:5, notes:'Midday MH option — same full-service experience as MH 1432.',                          tags:[['Direct','green'],['Free snack','green']] },
   { id:'ak6314', airline:'AirAsia',           logo:'lg-ai', no:'AK 6314', dep:'13:30', arr:'14:35', from:'KUL', to:'LGK', dur:'1h 05m', type:'Direct',              price:'₹2,400', kids:4, notes:'Most frequent slot. Mid-afternoon = nap on the plane.',                                tags:[['Afternoon','amber'],['Cheapest','green']] },
-  { id:'od2204', airline:'Batik Air',         logo:'lg-od', no:'OD 2204', dep:'15:00', arr:'16:05', from:'KUL', to:'LGK', dur:'1h 05m', type:'Direct',              price:'₹2,900', kids:4, notes:'Newer Batik Air fleet, decent service, free water.',                                   tags:[['Direct','green']] },
-  { id:'mh1450', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 1450', dep:'18:45', arr:'19:50', from:'KUL', to:'LGK', dur:'1h 05m', type:'Direct',              price:'₹3,800', kids:3, notes:'Evening — only pick if your inbound KUL connection forces it.',                     tags:[['Evening','amber'],['Free snack','green']] }
+  { id:'mh1436', airline:'Malaysia Airlines', logo:'lg-mh', no:'MH 1436', dep:'13:18', arr:'14:23', from:'KUL', to:'LGK', dur:'1h 05m', type:'Direct',              price:'₹3,800', kids:4, notes:'Mid-afternoon MH flight — good if your inbound BLR/BOM flight arrives mid-morning.',  tags:[['Direct','green'],['Free snack','green']] },
+  { id:'ak6322', airline:'AirAsia',           logo:'lg-ai', no:'AK 6322', dep:'18:30', arr:'19:35', from:'KUL', to:'LGK', dur:'1h 05m', type:'Direct',              price:'₹2,400', kids:3, notes:'Evening AK option. Late dinner at the resort.',                                       tags:[['Evening','amber'],['Cheapest','green']] },
+  { id:'ak6332', airline:'AirAsia',           logo:'lg-ai', no:'AK 6332', dep:'20:05', arr:'21:10', from:'KUL', to:'LGK', dur:'1h 05m', type:'Direct',              price:'₹2,400', kids:2, notes:'Last AK flight of the day — only if your day flight from India lands evening.',         tags:[['Late evening','amber'],['Cheapest','green']] }
 ];
 
 const hotelsKL = [
