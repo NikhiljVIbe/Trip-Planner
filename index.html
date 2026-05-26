@@ -429,6 +429,51 @@
     .ts-pill, .ts-date, .ts-return { height: 54px; }
   }
 
+  .ts-format-row {
+    margin-top: 14px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .ts-format-pills {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .ts-fpill {
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all .2s ease;
+    font-family: var(--font);
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 2px;
+    text-align: left;
+  }
+  .ts-fpill:hover { border-color: var(--ink); }
+  .ts-fpill.active {
+    background: linear-gradient(135deg, var(--brand-light), #fff);
+    border-color: var(--brand);
+  }
+  .tsf-top {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .ts-fpill.active .tsf-top { color: var(--brand); }
+  .tsf-bot {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  @media (max-width: 720px) {
+    .ts-format-pills { grid-template-columns: 1fr; }
+  }
+
   /* TRIP RECAP (on flight screen) */
   .trip-recap {
     display: flex; align-items: center; gap: 16px;
@@ -3510,6 +3555,23 @@
           <div class="ts-return" id="welcomeTripEnd">— (5 nights)</div>
         </div>
       </div>
+      <div class="ts-format-row">
+        <label class="ts-label">Trip length</label>
+        <div class="ts-format-pills">
+          <button class="ts-fpill active" data-format="2-3" onclick="setTripFormat(2,3)">
+            <span class="tsf-top">5 nights</span>
+            <span class="tsf-bot">2 KL + 3 Langkawi</span>
+          </button>
+          <button class="ts-fpill" data-format="3-2" onclick="setTripFormat(3,2)">
+            <span class="tsf-top">5 nights</span>
+            <span class="tsf-bot">3 KL + 2 Langkawi</span>
+          </button>
+          <button class="ts-fpill" data-format="3-3" onclick="setTripFormat(3,3)">
+            <span class="tsf-top">6 nights</span>
+            <span class="tsf-bot">3 KL + 3 Langkawi</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="start-actions">
@@ -4810,10 +4872,49 @@ function getKLPlan(hotel, flight, style = 'relaxed') {
 
   const day2 = style === 'explorer' ? day2Explorer : style === 'indoor' ? day2Indoor : day2Relaxed;
 
+  // Day 3 — used when state.klNights >= 3.  Themed per plan style.
+  const day3Relaxed = {
+    pill:'Bonus KL day', title:'Batu Caves + slow pool day',
+    items: [
+      { time:'8:30 AM', label:'Breakfast', title:local.breakfast, desc:'Slow start.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'10:00 AM', label:'Adventure', title:'Batu Caves (Murugan Temple)', desc:'30-min Grab. 272 rainbow steps + 42m golden statue. Toddlers stay at the base — monkeys are mischievous!', photo:PHOTOS.batuCaves, tags:[['See','see'],['Move','move']], book:[['klook','batu-caves-tour'],['getyourguide','batu-caves-kuala-lumpur']] },
+      { time:'12:30 PM', label:'Lunch', title:'Banana leaf near Batu Caves or back at hotel', desc:'Quick lunch on the way back.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'2:00 PM', label:'Rest', title:'Hotel pool + nap', desc:'Long afternoon at the hotel — pool + room service. Earned it.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'6:30 PM', label:'Stroll', title:'KLCC Park + Twin Towers sunset', desc:'Easy evening — fountain show + walk by the lake. Free.', photo:PHOTOS.klccPark, tags:[['See','see']] },
+      { time:'8:00 PM', label:'Dinner', title:local.dinner, desc:'Last KL dinner. Tomorrow you fly to Langkawi.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] }
+    ]
+  };
+  const day3Explorer = {
+    pill:'Theme-park day', title:'Sunway Lagoon',
+    items: [
+      { time:'8:00 AM', label:'Breakfast', title:'Quick hotel breakfast', desc:'Fuel up — Sunway is a full-day park.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'9:30 AM', label:'Adventure', title:'Sunway Lagoon Theme Park', desc:'Five parks in one — water park, wildlife zone, extreme rides. ~45 min drive from KLCC. Pre-book Klook.', photo:PHOTOS.pool, tags:[['See','see'],['Move','move']], book:[['klook','sunway-lagoon-tickets'],['getyourguide','sunway-lagoon']] },
+      { time:'1:00 PM', label:'Lunch', title:'Sunway Pyramid food court', desc:'Mall right next to the park. Lots of Indian veg options.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'2:00 PM', label:'See', title:'Back to Sunway Lagoon (afternoon)', desc:'Water park section in the heat — younger kids stay in the toddler zone.', photo:PHOTOS.pool, tags:[['See','see']] },
+      { time:'6:00 PM', label:'Move', title:'Grab back to hotel', desc:'Tired but happy. Quick shower + nap.', photo:PHOTOS.hotel, tags:[['Move','move']] },
+      { time:'8:00 PM', label:'Dinner', title:local.dinner, desc:'Wind-down. Pack tonight for Langkawi tomorrow.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] }
+    ]
+  };
+  const day3Indoor = {
+    pill:'Mall + AC day', title:'TRX + Pavilion + indoor play',
+    items: [
+      { time:'9:00 AM', label:'Breakfast', title:local.breakfast, desc:'Slow indoor breakfast.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'10:30 AM', label:'Mall', title:'TRX Mall + Exchange park', desc:'Newest KL mall. Indoor playground, food hall, AC everywhere. Stroller-friendly.', photo:PHOTOS.pavilion, tags:[['See','see'],['Indoor','rest']] },
+      { time:'1:00 PM', label:'Lunch', title:'TRX food hall', desc:'Massive food court. Indian veg + Italian + Japanese options.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
+      { time:'2:30 PM', label:'See', title:'Petrosains Discovery Centre (Suria KLCC)', desc:'Interactive science museum. Toddler zone + dinosaur exhibits. Skip-the-line via Klook.', photo:PHOTOS.aquaria, tags:[['See','see'],['Indoor','rest']], book:[['klook','petrosains-discovery-centre']] },
+      { time:'5:00 PM', label:'Rest', title:'Hotel pool', desc:'Pool time before dinner.', photo:PHOTOS.pool, tags:[['Rest','rest']] },
+      { time:'7:30 PM', label:'Dinner', title:local.dinner, desc:'Wind-down dinner. Pack for Langkawi.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] }
+    ]
+  };
+  const day3 = style === 'explorer' ? day3Explorer : style === 'indoor' ? day3Indoor : day3Relaxed;
+
   const basePlan = [
     { day:1, date:fmtDay(addDays(state.tripStartDate, 0)), title:'Arrive in KL', pill:day1.pill, items:day1.items },
     { day:2, date:fmtDay(addDays(state.tripStartDate, 1)), title:day2.title, pill:day2.pill, items:day2.items }
   ];
+  if ((state.klNights || 2) >= 3) {
+    basePlan.push({ day:3, date:fmtDay(addDays(state.tripStartDate, 2)), title:day3.title, pill:day3.pill, items:day3.items });
+  }
   return mergeExtras(basePlan, state.extrasKL, KL_ACTIVITIES_LIBRARY);
 }
 
@@ -4823,7 +4924,7 @@ function getLGKPlan(hotel, style = 'beach') {
   const beachy = area === 'Pantai Cenang';
 
   // Day 1 is the same for all styles — arrival is arrival.
-  const day1 = { day:1, date:fmtDay(addDays(state.tripStartDate, 2)), title:'Land + slow start', pill:'Arrival', items: [
+  const day1 = { day:1, date:fmtDay(addDays(state.tripStartDate, state.klNights || 2)), title:'Land + slow start', pill:'Arrival', items: [
     { time:'Morning', label:'Travel', title:'KL → Langkawi (LGK)', desc:'Short 1-hour flight. Resort pickup at LGK airport.', photo:PHOTOS.airplane, tags:[['Move','move']] },
     { time:'1:00 PM', label:'Check-in', title:`Arrive at ${hotel.name}`, desc:`Welcome drink, settle in. ${remote ? 'You\'re tucked into a quiet bay — perfect.' : 'You\'re right by the action — bonus.'}`, photo:PHOTOS.hotel, tags:[['Rest','rest']] },
     { time:'3:00 PM', label:'Pool / Beach', title:'Toddler-pace beach time', desc:`Shallow water at ${area === 'Datai Bay' ? 'Datai Bay (calm, private)' : area === 'Tanjung Rhu' ? 'Tanjung Rhu (prettiest beach in Malaysia)' : 'Pantai Cenang'}. Sandcastles, no agenda.`, photo:PHOTOS.beach, tags:[['Rest','rest']] },
@@ -4833,7 +4934,7 @@ function getLGKPlan(hotel, style = 'beach') {
 
   // STYLE: BEACH (default — relaxed)
   const beachPlan = [day1,
-    { day:2, date:fmtDay(addDays(state.tripStartDate, 3)), title:'Mangroves + eagles', pill:'Beach + chill', items: [
+    { day:2, date:fmtDay(addDays(state.tripStartDate, (state.klNights || 2) + 1)), title:'Mangroves + eagles', pill:'Beach + chill', items: [
       { time:'7:30 AM', label:'Breakfast', title:'Resort breakfast', desc:'Eat well — you\'ll be on a boat for half the day.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'9:00 AM', label:'Adventure', title:'Kilim Geoforest mangrove + eagle tour', desc:'Private covered boat (book ahead, ~RM 600 per family). 4 hours through limestone caves, eagle feeding, mangrove canopy. Toddler-safe.', photo:PHOTOS.mangrove, tags:[['See','see'],['Move','move']], book:[['klook','langkawi-mangrove-tour'],['getyourguide','kilim-geoforest-langkawi']] },
       { time:'12:30 PM', label:'Lunch', title:'Floating fish farm restaurant', desc:'Inside the geopark. Fresh seafood + veg options. Fish swim under your table.', photo:PHOTOS.islandFood, tags:[['Eat','eat'],['See','see']] },
@@ -4841,7 +4942,7 @@ function getLGKPlan(hotel, style = 'beach') {
       { time:'5:00 PM', label:'Activity 2', title:beachy ? 'Underwater World Langkawi' : 'Sunset beach walk', desc:beachy ? 'Indoor aquarium at Pantai Cenang — penguins, rainforest dome.' : 'Long walk on your private beach, golden-hour magic.', photo:beachy ? PHOTOS.underwater : PHOTOS.sunset, tags:[['See','see']], book:beachy ? [['klook','underwater-world-langkawi']] : null },
       { time:'7:30 PM', label:'Dinner', title:beachy ? 'Pantai Cenang beachfront' : 'In-resort fine dining', desc:beachy ? 'Casual beachfront with sand under your feet.' : 'Romantic enough for parents, kid-friendly menu.', photo:PHOTOS.pantaiCenang, tags:[['Eat','eat']] }
     ]},
-    { day:3, date:fmtDay(addDays(state.tripStartDate, 4)), title:'Slow island day', pill:'Beach + culture', items: [
+    { day:3, date:fmtDay(addDays(state.tripStartDate, (state.klNights || 2) + 2)), title:'Slow island day', pill:'Beach + culture', items: [
       { time:'8:30 AM', label:'Breakfast', title:'Long, slow breakfast', desc:'No rush.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'10:30 AM', label:'See', title:'Eagle Square + Kuah town', desc:'Iconic 12m eagle statue, 30-min photo stop + waterfront walk.', photo:PHOTOS.eagleSquare, tags:[['See','see']] },
       { time:'12:30 PM', label:'Lunch', title:beachy ? 'Restoran Tomato Nasi Kandar' : 'Wonderland Food Store, Kuah', desc:'Cheap, kid-friendly, local.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
@@ -4853,7 +4954,7 @@ function getLGKPlan(hotel, style = 'beach') {
 
   // STYLE: ADVENTURE
   const adventurePlan = [day1,
-    { day:2, date:fmtDay(addDays(state.tripStartDate, 3)), title:'Island hopping + cable car', pill:'Adventure', items: [
+    { day:2, date:fmtDay(addDays(state.tripStartDate, (state.klNights || 2) + 1)), title:'Island hopping + cable car', pill:'Adventure', items: [
       { time:'7:30 AM', label:'Breakfast', title:'Resort breakfast', desc:'Fuel up — long day on water and at altitude.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'8:30 AM', label:'Adventure', title:'Island Hopping Tour (3 islands)', desc:'Pulau Dayang Bunting (Pregnant Maiden Lake) + Eagle Feeding + Pulau Beras Basah. Private speedboat option safer with toddlers.', photo:PHOTOS.beach, tags:[['See','see'],['Move','move']], book:[['klook','langkawi-island-hopping'],['getyourguide','langkawi-island-hopping']] },
       { time:'1:00 PM', label:'Lunch', title:'Pantai Cenang seafood lunch', desc:'Back on land — quick refuel before afternoon.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
@@ -4861,7 +4962,7 @@ function getLGKPlan(hotel, style = 'beach') {
       { time:'4:00 PM', label:'See', title:'Panorama Langkawi SkyCab + SkyBridge', desc:'World\'s steepest cable car. WARNING: very steep, scary for toddlers — assess your kids first. Older kids (3+) usually love it.', photo:PHOTOS.petronas, tags:[['See','see'],['Move','move']], book:[['klook','langkawi-skycab'],['getyourguide','langkawi-skybridge-cable-car']] },
       { time:'7:00 PM', label:'Walk', title:'Oriental Village shops + dinner', desc:'Toy stores, ice cream, local crafts at the cable car base.', photo:PHOTOS.pantaiCenang, tags:[['Eat','eat']] }
     ]},
-    { day:3, date:fmtDay(addDays(state.tripStartDate, 4)), title:'Snorkel + sunset cruise', pill:'Adventure', items: [
+    { day:3, date:fmtDay(addDays(state.tripStartDate, (state.klNights || 2) + 2)), title:'Snorkel + sunset cruise', pill:'Adventure', items: [
       { time:'8:00 AM', label:'Breakfast', title:'Quick breakfast', desc:'Hit the water early.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'9:30 AM', label:'Snorkel', title:'Pulau Payar Marine Park (half-day)', desc:'Best snorkeling in Langkawi. Floating platform — even toddlers can splash in shallow corral pools.', photo:PHOTOS.underwater, tags:[['See','see'],['Move','move']], book:[['klook','pulau-payar-marine-park'],['getyourguide','pulau-payar-snorkel']] },
       { time:'1:30 PM', label:'Lunch', title:'Lunch on Pulau Payar platform', desc:'Buffet on the floating platform. Fish swarm beneath you.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
@@ -4873,7 +4974,7 @@ function getLGKPlan(hotel, style = 'beach') {
 
   // STYLE: CULTURE
   const culturePlan = [day1,
-    { day:2, date:fmtDay(addDays(state.tripStartDate, 3)), title:'Legends + art', pill:'Culture', items: [
+    { day:2, date:fmtDay(addDays(state.tripStartDate, (state.klNights || 2) + 1)), title:'Legends + art', pill:'Culture', items: [
       { time:'8:30 AM', label:'Breakfast', title:'Resort breakfast', desc:'Slow start — cultural sites open mid-morning.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'10:00 AM', label:'See', title:'Makam Mahsuri (Mahsuri\'s Tomb)', desc:'The cursed princess of Langkawi — legend says her wrongful execution cursed the island for 7 generations. Beautiful complex, stories your kids will remember.', photo:PHOTOS.eagleSquare, tags:[['See','see']] },
       { time:'11:30 AM', label:'Art', title:'Atma Alam Batik Art Village', desc:'Kids paint their own batik fabric — they take home a real souvenir they made. Highlight of the trip.', photo:PHOTOS.batuCaves, tags:[['See','see']], book:[['klook','atma-alam-batik-langkawi']] },
@@ -4882,7 +4983,7 @@ function getLGKPlan(hotel, style = 'beach') {
       { time:'5:00 PM', label:'See', title:'Eagle Square + Kuah waterfront', desc:'12m red eagle statue — symbol of Langkawi. Photo stop + waterfront stroll.', photo:PHOTOS.eagleSquare, tags:[['See','see']] },
       { time:'7:00 PM', label:'Dinner', title:'Wonderland Food Store, Kuah', desc:'Hawker stalls — Malay, Chinese, Indian veg side by side.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] }
     ]},
-    { day:3, date:fmtDay(addDays(state.tripStartDate, 4)), title:'Museums + nature', pill:'Culture', items: [
+    { day:3, date:fmtDay(addDays(state.tripStartDate, (state.klNights || 2) + 2)), title:'Museums + nature', pill:'Culture', items: [
       { time:'8:30 AM', label:'Breakfast', title:'Slow breakfast', desc:'No rush.', photo:PHOTOS.indianFood, tags:[['Eat','eat']] },
       { time:'10:00 AM', label:'See', title:'Galeria Perdana (Dr. Mahathir Museum)', desc:'Surprisingly fun for kids — toy cars, models, gifts from world leaders. Air-conditioned.', photo:PHOTOS.pavilion, tags:[['See','see']] },
       { time:'12:00 PM', label:'Lunch', title:'Local kopitiam in Kuah', desc:'Coffee shop noodles — easy on kids\' stomachs.', photo:PHOTOS.islandFood, tags:[['Eat','eat']] },
@@ -4893,7 +4994,11 @@ function getLGKPlan(hotel, style = 'beach') {
     ]}
   ];
 
-  const basePlan = style === 'adventure' ? adventurePlan : style === 'culture' ? culturePlan : beachPlan;
+  let basePlan = style === 'adventure' ? adventurePlan : style === 'culture' ? culturePlan : beachPlan;
+  // If only 2 LGK nights, drop the slow Day 3 (last day) — Day 1 (arrival) + Day 2 (highlight) is plenty
+  if ((state.lgkNights || 3) < 3 && basePlan.length > 2) {
+    basePlan = basePlan.slice(0, 2);
+  }
   return mergeExtras(basePlan, state.extrasLGK, LGK_ACTIVITIES_LIBRARY);
 }
 
@@ -4905,6 +5010,8 @@ const state = {
   currentScreen: 'welcome',
   departureCity: 'BLR',
   tripStartDate: '2026-06-30',
+  klNights: 2,
+  lgkNights: 3,
   flightKL: null,
   hotelKL: null,
   flightLGK: null,
@@ -4927,7 +5034,10 @@ const state = {
   filterAreaL: 'all'
 };
 
-const TRIP_NIGHTS = 5; // 2 KL + 3 LGK
+// Dynamic helper — total nights = KL nights + Langkawi nights
+function tripNights() { return (state.klNights || 2) + (state.lgkNights || 3); }
+// Backwards-compat constant for code paths that used a literal
+const TRIP_NIGHTS = 5; // legacy default; new code uses tripNights() instead
 
 function addDays(yyyymmdd, n) {
   const d = new Date(yyyymmdd + 'T00:00:00');
@@ -4941,7 +5051,7 @@ function fmtDay(d) {
 }
 function fmtRange() {
   const start = addDays(state.tripStartDate, 0);
-  const end = addDays(state.tripStartDate, TRIP_NIGHTS);
+  const end = addDays(state.tripStartDate, tripNights());
   const sMon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][start.getMonth()];
   const eMon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][end.getMonth()];
   return `${sMon} ${start.getDate()} — ${sMon === eMon ? '' : eMon + ' '}${end.getDate()}, ${end.getFullYear()}`;
@@ -4983,7 +5093,7 @@ function planDateRange(plan) {
   // Range based on a saved plan's tripStartDate (fallback to state if missing)
   const start = plan && plan.tripStartDate ? plan.tripStartDate : state.tripStartDate;
   const s = addDays(start, 0);
-  const e = addDays(start, TRIP_NIGHTS);
+  const e = addDays(start, tripNights());
   const mon = (d) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
   return `${mon(s)} ${s.getDate()} — ${mon(s) === mon(e) ? '' : mon(e) + ' '}${e.getDate()}, ${e.getFullYear()}`;
 }
@@ -4994,12 +5104,12 @@ function updateWelcomePillDate() {
 }
 
 function updateTripEndLabel() {
-  const end = addDays(state.tripStartDate, TRIP_NIGHTS);
+  const end = addDays(state.tripStartDate, tripNights());
   const start = addDays(state.tripStartDate, 0);
   const m = (d) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
   // Welcome page "Returns" field
   const wEnd = document.getElementById('welcomeTripEnd');
-  if (wEnd) wEnd.innerHTML = `<strong>${m(end)} ${end.getDate()}, ${end.getFullYear()}</strong> · ${TRIP_NIGHTS} nights`;
+  if (wEnd) wEnd.innerHTML = `<strong>${m(end)} ${end.getDate()}, ${end.getFullYear()}</strong> · ${tripNights()} nights`;
   // Recap on flight screens
   const recapDate = document.getElementById('recapDate');
   if (recapDate) recapDate.textContent = `${m(start)} ${start.getDate()}, ${start.getFullYear()}`;
@@ -5325,6 +5435,15 @@ function setTOD(slot, tod) {
   }
 }
 
+function setTripFormat(klN, lgkN) {
+  state.klNights = klN;
+  state.lgkNights = lgkN;
+  const fmt = klN + '-' + lgkN;
+  document.querySelectorAll('.ts-fpill').forEach(b => b.classList.toggle('active', b.dataset.format === fmt));
+  updateTripEndLabel();
+  updateWelcomePillDate();
+}
+
 function setCity(city) {
   state.departureCity = city;
   flightsKL = flightsByCity[city];
@@ -5420,6 +5539,7 @@ function startPlanning() {
   state.planStyleLGK = 'beach';
   state.extrasKL = [];
   state.extrasLGK = [];
+  // keep state.klNights and state.lgkNights as the user chose on Welcome
   goTo('flightKL');
 }
 
@@ -5755,7 +5875,7 @@ function renderSummary() {
     <div class="summary-card">
       <div class="lbl">🏨 Stay in KL</div>
       <div class="val">${hKL ? hKL.name : '—'}</div>
-      <div class="sub">${hKL ? `${hKL.group} · ${hKL.area} · ${priceWithINR(hKL.price)}/night × 2 nights` : ''}</div>
+      <div class="sub">${hKL ? `${hKL.group} · ${hKL.area} · ${priceWithINR(hKL.price)}/night × ${state.klNights || 2} nights` : ''}</div>
     </div>
     <div class="summary-card">
       <div class="lbl">✈ Flight to Langkawi</div>
@@ -5765,7 +5885,7 @@ function renderSummary() {
     <div class="summary-card">
       <div class="lbl">🏝 Stay in Langkawi</div>
       <div class="val">${hLGK ? hLGK.name : '—'}</div>
-      <div class="sub">${hLGK ? `${hLGK.group} · ${hLGK.area} · ${priceWithINR(hLGK.price)}/night × 3 nights` : ''}</div>
+      <div class="sub">${hLGK ? `${hLGK.group} · ${hLGK.area} · ${priceWithINR(hLGK.price)}/night × ${state.lgkNights || 3} nights` : ''}</div>
     </div>
     <div class="summary-card">
       <div class="lbl">✈ Return flight</div>
@@ -5786,6 +5906,8 @@ function saveItinerary() {
       saved: new Date().toISOString(),
       departureCity: state.departureCity,
       tripStartDate: state.tripStartDate,
+      klNights: state.klNights,
+      lgkNights: state.lgkNights,
       flightKL: state.flightKL,
       hotelKL: state.hotelKL,
       flightLGK: state.flightLGK,
@@ -5847,7 +5969,7 @@ function showToast(message) {
 function _depDate() { return state.tripStartDate || '2026-06-30'; }
 function _retDate() {
   const d = new Date(_depDate() + 'T00:00:00');
-  d.setDate(d.getDate() + TRIP_NIGHTS);
+  d.setDate(d.getDate() + tripNights());
   return d.toISOString().slice(0,10);
 }
 function _ddmmyyyy(yyyymmdd, sep) {
@@ -5945,13 +6067,13 @@ function flightArc(depCity) {
       <circle class="arc-city-ring" cx="480" cy="200" r="14" />
       <circle class="arc-city" cx="480" cy="200" r="7" />
       <text class="arc-label" x="480" y="232" text-anchor="middle">KUL</text>
-      <text class="arc-sub" x="480" y="248" text-anchor="middle">Kuala Lumpur · 2 nights</text>
+      <text class="arc-sub" x="480" y="248" text-anchor="middle">Kuala Lumpur · ${state.klNights || 2} nights</text>
 
       <!-- LGK -->
       <circle class="arc-city-ring" cx="660" cy="90" r="14" />
       <circle class="arc-city" cx="660" cy="90" r="7" />
       <text class="arc-label" x="660" y="76" text-anchor="middle">LGK</text>
-      <text class="arc-sub" x="660" y="60" text-anchor="middle">Langkawi · 3 nights</text>
+      <text class="arc-sub" x="660" y="60" text-anchor="middle">Langkawi · ${state.lgkNights || 3} nights</text>
     </svg>
   `;
 }
@@ -6003,7 +6125,7 @@ function renderViewPlan(plan) {
         <div class="vt-click">Tap for booking links →</div>
       </div>
       <div class="vp-trip-card" onclick="openDetail('hotel', '${plan.hotelKL || ''}')">
-        <div class="vt-eyebrow">${ICONS.building} Stay · Kuala Lumpur (2 nights)</div>
+        <div class="vt-eyebrow">${ICONS.building} Stay · Kuala Lumpur (${plan.klNights || state.klNights || 2} nights)</div>
         <h4>${h1 ? h1.name : 'Not selected'}</h4>
         <div class="vt-meta">${h1 ? `${h1.area} · ${priceWithINR(h1.price)}/night` : '—'}</div>
         <div class="vt-click">Tap for booking links →</div>
@@ -6015,7 +6137,7 @@ function renderViewPlan(plan) {
         <div class="vt-click">Tap for booking links →</div>
       </div>
       <div class="vp-trip-card" onclick="openDetail('hotel', '${plan.hotelLGK || ''}')">
-        <div class="vt-eyebrow">${ICONS.palm} Stay · Langkawi (3 nights)</div>
+        <div class="vt-eyebrow">${ICONS.palm} Stay · Langkawi (${plan.lgkNights || state.lgkNights || 3} nights)</div>
         <h4>${h2 ? h2.name : 'Not selected'}</h4>
         <div class="vt-meta">${h2 ? `${h2.area} · ${priceWithINR(h2.price)}/night` : '—'}</div>
         <div class="vt-click">Tap for booking links →</div>
@@ -6228,20 +6350,20 @@ function renderSaved() {
           <span class="sc-city">KUL</span>
           ${ICONS.planeArrow}
           <span class="sc-city sc-city-end">LGK</span>
-          <span class="sc-nights">${TRIP_NIGHTS} nights</span>
+          <span class="sc-nights">${tripNights()} nights</span>
         </div>
         <div class="sc-thumbs">
           <div class="sc-thumb">
             <img src="${klImg}" alt="${hKL ? hKL.name : 'KL'}" data-wiki="${(hKL && WIKI_HOTELS[hKL.id]) || 'Petronas Towers'}" onerror="this.onerror=null;this.src='${loremFallback(hKL ? hKL.name : 'kuala lumpur skyline')}';" />
             <div class="sc-thumb-overlay">
-              <div class="sc-thumb-tag">${ICONS.building} Kuala Lumpur · 2 nights</div>
+              <div class="sc-thumb-tag">${ICONS.building} Kuala Lumpur · ${p.klNights || 2} nights</div>
               <div class="sc-thumb-name">${hKL ? hKL.name : 'Hotel not found'}</div>
             </div>
           </div>
           <div class="sc-thumb">
             <img src="${lgkImg}" alt="${hLGK ? hLGK.name : 'Langkawi'}" data-wiki="${(hLGK && WIKI_HOTELS[hLGK.id]) || 'Pantai Cenang'}" onerror="this.onerror=null;this.src='${loremFallback(hLGK ? hLGK.name : 'langkawi beach')}';" />
             <div class="sc-thumb-overlay">
-              <div class="sc-thumb-tag">${ICONS.palm} Langkawi · 3 nights</div>
+              <div class="sc-thumb-tag">${ICONS.palm} Langkawi · ${p.lgkNights || 3} nights</div>
               <div class="sc-thumb-name">${hLGK ? hLGK.name : 'Resort not found'}</div>
             </div>
           </div>
@@ -6295,6 +6417,8 @@ function loadPlan(id) {
     }
     state.departureCity = p.departureCity || 'BLR';
     state.tripStartDate = p.tripStartDate || '2026-06-30';
+    state.klNights = p.klNights || 2;
+    state.lgkNights = p.lgkNights || 3;
     state.flightKL = p.flightKL;
     state.hotelKL = p.hotelKL;
     state.flightLGK = p.flightLGK;
@@ -6386,6 +6510,8 @@ function checkSharedURL() {
   // Mark as shared (read-only preview), restore state, render & navigate
   state.departureCity = plan.departureCity || 'BLR';
   state.tripStartDate = plan.tripStartDate || '2026-06-30';
+  state.klNights = plan.klNights || 2;
+  state.lgkNights = plan.lgkNights || 3;
   state.flightKL = plan.flightKL;
   state.hotelKL = plan.hotelKL;
   state.flightLGK = plan.flightLGK;
