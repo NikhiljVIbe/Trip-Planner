@@ -1728,6 +1728,66 @@
   }
   .empty-state p { color: var(--ink-soft); margin-bottom: 24px; }
 
+  /* COMPARE PRICES SECTION (hotel card + modal) */
+  .compare-row {
+    display: flex; gap: 8px; align-items: center;
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    border: 1px solid #6ee7b7;
+    border-radius: 12px;
+    flex-wrap: wrap;
+  }
+  .cmp-primary {
+    flex: 1;
+    min-width: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all .15s ease;
+    box-shadow: 0 4px 12px -2px rgba(22,163,74,0.4);
+  }
+  .cmp-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px -2px rgba(22,163,74,0.55);
+  }
+  .cmp-primary .cmp-emoji { font-size: 16px; }
+  .cmp-secondary {
+    padding: 9px 12px;
+    background: #fff;
+    color: #047857;
+    border: 1.5px solid #6ee7b7;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .15s ease;
+  }
+  .cmp-secondary:hover { background: #d1fae5; }
+  .cmp-tagline {
+    width: 100%;
+    font-size: 11px;
+    color: #047857;
+    font-weight: 500;
+    margin-top: -2px;
+    line-height: 1.35;
+  }
+  @media (max-width: 480px) {
+    .cmp-primary { flex: 1 1 100%; }
+    .cmp-secondary { flex: 1 1 100%; text-align: center; }
+  }
+
   /* ====================================================
      TRAVEL INFO PAGE — modern redesign
      ==================================================== */
@@ -5683,6 +5743,13 @@ function renderHotels(list, mountId, stateKey, nextBtnId, filterBrandKey, filter
             `).join('')}
           </div>
         </div>
+        <div class="compare-row" onclick="event.stopPropagation();">
+          <button type="button" class="cmp-primary" onclick="event.stopPropagation(); compareGoogleHotels('${h.id}');">
+            <span class="cmp-emoji">💰</span> Find best price (Google Hotels)
+          </button>
+          <button type="button" class="cmp-secondary" onclick="event.stopPropagation(); openAllBookingSites('${h.id}');">Open all sites</button>
+          <div class="cmp-tagline">Compares MMT · Goibibo · Booking · Agoda · Yatra · Trivago for your trip dates</div>
+        </div>
         <div class="kid-score">
           <span>Kid-friendly</span>
           <span class="kids-rating">${'⭐'.repeat(h.kids)}</span>
@@ -5985,6 +6052,58 @@ function _yymmdd(yyyymmdd) {
   return y.slice(2) + m + d;
 }
 
+// ===== HOTEL PRICE COMPARISON =====
+// Returns whether a hotel is in KL or Langkawi based on its area
+function hotelCity(h) {
+  const lgkAreas = ['Pantai Cenang','Pantai Tengah','Pantai Kok','Kuah','Datai Bay','Tanjung Rhu','Awana','Teluk Nibung'];
+  return (h && lgkAreas.includes(h.area)) ? 'LGK' : 'KL';
+}
+
+// Returns the right check-in / check-out dates for a hotel given the trip plan
+function hotelDates(h) {
+  const city = hotelCity(h);
+  if (city === 'KL') {
+    return { checkin: _depDate(), checkout: addDaysStr(_depDate(), state.klNights || 2) };
+  }
+  const checkin = addDaysStr(_depDate(), state.klNights || 2);
+  const checkout = addDaysStr(_depDate(), (state.klNights || 2) + (state.lgkNights || 3));
+  return { checkin, checkout };
+}
+
+function addDaysStr(yyyymmdd, n) {
+  const d = new Date(yyyymmdd + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  return d.toISOString().slice(0,10);
+}
+
+function compareGoogleHotels(hotelId) {
+  const h = hotelsKL.find(x => x.id === hotelId) || hotelsLGK.find(x => x.id === hotelId);
+  if (!h) return;
+  const { checkin, checkout } = hotelDates(h);
+  const url = `https://www.google.com/travel/hotels?q=${encodeURIComponent(h.name)}&checkin=${checkin}&checkout=${checkout}&adults=4&children=2`;
+  window.open(url, '_blank', 'noopener');
+}
+
+function openAllBookingSites(hotelId) {
+  const h = hotelsKL.find(x => x.id === hotelId) || hotelsLGK.find(x => x.id === hotelId);
+  if (!h) return;
+  const { checkin, checkout } = hotelDates(h);
+  const name = encodeURIComponent(h.name);
+  const mmtCheckin  = checkin.split('-')[1] + checkin.split('-')[2] + checkin.split('-')[0];
+  const mmtCheckout = checkout.split('-')[1] + checkout.split('-')[2] + checkout.split('-')[0];
+  const urls = [
+    `https://www.google.com/travel/hotels?q=${name}&checkin=${checkin}&checkout=${checkout}&adults=4&children=2`,
+    `https://www.trivago.in/en-IN/srl/hotels?query=${name}`,
+    `https://www.booking.com/searchresults.html?ss=${name}&checkin=${checkin}&checkout=${checkout}&group_adults=4&group_children=2`,
+    `https://www.agoda.com/search?textToSearch=${name}&checkIn=${checkin}&checkOut=${checkout}&adults=4&children=2`,
+    `https://www.makemytrip.com/hotels/hotel-listing/?checkin=${mmtCheckin}&checkout=${mmtCheckout}&country=MY&searchText=${name}&roomStayQualifier=2e2e0e&locusType=hotel`,
+    `https://hotels.yatra.com/hotels/search?searchText=${name}&country=MY&checkIn=${_ddmmyyyy(checkin)}&checkOut=${_ddmmyyyy(checkout)}&rooms=1&adultCount=4&childCount=2`,
+    `https://www.goibibo.com/hotels/hotels-in-${encodeURIComponent((h.area||'kuala-lumpur').toLowerCase().replace(/\s+/g,'-'))}-malaysia/?searchText=${name}`
+  ];
+  urls.forEach((u, i) => setTimeout(() => window.open(u, '_blank', 'noopener'), i * 80));
+  showToast(`🔍 Opening ${urls.length} sites — compare and book the cheapest`);
+}
+
 function hotelBookingLinks(h) {
   if (!h) return '';
   const name = encodeURIComponent(h.name);
@@ -6262,7 +6381,14 @@ function openDetail(type, id) {
         <div class="detail-meta"><strong>${h.group}</strong> · ${priceWithINR(h.price)}/night</div>
         <p>${h.desc}</p>
         <div class="detail-tags">${h.amenities.slice(0,5).map(a => `<span class="amenity-pill">${a}</span>`).join('')}</div>
-        <h3>Book this hotel</h3>
+        <div class="compare-row">
+          <button type="button" class="cmp-primary" onclick="compareGoogleHotels('${h.id}');">
+            <span class="cmp-emoji">💰</span> Find best price (Google Hotels)
+          </button>
+          <button type="button" class="cmp-secondary" onclick="openAllBookingSites('${h.id}');">Open all 7 sites</button>
+          <div class="cmp-tagline">Google Hotels aggregates live prices from MMT, Goibibo, Booking.com, Agoda &amp; more for your dates.</div>
+        </div>
+        <h3>Or book directly:</h3>
         <div class="booking-links">${hotelBookingLinks(h)}</div>
       </div>`;
   } else if (type === 'activity') {
